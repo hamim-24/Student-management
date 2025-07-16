@@ -32,7 +32,7 @@ public class Account {
     public String toString() {
         return String.format("ID: %s\n" +
                 "Name: %s %s\n" +
-                "Email: %s %s\n" +
+                "Email: %s\n" +
                 "Date: %s",
                 ID, firstName, lastName, email, date.toString());
     }

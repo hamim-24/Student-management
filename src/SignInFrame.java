@@ -66,7 +66,7 @@ public class SignInFrame extends JFrame {
         genderLabel = new JLabel("Gender:");
         passwordLabel = new JLabel("Password:");
         confirmPasswordLabel = new JLabel("Confirm Password:");
-        idLabel = new JLabel("Username:");
+        idLabel = new JLabel("ID:");
         photoLabel = new JLabel("Photo:");
         statusLabel = new JLabel("Status:");
 
@@ -112,7 +112,7 @@ public class SignInFrame extends JFrame {
             yearCombo.addItem(String.valueOf(LocalDate.now().getYear() - i));
         }
 
-        statusCombo = new JComboBox<>(new String[]{"Teacher", "Student"});
+        statusCombo = new JComboBox<>(new String[]{"Select", "Teacher", "Student"});
 
         // Title labels
         titleLabel = new JLabel("PERSONAL INFORMATION:");
@@ -323,28 +323,32 @@ public class SignInFrame extends JFrame {
         emailTextField.setBackground(Color.WHITE);
 
         // Validate fields
-        if (firstNameTextField.getText().trim().isEmpty()) {
+        if (getFirstName().isEmpty()) {
             errorMessage.append("- First name is required\n");
             isValid = false;
         }
 
-        if (lastNameTextField.getText().trim().isEmpty()) {
+        if (getLastName().isEmpty()) {
             errorMessage.append("- Last name is required\n");
             isValid = false;
         }
 
-        String email = emailTextField.getText().trim();
-        if (email.isEmpty()) {
+        if (getEmail().isEmpty()) {
             errorMessage.append("- Email is required\n");
             isValid = false;
-        } else if (!EMAIL_PATTERN.matcher(email).matches()) {
+        } else if (!EMAIL_PATTERN.matcher(getEmail()).matches()) {
             errorMessage.append("- Email format is invalid\n");
             emailTextField.setBackground(new Color(255, 230, 230));
             isValid = false;
         }
 
-        if (idTextField.getText().trim().isEmpty()) {
-            errorMessage.append("- Username is required\n");
+        if (getStatus().equals("Select")) {
+            errorMessage.append("- Status is required\n");
+            isValid = false;
+        }
+
+        if (getId().isEmpty()) {
+            errorMessage.append("- ID is required\n");
             isValid = false;
         }
 
@@ -395,8 +399,6 @@ public class SignInFrame extends JFrame {
 
             dispose();
             new LoginForm();
-
-            resetFrame();
         } else if (!isValid) {
             JOptionPane.showMessageDialog(this,
                     errorMessage.toString(),
@@ -432,10 +434,10 @@ public class SignInFrame extends JFrame {
                     passwordTextField.setBackground(Color.WHITE);
                     PasswordStatusLabel.setText("");
                     createButton.setVisible(true);
+                    getRootPane().setDefaultButton(createButton);
                 }
-            } else if (source == idLabel) {
-                String id = idTextField.getText().trim();
-                if (checkId(id)) {
+            } else if (source == idTextField) {
+                if (checkId(getId())) {
                     idTextField.setBackground(new Color(255, 230, 230));
                     idStatusLabel.setText("ID exist, Change ID");
                 } else {
@@ -468,7 +470,7 @@ public class SignInFrame extends JFrame {
     }
 
     private boolean checkId(String id) {
-        return accounts.get(id) == null;
+        return accounts.get(id) != null;
     }
 
     private String getFirstName() {
@@ -481,7 +483,7 @@ public class SignInFrame extends JFrame {
         return emailTextField.getText().trim();
     }
     private String getPassword() {
-        return passwordTextField.getText().trim();
+        return String.valueOf(passwordTextField.getPassword()).trim();
     }
     private String getId() {
         return idTextField.getText().trim();
