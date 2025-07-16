@@ -8,6 +8,8 @@ import java.util.Map;
 public class LoginForm extends JFrame {
 
     Map<String, Account> accounts = new HashMap<>();
+    Account admin = new Account("11111", "111111", "hamimlohani@gmail.com", "Hamim", "Lohani", "Male", "24-06-2005");
+    Map<String, Account> adminAccounts = new HashMap<>();
 
     JTextField idField;
     JPasswordField passwordField;
@@ -19,6 +21,7 @@ public class LoginForm extends JFrame {
     public LoginForm() {
 
         this.accounts = SignInFrame.getAccounts();
+        adminAccounts.put(admin.getID(), admin);
 
         createComponents();
         layoutComponents();
@@ -44,11 +47,11 @@ public class LoginForm extends JFrame {
         idField.setFocusable(true);
         passwordField.setFocusable(true);
 
-        loginButton = new JButton("Login");
+        loginButton = new JButton("Administration");
         loginButton.setBackground(new Color(70, 130, 180));
         loginButton.setFocusPainted(false);
 
-        studentLoginButton = new JButton("Student Login");
+        studentLoginButton = new JButton("Student and Teacher");
         studentLoginButton.setBackground(new Color(70, 130, 180));
         studentLoginButton.setFocusPainted(false);
 
@@ -146,42 +149,46 @@ public class LoginForm extends JFrame {
 
     private void setupEvenHandelars() {
 
-        String id = idField.getText();
-        String password = String.valueOf(passwordField.getPassword());
-
         loginButton.addActionListener(e -> {
+            String id = idField.getText().trim();
+            String password = String.valueOf(passwordField.getPassword()).trim();
 
-            Account teacherAccount = accounts.get(id);
             if (validForm()) {
-                if (teacherAccount == null) {
+                Account account = adminAccounts.get(id);
+                if (account == null) {
                     JOptionPane.showMessageDialog(this, "Invalid ID\n\n- Register your ID", "Error", JOptionPane.ERROR_MESSAGE);
                     getRootPane().setDefaultButton(registerButton);
-                } else if (!teacherAccount.getPassword().equals(password)) {
+                    return;
+                }
+
+                if (!account.getPassword().equals(password)) {
                     JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-
+                    JOptionPane.showMessageDialog(this, "Login Successful!!\n\n" + account, "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
         getRootPane().setDefaultButton(loginButton);
 
         studentLoginButton.addActionListener(e -> {
+            String id = idField.getText().trim();
+            String password = String.valueOf(passwordField.getPassword()).trim();
 
-            Account studentAccount = accounts.get(id);
             if (validForm()) {
-                if (studentAccount == null) {
+                Account account = accounts.get(id);
+                if (account == null) {
                     JOptionPane.showMessageDialog(this, "Invalid ID\n\n- Register your ID", "Error", JOptionPane.ERROR_MESSAGE);
                     getRootPane().setDefaultButton(registerButton);
-                } else if (!studentAccount.getPassword().equals(password)) {
+                } else if (!account.getPassword().equals(password)) {
                     JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-
-
+                    JOptionPane.showMessageDialog(this, "Login Successful!!\n\n" + account, "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
 
         registerButton.addActionListener(e -> {
+            dispose();
             new SignInFrame();
         });
     }
@@ -190,7 +197,7 @@ public class LoginForm extends JFrame {
 
     private boolean validForm() {
 
-        if (idField.getText().equals(ID_PLACE_HOLDER) || passwordField.getText().equals(PASSWORD_PLACE_HOLDER)) {
+        if (idField.getText().equals(ID_PLACE_HOLDER) || String.valueOf(passwordField.getPassword()).equals(PASSWORD_PLACE_HOLDER)) {
             JOptionPane.showMessageDialog(this, "Please fill all the fields!", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
