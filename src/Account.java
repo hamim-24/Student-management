@@ -2,14 +2,14 @@ import java.util.Date;
 
 public class Account {
 
-    private String ID;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String gender;
-    private String dob;
-    private Date date;
+    private final String ID;
+    private final String password;
+    private final String email;
+    private final String firstName;
+    private final String lastName;
+    private final String gender;
+    private final String dob;
+    private final Date date;
 
     public Account(String id, String password,  String email, String firstName, String lastName,  String gender, String dob) {
         this.ID = id;
@@ -30,10 +30,13 @@ public class Account {
     }
 
     public String toString() {
-        return String.format("ID: %s\n" +
-                "Name: %s %s\n" +
-                "Email: %s\n" +
-                "Date: %s",
-                ID, firstName, lastName, email, date.toString());
+        return String.format("""
+                        ID: %s
+                        Name: %s %s
+                        Email: %s
+                        Date of Birth: %s
+                        Gender: %s
+                        Date: %s""",
+                ID, firstName, lastName, email, dob, gender, date.toString());
     }
 }
