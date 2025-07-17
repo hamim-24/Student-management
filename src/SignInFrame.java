@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class SignInFrame extends JFrame {
-    private static Map<String, Account> accounts = new HashMap<>();
+    private static final Map<String, Account> accounts = new HashMap<>();
 
     private Account account;
     private JLabel PasswordStatusLabel, mainTitleLabel, titleLabel, accountLabel, firstNameLabel, lastNameLabel, idLabel, idStatusLabel,
@@ -46,17 +46,21 @@ public class SignInFrame extends JFrame {
         setTitle("Sign In");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
+        setSize(800, 600);
         setLocationRelativeTo(null);
     }
 
     private void createComponents() {
-        PasswordStatusLabel = new JLabel();
-        PasswordStatusLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 10));
+        // Status labels with proper initialization
+        PasswordStatusLabel = new JLabel(" "); // Space to maintain height
+        PasswordStatusLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 8));
         PasswordStatusLabel.setForeground(Color.RED);
+        PasswordStatusLabel.setPreferredSize(new Dimension(300, 7));
 
-        idStatusLabel = new JLabel();
-        idStatusLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 10));
+        idStatusLabel = new JLabel(" "); // Space to maintain height
+        idStatusLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 8));
         idStatusLabel.setForeground(Color.RED);
+        idStatusLabel.setPreferredSize(new Dimension(300, 7));
 
         // Labels
         firstNameLabel = new JLabel("First Name:");
@@ -98,7 +102,6 @@ public class SignInFrame extends JFrame {
         resetButton = new JButton("Reset");
         resetButton.setFocusable(false);
         loginButton = new JButton("Login");
-        loginButton.setFocusable(false);
         loginButton.setFocusable(false);
 
         // Combo boxes
@@ -207,37 +210,46 @@ public class SignInFrame extends JFrame {
         gbc.gridwidth = 2;
         mainPanel.add(photoPanel, gbc);
 
+        // Account section title
         gbc.gridwidth = 3;
         gbc.gridx = 0;
         gbc.gridy = 9;
         gbc.insets = new Insets(20, 0, 10, 0);
         mainPanel.add(accountLabel, gbc);
-        gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Password fields
+        // Reset insets for form fields
+        gbc.insets = new Insets(5, 5, 0, 5);
         gbc.gridwidth = 1;
+
+        // ID field
         addFormField(mainPanel, idLabel, idTextField, gbc, 10);
 
-        // id status label
+        // ID status label - positioned directly under ID field
         gbc.gridx = 1;
         gbc.gridy = 11;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(-5, 5, 5, 5);
+        gbc.insets = new Insets(0, 5, 0, 5); // No top margin to place directly under
         mainPanel.add(idStatusLabel, gbc);
+
+        // Reset insets for next fields
         gbc.insets = new Insets(5, 5, 5, 5);
 
+        // Password fields
         addFormField(mainPanel, passwordLabel, passwordTextField, gbc, 12);
+        gbc.insets = new Insets(5, 5, 0, 5);
         addFormField(mainPanel, confirmPasswordLabel, confirmPasswordTextField, gbc, 13);
 
-        // Error label
+        // Password status label - positioned directly under confirm password field
         gbc.gridx = 1;
         gbc.gridy = 14;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(-5, 5, 5, 5);
+        gbc.insets = new Insets(0, 5, 0, 5); // No top margin to place directly under
         mainPanel.add(PasswordStatusLabel, gbc);
-        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Reset insets for button panel
+        gbc.insets = new Insets(20, 0, 0, 0);
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -245,13 +257,10 @@ public class SignInFrame extends JFrame {
         buttonPanel.add(resetButton);
         buttonPanel.add(createButton);
 
-        createButton.setVisible(false);
-
         gbc.gridx = 0;
         gbc.gridy = 15;
         gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(20, 0, 0, 0);
         gbc.anchor = GridBagConstraints.CENTER;
         mainPanel.add(buttonPanel, gbc);
 
@@ -314,12 +323,15 @@ public class SignInFrame extends JFrame {
 
     private void validateAndCreateAccount() {
         boolean isValid = true;
-        boolean pwdMatck = false;
+        boolean pwdMatch = false;
         StringBuilder errorMessage = new StringBuilder("Please correct the following errors:\n");
 
-        // Clear previous error styling
-        PasswordStatusLabel.setText("");
+        // Clear previous error styling and status messages
+        PasswordStatusLabel.setText(" ");
+        idStatusLabel.setText(" ");
         confirmPasswordTextField.setBackground(Color.WHITE);
+        passwordTextField.setBackground(Color.WHITE);
+        idTextField.setBackground(Color.WHITE);
         emailTextField.setBackground(Color.WHITE);
 
         // Validate fields
@@ -350,6 +362,11 @@ public class SignInFrame extends JFrame {
         if (getId().isEmpty()) {
             errorMessage.append("- ID is required\n");
             isValid = false;
+        } else if (checkId(getId())) {
+            errorMessage.append("- ID already exists\n");
+            idTextField.setBackground(new Color(255, 230, 230));
+            idStatusLabel.setText("ID exists, Change ID");
+            isValid = false;
         }
 
         if (passwordTextField.getPassword().length == 0) {
@@ -357,15 +374,15 @@ public class SignInFrame extends JFrame {
             isValid = false;
         }
 
-        if (passwordTextField.getPassword().length > 5 || confirmPasswordTextField.getPassword().length > 5) {
+        if (passwordTextField.getPassword().length > 5 && confirmPasswordTextField.getPassword().length > 5) {
             String password = new String(passwordTextField.getPassword());
             String confirmPassword = new String(confirmPasswordTextField.getPassword());
             if (password.equals(confirmPassword)) {
-                pwdMatck = true;
+                pwdMatch = true;
             } else {
                 confirmPasswordTextField.setBackground(new Color(255, 230, 230));
-                PasswordStatusLabel.setText("Passwords do't match");
-                pwdMatck = false;
+                PasswordStatusLabel.setText("Passwords don't match");
+                pwdMatch = false;
                 isValid = false;
                 errorMessage.append("- Passwords don't match\n");
             }
@@ -381,10 +398,7 @@ public class SignInFrame extends JFrame {
             isValid = false;
         }
 
-        if (isValid && pwdMatck) {
-            confirmPasswordTextField.setBackground(Color.WHITE);
-            passwordTextField.setBackground(Color.WHITE);
-
+        if (isValid && pwdMatch) {
             JOptionPane.showMessageDialog(this,
                     "Account created successfully!",
                     "Success",
@@ -419,54 +433,70 @@ public class SignInFrame extends JFrame {
                 } else {
                     emailTextField.setBackground(Color.WHITE);
                 }
-            } else if (source == passwordTextField) {
+            } else if (source == passwordTextField || source == confirmPasswordTextField) {
                 String password = new String(passwordTextField.getPassword());
                 String confirmPassword = new String(confirmPasswordTextField.getPassword());
 
-                if (password.length() <= 5) {
+                if (password.length() <= 5 && !password.isEmpty()) {
                     passwordTextField.setBackground(new Color(255, 230, 230));
                     PasswordStatusLabel.setText("Password must be at least 6 characters");
-                } else if (!confirmPassword.isEmpty() && !password.equals(confirmPassword)) {
+                } else if (password.length() > 5 && !confirmPassword.isEmpty() && !password.equals(confirmPassword)) {
                     confirmPasswordTextField.setBackground(new Color(255, 230, 230));
-                    PasswordStatusLabel.setText("Passwords do not match");
-                } else {
+                    PasswordStatusLabel.setText("Passwords don't match");
+                } else if (password.length() > 5 && confirmPassword.length() > 5 && password.equals(confirmPassword)) {
                     confirmPasswordTextField.setBackground(Color.WHITE);
                     passwordTextField.setBackground(Color.WHITE);
-                    PasswordStatusLabel.setText("");
-                    createButton.setVisible(true);
+                    PasswordStatusLabel.setText(" ");
                     getRootPane().setDefaultButton(createButton);
+                } else {
+                    passwordTextField.setBackground(Color.WHITE);
+                    confirmPasswordTextField.setBackground(Color.WHITE);
+                    PasswordStatusLabel.setText(" ");
                 }
             } else if (source == idTextField) {
-                if (checkId(getId())) {
+                String id = getId();
+                if (!id.isEmpty() && checkId(id)) {
                     idTextField.setBackground(new Color(255, 230, 230));
-                    idStatusLabel.setText("ID exist, Change ID");
+                    idStatusLabel.setText("ID exists, Change ID");
                 } else {
                     idTextField.setBackground(Color.WHITE);
-                    idStatusLabel.setText("");
+                    idStatusLabel.setText(" ");
                 }
             }
         }
     }
 
     private void resetFrame() {
-        PasswordStatusLabel.setText("");
+        // Clear status labels
+        PasswordStatusLabel.setText(" ");
+        idStatusLabel.setText(" ");
+
+        // Clear text fields
         firstNameTextField.setText("");
         lastNameTextField.setText("");
         emailTextField.setText("");
+        idTextField.setText("");
         passwordTextField.setText("");
         confirmPasswordTextField.setText("");
 
         // Reset background colors
         emailTextField.setBackground(Color.WHITE);
+        idTextField.setBackground(Color.WHITE);
+        passwordTextField.setBackground(Color.WHITE);
         confirmPasswordTextField.setBackground(Color.WHITE);
 
+        // Reset other components
         genderGroup.clearSelection();
         dayCombo.setSelectedIndex(0);
         monthCombo.setSelectedIndex(0);
         yearCombo.setSelectedIndex(0);
+        statusCombo.setSelectedIndex(0);
         filePathLabel.setText(DEFAULT_FILE_PATH);
         filePathLabel.setForeground(Color.GRAY);
         filePath = null;
+
+        // Hide create button
+        createButton.setVisible(false);
     }
 
     private boolean checkId(String id) {
