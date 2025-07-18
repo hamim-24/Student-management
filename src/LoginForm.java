@@ -8,7 +8,7 @@ import java.util.Map;
 public class LoginForm extends JFrame {
 
     Map<String, Account> accounts = new HashMap<>();
-    Account admin = new Account("11111", "111111", "hamimlohani@gmail.com", "Hamim", "Lohani", "Male", "24-06-2005");
+    Account admin = new Account("11111", "111111", "hamimlohani@gmail.com", "Hamim", "Lohani", "Male", "24-06-2005", "", "");
     Map<String, Account> adminAccounts = new HashMap<>();
 
     JTextField idField;
@@ -20,7 +20,7 @@ public class LoginForm extends JFrame {
 
     public LoginForm() {
 
-        this.accounts = SignInFrame.getAccounts();
+        this.accounts = Main.getAccounts();
         adminAccounts.put(admin.getID(), admin);
 
         createComponents();

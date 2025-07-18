@@ -21,7 +21,6 @@ public class AdministrationForm extends JFrame {
         setTitle("Administration");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
 
         setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -32,29 +31,30 @@ public class AdministrationForm extends JFrame {
         gbc.insets = new Insets(25, 30, 10, 30);
         add(titleLabel, gbc);
 
-
         gbc.gridy = 1;
         gbc.gridx = 0;
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        buttonPanel.add(studentButton, gbc);
-        buttonPanel.add(teacherButton, gbc);
-        buttonPanel.add(backButton, gbc);
+        buttonPanel.add(studentButton);
+        buttonPanel.add(teacherButton);
+        buttonPanel.add(backButton);
 
         add(buttonPanel, gbc);
 
         pack();
 
-        backButton.addActionListener(e -> {
-            dispose();
-            new LoginForm();
-        });
-
         studentButton.addActionListener(e -> {
-
+            dispose();
+            new StudentList();
         });
 
         teacherButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Teacher List functionality not implemented yet.", 
+                "Info", JOptionPane.INFORMATION_MESSAGE);
+        });
 
+        backButton.addActionListener(e -> {
+            dispose();
+            new LoginForm();
         });
 
         setVisible(true);

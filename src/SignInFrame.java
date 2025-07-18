@@ -13,20 +13,27 @@ public class SignInFrame extends JFrame {
 
     private Account account;
     private JLabel PasswordStatusLabel, mainTitleLabel, titleLabel, accountLabel, firstNameLabel, lastNameLabel, idLabel, idStatusLabel,
-            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel, classLabel, rollLabel;
+            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel, classLabel, rollLabel, departmentLabel;
     private JTextField firstNameTextField, lastNameTextField, emailTextField, idTextField, rollTextField;
     private JPasswordField passwordTextField, confirmPasswordTextField;
     private JButton createButton, resetButton, choosePhotoButton, loginButton;
     private JRadioButton maleRadioButton, femaleRadioButton;
     private ButtonGroup genderGroup;
-    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo, classCombo;
+    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo, classCombo, departmentCombo;
     String filePath;
 
     JPanel mainPanel;
     GridBagConstraints gbc;
 
+    private int lineNumber = -1;
+    private int line1, line2;
+
     final String DEFAULT_FILE_PATH = "No Path Selected";
     private boolean studentFieldsVisible = false;
+
+    public static final String[] departments = {
+            "Select", "CSE", "EEE", "BBA", "Civil"
+    };
 
     private static final String[] months = {
             "January", "February", "March", "April", "May", "June",
@@ -37,7 +44,7 @@ public class SignInFrame extends JFrame {
             "^[A-Za-z0-9+_.-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$"
     );
 
-    private static final String[] classes = {
+    public static final String[] classes = {
             "Select", "1st Year", "2nd Year", "3rd Year", "4th Year"
     };
 
@@ -86,6 +93,7 @@ public class SignInFrame extends JFrame {
         statusLabel = new JLabel("Status:");
         classLabel = new JLabel("Class:");
         rollLabel = new JLabel("Roll:");
+        departmentLabel = new JLabel("Department:");
 
         // Radio buttons
         maleRadioButton = new JRadioButton("Male");
@@ -130,6 +138,7 @@ public class SignInFrame extends JFrame {
         }
         statusCombo = new JComboBox<>(new String[]{"Select", "Teacher", "Student"});
         classCombo = new JComboBox<>(classes);
+        departmentCombo = new JComboBox<>(departments);
 
         // Title labels
         titleLabel = new JLabel("PERSONAL INFORMATION:");
@@ -154,7 +163,7 @@ public class SignInFrame extends JFrame {
 
         // Main title
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = nextLine();
         gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 20, 0);
@@ -162,7 +171,7 @@ public class SignInFrame extends JFrame {
         mainPanel.add(mainTitleLabel, gbc);
 
         // Section title
-        gbc.gridy = 1;
+        gbc.gridy = nextLine();
         gbc.insets = new Insets(0, 0, 10, 0);
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(titleLabel, gbc);
@@ -172,14 +181,17 @@ public class SignInFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Form fields
-        addFormField(mainPanel, firstNameLabel, firstNameTextField, gbc, 2);
-        addFormField(mainPanel, lastNameLabel, lastNameTextField, gbc, 3);
-        addFormField(mainPanel, emailLabel, emailTextField, gbc, 4);
-        addFormField(mainPanel, statusLabel, statusCombo, gbc, 5);
+        addFormField(mainPanel, firstNameLabel, firstNameTextField, gbc, nextLine());
+        addFormField(mainPanel, lastNameLabel, lastNameTextField, gbc, nextLine());
+        addFormField(mainPanel, emailLabel, emailTextField, gbc, nextLine());
+        addFormField(mainPanel, departmentLabel, departmentCombo, gbc, nextLine());
+        addFormField(mainPanel, statusLabel, statusCombo, gbc, nextLine());
+        line1 = nextLine(); // for class
+        line2 = nextLine(); // for roll
 
         // Gender field
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = nextLine();
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(genderLabel, gbc);
 
@@ -195,7 +207,7 @@ public class SignInFrame extends JFrame {
         // DOB field
         gbc.gridwidth = 1;
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = nextLine();
         mainPanel.add(dobLabel, gbc);
 
         JPanel dobPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -212,7 +224,7 @@ public class SignInFrame extends JFrame {
         // Photo field
         gbc.gridwidth = 1;
         gbc.gridx = 0;
-        gbc.gridy = 10;
+        gbc.gridy = nextLine();
         mainPanel.add(photoLabel, gbc);
 
         JPanel photoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -227,7 +239,7 @@ public class SignInFrame extends JFrame {
         // Account section title
         gbc.gridwidth = 3;
         gbc.gridx = 0;
-        gbc.gridy = 11;
+        gbc.gridy = nextLine();
         gbc.insets = new Insets(20, 0, 10, 0);
         mainPanel.add(accountLabel, gbc);
 
@@ -235,23 +247,23 @@ public class SignInFrame extends JFrame {
         gbc.gridwidth = 1;
 
         // ID field
-        addFormField(mainPanel, idLabel, idTextField, gbc, 12);
+        addFormField(mainPanel, idLabel, idTextField, gbc, nextLine());
 
         // ID status label - positioned directly under ID field
         gbc.gridx = 1;
-        gbc.gridy = 13;
+        gbc.gridy = nextLine();
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 5, -5, 5); // No top margin to place directly under
         mainPanel.add(idStatusLabel, gbc);
 
         // Password fields
-        addFormField(mainPanel, passwordLabel, passwordTextField, gbc, 14);
-        addFormField(mainPanel, confirmPasswordLabel, confirmPasswordTextField, gbc, 15);
+        addFormField(mainPanel, passwordLabel, passwordTextField, gbc, nextLine());
+        addFormField(mainPanel, confirmPasswordLabel, confirmPasswordTextField, gbc, nextLine());
 
         // Password status label - positioned directly under confirm password field
         gbc.gridx = 1;
-        gbc.gridy = 16;
+        gbc.gridy = nextLine();
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 5, 0, 5); // No top margin to place directly under
@@ -267,7 +279,7 @@ public class SignInFrame extends JFrame {
         buttonPanel.add(resetButton);
 
         gbc.gridx = 0;
-        gbc.gridy = 17;
+        gbc.gridy = nextLine();
         gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -341,8 +353,8 @@ public class SignInFrame extends JFrame {
 
             if (selectedStatus.equals("Student") && !studentFieldsVisible) {
                 // Show student fields
-                addFormField(mainPanel, classLabel, classCombo, gbc, 6);
-                addFormField(mainPanel, rollLabel, rollTextField, gbc, 7);
+                addFormField(mainPanel, classLabel, classCombo, gbc, line1);
+                addFormField(mainPanel, rollLabel, rollTextField, gbc, line2);
                 studentFieldsVisible = true;
 
                 // Shift other components down
@@ -431,6 +443,11 @@ public class SignInFrame extends JFrame {
             isValid = false;
         }
 
+        if (getDepartment().isEmpty()) {
+            errorMessage.append("- Department is required\n");
+            isValid = false;
+        }
+
         if (getStatus().equals("Select")) {
             errorMessage.append("- Status is required\n");
             isValid = false;
@@ -488,15 +505,15 @@ public class SignInFrame extends JFrame {
 
         if (isValid && pwdMatch) {
             if (getStatus().equals("Teacher")) {
-                account = new TeacherAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob());
+                account = new TeacherAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getDepartment(), getStatus());
             } else if (getStatus().equals("Student")) {
-                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getClassNo(), getRoll());
+                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getClassNo(), getRoll(), getDepartment(), getStatus());
             }
             accounts.put(getId(), account);
 
             JOptionPane.showMessageDialog(this,
                     "Account created successfully!\n\n" +
-                    account.toString(),
+                    accounts.get(getId()).toString(),
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -632,7 +649,10 @@ public class SignInFrame extends JFrame {
         return statusCombo.getSelectedItem().toString().trim();
     }
     private String getClassNo() {
-        return classCombo.getSelectedItem().toString();
+        return classCombo.getSelectedItem().toString().trim();
+    }
+    private String getDepartment() {
+        return departmentCombo.getSelectedItem().toString().trim();
     }
     private int getRoll() {
         try {
@@ -642,7 +662,8 @@ public class SignInFrame extends JFrame {
         }
     }
 
-    public static Map<String, Account> getAccounts() {
-        return accounts;
+    public int nextLine() {
+        return ++lineNumber;
     }
+
 }
