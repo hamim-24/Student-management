@@ -26,7 +26,7 @@ public class LoginForm extends JFrame {
         createComponents();
         layoutComponents();
         setPlaceHolders();
-        setupEvenHandelars();
+        addEvenListeners();
 
         setTitle("Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,15 +49,12 @@ public class LoginForm extends JFrame {
         passwordField.setFocusable(true);
 
         loginButton = new JButton("Administration");
-        loginButton.setBackground(new Color(70, 130, 180));
         loginButton.setFocusPainted(false);
 
         studentLoginButton = new JButton("Student and Teacher");
-        studentLoginButton.setBackground(new Color(70, 130, 180));
         studentLoginButton.setFocusPainted(false);
 
         registerButton = new JButton("Register");
-        registerButton.setBackground(new Color(70, 130, 180));
         registerButton.setFocusPainted(false);
 
     }
@@ -148,7 +145,7 @@ public class LoginForm extends JFrame {
         });
     }
 
-    private void setupEvenHandelars() {
+    private void addEvenListeners() {
 
         loginButton.addActionListener(e -> {
             String id = idField.getText().trim();
@@ -165,7 +162,9 @@ public class LoginForm extends JFrame {
                 if (!account.getPassword().equals(password)) {
                     JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Login Successful!!\n\n" + account, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Login Successful!!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                    new AdministrationForm();
                 }
             }
         });
