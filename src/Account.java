@@ -28,7 +28,24 @@ public class Account {
     public String getPassword() {
         return password;
     }
-
+    public String getEmail() {
+        return email;
+    }
+    public String getFirstName() {
+        return firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public String getGender() {
+        return gender;
+    }
+    public String getDob() {
+        return dob;
+    }
+    public Date getDate() {
+        return date;
+    }
     public String toString() {
         return String.format("""
                         ID: %s

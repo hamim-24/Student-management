@@ -15,8 +15,8 @@ public class LoginForm extends JFrame {
     JPasswordField passwordField;
     JButton loginButton, studentLoginButton, registerButton;
 
-    private final String ID_PLACE_HOLDER = "IDENTITY  NUMBER";
-    private final String PASSWORD_PLACE_HOLDER = "PASSWORD";
+    private final String ID_PLACE_HOLDER = "ID/Registration Number";
+    private final String PASSWORD_PLACE_HOLDER = "Password";
 
     public LoginForm() {
 
