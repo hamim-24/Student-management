@@ -13,16 +13,20 @@ public class SignInFrame extends JFrame {
 
     private Account account;
     private JLabel PasswordStatusLabel, mainTitleLabel, titleLabel, accountLabel, firstNameLabel, lastNameLabel, idLabel, idStatusLabel,
-            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel;
-    private JTextField firstNameTextField, lastNameTextField, emailTextField, idTextField;
+            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel, classLabel, rollLabel;
+    private JTextField firstNameTextField, lastNameTextField, emailTextField, idTextField, rollTextField;
     private JPasswordField passwordTextField, confirmPasswordTextField;
     private JButton createButton, resetButton, choosePhotoButton, loginButton;
     private JRadioButton maleRadioButton, femaleRadioButton;
     private ButtonGroup genderGroup;
-    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo;
+    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo, classCombo;
     String filePath;
 
+    JPanel mainPanel;
+    GridBagConstraints gbc;
+
     final String DEFAULT_FILE_PATH = "No Path Selected";
+    private boolean studentFieldsVisible = false;
 
     private static final String[] months = {
             "January", "February", "March", "April", "May", "June",
@@ -33,16 +37,23 @@ public class SignInFrame extends JFrame {
             "^[A-Za-z0-9+_.-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$"
     );
 
+    private static final String[] classes = {
+            "Select", "1st Year", "2nd Year", "3rd Year", "4th Year"
+    };
+
     public SignInFrame() {
+
         initializeFrame();
         createComponents();
         layoutComponents();
         addEventListeners();
 
         setVisible(true);
+        getRootPane().setDefaultButton(createButton);
     }
 
     private void initializeFrame() {
+
         setTitle("Sign In");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -66,13 +77,15 @@ public class SignInFrame extends JFrame {
         firstNameLabel = new JLabel("First Name:");
         lastNameLabel = new JLabel("Last Name:");
         emailLabel = new JLabel("Email:");
-        dobLabel = new JLabel("DOB:");
+        dobLabel = new JLabel("Date of Birth:");
         genderLabel = new JLabel("Gender:");
         passwordLabel = new JLabel("Password:");
         confirmPasswordLabel = new JLabel("Confirm Password:");
-        idLabel = new JLabel("ID:");
-        photoLabel = new JLabel("Photo:");
+        idLabel = new JLabel("ID/Registration Number:");
+        photoLabel = new JLabel("Photo(optional):");
         statusLabel = new JLabel("Status:");
+        classLabel = new JLabel("Class:");
+        rollLabel = new JLabel("Roll:");
 
         // Radio buttons
         maleRadioButton = new JRadioButton("Male");
@@ -93,6 +106,7 @@ public class SignInFrame extends JFrame {
         passwordTextField = new JPasswordField(20);
         confirmPasswordTextField = new JPasswordField(20);
         idTextField = new JTextField(20);
+        rollTextField = new JTextField(20);
 
         // Buttons
         createButton = new JButton("Create Account");
@@ -114,8 +128,8 @@ public class SignInFrame extends JFrame {
         for (int i = 0; i < 50; i++) {
             yearCombo.addItem(String.valueOf(LocalDate.now().getYear() - i));
         }
-
         statusCombo = new JComboBox<>(new String[]{"Select", "Teacher", "Student"});
+        classCombo = new JComboBox<>(classes);
 
         // Title labels
         titleLabel = new JLabel("PERSONAL INFORMATION:");
@@ -132,10 +146,11 @@ public class SignInFrame extends JFrame {
     }
 
     private void layoutComponents() {
+
         setLayout(new BorderLayout());
-        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
-        GridBagConstraints gbc = new GridBagConstraints();
+        gbc = new GridBagConstraints();
 
         // Main title
         gbc.gridx = 0;
@@ -155,7 +170,6 @@ public class SignInFrame extends JFrame {
         // Reset constraints for form fields
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
 
         // Form fields
         addFormField(mainPanel, firstNameLabel, firstNameTextField, gbc, 2);
@@ -165,7 +179,7 @@ public class SignInFrame extends JFrame {
 
         // Gender field
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 8;
         gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(genderLabel, gbc);
 
@@ -181,7 +195,7 @@ public class SignInFrame extends JFrame {
         // DOB field
         gbc.gridwidth = 1;
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 9;
         mainPanel.add(dobLabel, gbc);
 
         JPanel dobPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -198,7 +212,7 @@ public class SignInFrame extends JFrame {
         // Photo field
         gbc.gridwidth = 1;
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 10;
         mainPanel.add(photoLabel, gbc);
 
         JPanel photoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -213,36 +227,31 @@ public class SignInFrame extends JFrame {
         // Account section title
         gbc.gridwidth = 3;
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = 11;
         gbc.insets = new Insets(20, 0, 10, 0);
         mainPanel.add(accountLabel, gbc);
 
         // Reset insets for form fields
-        gbc.insets = new Insets(5, 5, 0, 5);
         gbc.gridwidth = 1;
 
         // ID field
-        addFormField(mainPanel, idLabel, idTextField, gbc, 10);
+        addFormField(mainPanel, idLabel, idTextField, gbc, 12);
 
         // ID status label - positioned directly under ID field
         gbc.gridx = 1;
-        gbc.gridy = 11;
+        gbc.gridy = 13;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 5, 0, 5); // No top margin to place directly under
+        gbc.insets = new Insets(0, 5, -5, 5); // No top margin to place directly under
         mainPanel.add(idStatusLabel, gbc);
 
-        // Reset insets for next fields
-        gbc.insets = new Insets(5, 5, 5, 5);
-
         // Password fields
-        addFormField(mainPanel, passwordLabel, passwordTextField, gbc, 12);
-        gbc.insets = new Insets(5, 5, 0, 5);
-        addFormField(mainPanel, confirmPasswordLabel, confirmPasswordTextField, gbc, 13);
+        addFormField(mainPanel, passwordLabel, passwordTextField, gbc, 14);
+        addFormField(mainPanel, confirmPasswordLabel, confirmPasswordTextField, gbc, 15);
 
         // Password status label - positioned directly under confirm password field
         gbc.gridx = 1;
-        gbc.gridy = 14;
+        gbc.gridy = 16;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 5, 0, 5); // No top margin to place directly under
@@ -254,11 +263,11 @@ public class SignInFrame extends JFrame {
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         buttonPanel.add(loginButton);
-        buttonPanel.add(resetButton);
         buttonPanel.add(createButton);
+        buttonPanel.add(resetButton);
 
         gbc.gridx = 0;
-        gbc.gridy = 15;
+        gbc.gridy = 17;
         gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -275,7 +284,35 @@ public class SignInFrame extends JFrame {
         pack();
     }
 
+
+
+    private void shiftComponentsDown() {
+        // When student fields are added at rows 6-7, shift everything else down by 2 rows
+        Component[] components = mainPanel.getComponents();
+        for (Component comp : components) {
+            GridBagConstraints constraints = ((GridBagLayout) mainPanel.getLayout()).getConstraints(comp);
+            if (constraints.gridy >= 8) {
+                constraints.gridy += 2;
+                mainPanel.add(comp, constraints);
+            }
+        }
+    }
+
+    private void shiftComponentsUp() {
+        // When student fields are removed, shift everything back up by 2 rows
+        Component[] components = mainPanel.getComponents();
+        for (Component comp : components) {
+            GridBagConstraints constraints = ((GridBagLayout) mainPanel.getLayout()).getConstraints(comp);
+            if (constraints.gridy >= 10) {
+                constraints.gridy -= 2;
+                mainPanel.add(comp, constraints);
+            }
+        }
+    }
+
     public static void addFormField(JPanel panel, JLabel label, JComponent component, GridBagConstraints gbc, int row) {
+
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridy = row;
         gbc.gridx = 0;
         gbc.gridwidth = 1;
@@ -289,12 +326,51 @@ public class SignInFrame extends JFrame {
     }
 
     private void addEventListeners() {
+
         firstNameTextField.addFocusListener(new ValidationFocusListener());
         lastNameTextField.addFocusListener(new ValidationFocusListener());
         emailTextField.addFocusListener(new ValidationFocusListener());
         idTextField.addFocusListener(new ValidationFocusListener());
         passwordTextField.addFocusListener(new ValidationFocusListener());
         confirmPasswordTextField.addFocusListener(new ValidationFocusListener());
+
+        // Add action listener for status combo box to handle real-time changes
+        statusCombo.addActionListener(e -> {
+
+            String selectedStatus = getStatus();
+
+            if (selectedStatus.equals("Student") && !studentFieldsVisible) {
+                // Show student fields
+                addFormField(mainPanel, classLabel, classCombo, gbc, 6);
+                addFormField(mainPanel, rollLabel, rollTextField, gbc, 7);
+                studentFieldsVisible = true;
+
+                // Shift other components down
+                shiftComponentsDown();
+
+            } else if (!selectedStatus.equals("Student") && studentFieldsVisible) {
+                // Hide student fields
+                mainPanel.remove(classLabel);
+                mainPanel.remove(classCombo);
+                mainPanel.remove(rollLabel);
+                mainPanel.remove(rollTextField);
+                studentFieldsVisible = false;
+
+                // Clear the text fields
+                classCombo.setSelectedIndex(0);
+                rollTextField.setText("");
+
+                // Shift other components up
+                shiftComponentsUp();
+            }
+
+            // Revalidate and repaint the panel
+            mainPanel.revalidate();
+            mainPanel.repaint();
+
+            getRootPane().setDefaultButton(createButton);
+            pack();
+        });
     }
 
     private class FormActionListener implements ActionListener {
@@ -322,6 +398,7 @@ public class SignInFrame extends JFrame {
     }
 
     private void validateAndCreateAccount() {
+
         boolean isValid = true;
         boolean pwdMatch = false;
         StringBuilder errorMessage = new StringBuilder("Please correct the following errors:\n");
@@ -359,6 +436,24 @@ public class SignInFrame extends JFrame {
             isValid = false;
         }
 
+        if (getStatus().equals("Student")) {
+            if (getClassNo().equals("Select")) {
+                errorMessage.append("- Class is required\n");
+                isValid = false;
+            }
+            if (rollTextField.getText().trim().isEmpty()) {
+                errorMessage.append("- Roll is required\n");
+                isValid = false;
+            } else if (getRoll() == -1) {
+                errorMessage.append("- Roll Must be an integer\n");
+            }
+        }
+
+        if (!maleRadioButton.isSelected() && !femaleRadioButton.isSelected()) {
+            errorMessage.append("- Gender is required\n");
+            isValid = false;
+        }
+
         if (getId().isEmpty()) {
             errorMessage.append("- ID is required\n");
             isValid = false;
@@ -372,9 +467,7 @@ public class SignInFrame extends JFrame {
         if (passwordTextField.getPassword().length == 0) {
             errorMessage.append("- Password is required\n");
             isValid = false;
-        }
-
-        if (passwordTextField.getPassword().length > 5 && confirmPasswordTextField.getPassword().length > 5) {
+        } else if (passwordTextField.getPassword().length > 5 && confirmPasswordTextField.getPassword().length > 5) {
             String password = new String(passwordTextField.getPassword());
             String confirmPassword = new String(confirmPasswordTextField.getPassword());
             if (password.equals(confirmPassword)) {
@@ -393,23 +486,19 @@ public class SignInFrame extends JFrame {
             isValid = false;
         }
 
-        if (!maleRadioButton.isSelected() && !femaleRadioButton.isSelected()) {
-            errorMessage.append("- Gender is required\n");
-            isValid = false;
-        }
-
         if (isValid && pwdMatch) {
-            JOptionPane.showMessageDialog(this,
-                    "Account created successfully!",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
-
             if (getStatus().equals("Teacher")) {
                 account = new TeacherAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob());
             } else if (getStatus().equals("Student")) {
-                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob());
+                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getClassNo(), getRoll());
             }
             accounts.put(getId(), account);
+
+            JOptionPane.showMessageDialog(this,
+                    "Account created successfully!\n\n" +
+                    account.toString(),
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
 
             dispose();
             new LoginForm();
@@ -433,7 +522,9 @@ public class SignInFrame extends JFrame {
                 } else {
                     emailTextField.setBackground(Color.WHITE);
                 }
-            } else if (source == passwordTextField || source == confirmPasswordTextField) {
+            }
+
+            if (source == passwordTextField || source == confirmPasswordTextField) {
                 String password = new String(passwordTextField.getPassword());
                 String confirmPassword = new String(confirmPasswordTextField.getPassword());
 
@@ -447,13 +538,14 @@ public class SignInFrame extends JFrame {
                     confirmPasswordTextField.setBackground(Color.WHITE);
                     passwordTextField.setBackground(Color.WHITE);
                     PasswordStatusLabel.setText(" ");
-                    getRootPane().setDefaultButton(createButton);
                 } else {
                     passwordTextField.setBackground(Color.WHITE);
                     confirmPasswordTextField.setBackground(Color.WHITE);
                     PasswordStatusLabel.setText(" ");
                 }
-            } else if (source == idTextField) {
+            }
+
+            if (source == idTextField) {
                 String id = getId();
                 if (!id.isEmpty() && checkId(id)) {
                     idTextField.setBackground(new Color(255, 230, 230));
@@ -478,6 +570,8 @@ public class SignInFrame extends JFrame {
         idTextField.setText("");
         passwordTextField.setText("");
         confirmPasswordTextField.setText("");
+        classCombo.setSelectedIndex(0);
+        rollTextField.setText("");
 
         // Reset background colors
         emailTextField.setBackground(Color.WHITE);
@@ -495,8 +589,18 @@ public class SignInFrame extends JFrame {
         filePathLabel.setForeground(Color.GRAY);
         filePath = null;
 
-        // Hide create button
-        createButton.setVisible(false);
+        // Hide student fields if they were visible
+        if (studentFieldsVisible) {
+            mainPanel.remove(classLabel);
+            mainPanel.remove(classCombo);
+            mainPanel.remove(rollLabel);
+            mainPanel.remove(rollTextField);
+            studentFieldsVisible = false;
+            shiftComponentsUp();
+            mainPanel.revalidate();
+            mainPanel.repaint();
+            pack();
+        }
     }
 
     private boolean checkId(String id) {
@@ -526,6 +630,16 @@ public class SignInFrame extends JFrame {
     }
     private String getStatus() {
         return statusCombo.getSelectedItem().toString().trim();
+    }
+    private String getClassNo() {
+        return classCombo.getSelectedItem().toString();
+    }
+    private int getRoll() {
+        try {
+            return Integer.parseInt(rollTextField.getText().trim());
+        } catch (NumberFormatException e) {
+            return  -1;
+        }
     }
 
     public static Map<String, Account> getAccounts() {
