@@ -3,15 +3,17 @@ import java.util.Date;
 public class Account {
 
     private final String ID;
-    private final String password;
+    private String password;
     private final String email;
     private final String firstName;
     private final String lastName;
     private final String gender;
     private final String dob;
     private final Date date;
+    private final String department;
+    private final String status;
 
-    public Account(String id, String password,  String email, String firstName, String lastName,  String gender, String dob) {
+    public Account(String id, String password,  String email, String firstName, String lastName,  String gender, String dob, String department, String status) {
         this.ID = id;
         this.password = password;
         this.email = email;
@@ -19,6 +21,8 @@ public class Account {
         this.lastName = lastName;
         this.gender = gender;
         this.dob = dob;
+        this.department = department;
+        this.status = status;
         this.date = new Date();
     }
 
@@ -46,6 +50,12 @@ public class Account {
     public Date getDate() {
         return date;
     }
+    public String getDepartment() {
+        return department;
+    }
+    public String getStatus() {
+        return status;
+    }
     public String toString() {
         return String.format("""
                         ID: %s
@@ -53,7 +63,9 @@ public class Account {
                         Email: %s
                         Date of Birth: %s
                         Gender: %s
+                        Status: %s
+                        Department : %s
                         Date: %s""",
-                ID, firstName, lastName, email, dob, gender, date.toString());
+                ID, firstName, lastName, email, dob, gender, status, department, date.toString());
     }
 }
