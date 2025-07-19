@@ -48,7 +48,7 @@ public class Main {
         accounts.put(t20.getID(), t20);
 
 
-        Account s1 = new StudentAccount("S001", "pass123", "john1@mail.com", "John", "Doe", "Male", "2002-01-01", "1st Year", 1, "CSE", "Student", 3.8);
+        Account s1 = new StudentAccount("S001", "pass123", "john1@mail.com", "John", "Doe", "Male", "2002-01-01", "1st Year", 1, "CSE", "Student", .8);
         Account s2 = new StudentAccount("S002", "pass456", "jane2@mail.com", "Jane", "Smith", "Female", "2001-05-12", "2nd Year", 2, "EEE", "Student", 3.6);
         Account s3 = new StudentAccount("S003", "pass789", "alex3@mail.com", "Alex", "Johnson", "Male", "2000-11-23", "3rd Year", 3, "BBA", "Student", 3.2);
         Account s4 = new StudentAccount("S004", "pass321", "emma4@mail.com", "Emma", "Williams", "Female", "2002-07-30", "1st Year", 1, "CSE", "Student", 3.9);
