@@ -193,8 +193,6 @@ public class LoginForm extends JFrame {
         });
     }
 
-
-
     private boolean validForm() {
 
         if (idField.getText().equals(ID_PLACE_HOLDER) || String.valueOf(passwordField.getPassword()).equals(PASSWORD_PLACE_HOLDER)) {
