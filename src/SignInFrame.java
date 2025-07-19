@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class SignInFrame extends JFrame {
-    private static final Map<String, Account> accounts = new HashMap<>();
+    // Remove the static local accounts map - we'll use Main.getAccounts() instead
+    private Map<String, Account> accounts = new HashMap<>();
 
     private Account account;
     private JLabel PasswordStatusLabel, mainTitleLabel, titleLabel, accountLabel, firstNameLabel, lastNameLabel, idLabel, idStatusLabel,
@@ -49,6 +50,8 @@ public class SignInFrame extends JFrame {
     };
 
     public SignInFrame() {
+        // Get reference to the main accounts map
+        this.accounts = Main.getAccounts();
 
         initializeFrame();
         createComponents();
@@ -296,8 +299,6 @@ public class SignInFrame extends JFrame {
         pack();
     }
 
-
-
     private void shiftComponentsDown() {
         // When student fields are added at rows 6-7, shift everything else down by 2 rows
         Component[] components = mainPanel.getComponents();
@@ -507,13 +508,15 @@ public class SignInFrame extends JFrame {
             if (getStatus().equals("Teacher")) {
                 account = new TeacherAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getDepartment(), getStatus());
             } else if (getStatus().equals("Student")) {
-                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getClassNo(), getRoll(), getDepartment(), getStatus());
+                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getClassNo(), getRoll(), getDepartment(), getStatus(), 0.0);
             }
+
+            // Add to the main accounts map instead of local map
             accounts.put(getId(), account);
 
             JOptionPane.showMessageDialog(this,
                     "Account created successfully!\n\n" +
-                    accounts.get(getId()).toString(),
+                            account.toString(),
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -602,6 +605,7 @@ public class SignInFrame extends JFrame {
         monthCombo.setSelectedIndex(0);
         yearCombo.setSelectedIndex(0);
         statusCombo.setSelectedIndex(0);
+        departmentCombo.setSelectedIndex(0);
         filePathLabel.setText(DEFAULT_FILE_PATH);
         filePathLabel.setForeground(Color.GRAY);
         filePath = null;

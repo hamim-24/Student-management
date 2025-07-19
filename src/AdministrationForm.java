@@ -48,8 +48,8 @@ public class AdministrationForm extends JFrame {
         });
 
         teacherButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Teacher List functionality not implemented yet.", 
-                "Info", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+            new TeacherList(); // Now properly implemented
         });
 
         backButton.addActionListener(e -> {

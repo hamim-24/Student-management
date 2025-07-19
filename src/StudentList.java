@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -11,16 +9,26 @@ public class StudentList extends JFrame {
     private JTable studentTable;
     private DefaultTableModel tableModel;
     private DefaultTableModel allStudentsModel;
-    private JTextField nameField, emailField, ageField, majorField, gpaField;
+    private JTextField nameField, emailField, dobField, gpaField;
     private JComboBox<String> classComboBox;
-    private JComboBox<String> departmentComboBox;
+    private JComboBox<String> departmentComboBox, updateDepartmentCombo;
     private JComboBox<String> classFilterComboBox;
+
+    // New filter components
+    private JTextField rollFilterField, idFilterField, cgpaFilterField;
+    private JButton clearFiltersButton;
+
     private JButton updateButton, deleteButton, clearButton, backButton;
     private int selectedRow = -1;
+
+    static int totalStudents = 0;
+    private int filteredStudentCount = 0;
+    private JLabel filteredCountLabel;
 
     Map<String, Account> accounts = new HashMap<>();
 
     public StudentList() {
+
         this.accounts = Main.getAccounts();
 
         initializeComponents();
@@ -30,7 +38,7 @@ public class StudentList extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Student Management System");
-        setSize(1200, 700); // Increased size to accommodate input fields
+        setSize(1400, 700); // Increased width to accommodate new filters
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -53,6 +61,9 @@ public class StudentList extends JFrame {
                 return false;
             }
         };
+        
+        // Initialize filtered count label
+        filteredCountLabel = new JLabel("Students: 0 / 0 (filtered/total)");
 
         studentTable = new JTable(tableModel);
         studentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -68,8 +79,7 @@ public class StudentList extends JFrame {
         // Create input fields
         nameField = new JTextField(20);
         emailField = new JTextField(20);
-        ageField = new JTextField(20);
-        majorField = new JTextField(20);
+        dobField = new JTextField(20);
         gpaField = new JTextField(20);
 
         // Create class combo box for adding students
@@ -85,6 +95,35 @@ public class StudentList extends JFrame {
         String[] departmentFilters = SignInFrame.departments;
         departmentComboBox = new JComboBox<>(departmentFilters);
         departmentComboBox.addActionListener(e -> filterStudents());
+        updateDepartmentCombo = new JComboBox<>(departmentFilters);
+
+        // Initialize new filter components
+        rollFilterField = new JTextField(10);
+        rollFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterStudents();
+            }
+        });
+
+        idFilterField = new JTextField(10);
+        idFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterStudents();
+            }
+        });
+
+        cgpaFilterField = new JTextField(10);
+        cgpaFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterStudents();
+            }
+        });
+
+        clearFiltersButton = new JButton("Clear Filters");
+        clearFiltersButton.setBackground(new Color(149, 165, 166));
+        clearFiltersButton.setForeground(Color.WHITE);
+        clearFiltersButton.setOpaque(true);
+        clearFiltersButton.setBorderPainted(false);
 
         // Create buttons
         updateButton = new JButton("Update Student");
@@ -125,15 +164,9 @@ public class StudentList extends JFrame {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        // Filter panel
-        JPanel filterPanel = new JPanel(new GridLayout(2, 2, 10, 5));
-        filterPanel.add(new JLabel("Year:"));
-        filterPanel.add(classFilterComboBox);
-        filterPanel.add(new JLabel("Department:"));
-        filterPanel.add(departmentComboBox);
-        filterPanel.setBorder(BorderFactory.createTitledBorder("Filters"));
-
-        topPanel.add(filterPanel, BorderLayout.WEST);
+        // Enhanced filter panel with new filters
+        JPanel filterPanel = createEnhancedFilterPanel();
+        topPanel.add(filterPanel, BorderLayout.CENTER);
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
@@ -143,11 +176,11 @@ public class StudentList extends JFrame {
         // Table panel
         JScrollPane scrollPane = new JScrollPane(studentTable);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Student List"));
-        scrollPane.setPreferredSize(new Dimension(800, 400));
+        scrollPane.setPreferredSize(new Dimension(900, 400)); // Adjusted width
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Fixed: Add input form panel to the right
+        // Add input form panel to the right
         JPanel inputPanel = createInputPanel();
         centerPanel.add(inputPanel, BorderLayout.EAST);
 
@@ -160,7 +193,51 @@ public class StudentList extends JFrame {
         add(mainPanel);
     }
 
-    // Fixed: Create input panel that was missing
+    private JPanel createEnhancedFilterPanel() {
+        JPanel filterPanel = new JPanel(new GridBagLayout());
+        filterPanel.setBorder(BorderFactory.createTitledBorder("Filters"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // First row - existing filters
+        gbc.gridx = 0; gbc.gridy = 0;
+        filterPanel.add(new JLabel("Year:"), gbc);
+        gbc.gridx = 1;
+        filterPanel.add(classFilterComboBox, gbc);
+
+        gbc.gridx = 2;
+        filterPanel.add(new JLabel("Department:"), gbc);
+        gbc.gridx = 3;
+        filterPanel.add(departmentComboBox, gbc);
+
+        // Second row - new filters
+        gbc.gridx = 4;
+        filterPanel.add(new JLabel("Roll:"), gbc);
+        gbc.gridx = 5;
+        filterPanel.add(rollFilterField, gbc);
+
+        gbc.gridx = 6;
+        filterPanel.add(new JLabel("Student ID:"), gbc);
+        gbc.gridx = 7;
+        filterPanel.add(idFilterField, gbc);
+
+        gbc.gridx = 8;
+        filterPanel.add(new JLabel("Min CGPA:"), gbc);
+        gbc.gridx = 9;
+        filterPanel.add(cgpaFilterField, gbc);
+
+        // Clear filters button
+        gbc.gridx = 10; gbc.gridheight = 2;
+        //gbc.fill = GridBagConstraints.VERTICAL;
+        filterPanel.add(clearFiltersButton, gbc);
+
+        gbc.gridx = 11; gbc.gridheight = 1;
+        filterPanel.add(filteredCountLabel, gbc);
+
+        return filterPanel;
+    }
+
     private JPanel createInputPanel() {
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBorder(BorderFactory.createTitledBorder("Edit Student Information"));
@@ -197,8 +274,8 @@ public class StudentList extends JFrame {
         gbc.gridx = 0; gbc.gridy = 3;
         inputPanel.add(new JLabel("Date of Birth:"), gbc);
         gbc.gridx = 1;
-        ageField.setPreferredSize(new Dimension(180, 25));
-        inputPanel.add(ageField, gbc);
+        dobField.setPreferredSize(new Dimension(180, 25));
+        inputPanel.add(dobField, gbc);
 
         // Academic Information Section
         JLabel academicLabel = new JLabel("Academic Information");
@@ -214,8 +291,8 @@ public class StudentList extends JFrame {
         gbc.gridx = 0; gbc.gridy = 5;
         inputPanel.add(new JLabel("Department:"), gbc);
         gbc.gridx = 1;
-        majorField.setPreferredSize(new Dimension(180, 25));
-        inputPanel.add(majorField, gbc);
+        updateDepartmentCombo.setPreferredSize(new Dimension(180, 25));
+        inputPanel.add(updateDepartmentCombo, gbc);
 
         // Class field
         gbc.gridx = 0; gbc.gridy = 6;
@@ -256,9 +333,22 @@ public class StudentList extends JFrame {
             dispose();
             new AdministrationForm();
         });
+
+        // Clear filters button action
+        clearFiltersButton.addActionListener(e -> clearAllFilters());
+    }
+
+    private void clearAllFilters() {
+        classFilterComboBox.setSelectedIndex(0);
+        departmentComboBox.setSelectedIndex(0);
+        rollFilterField.setText("");
+        idFilterField.setText("");
+        cgpaFilterField.setText("");
+        filterStudents();
     }
 
     private void updateStudent() {
+        getRootPane().setDefaultButton(updateButton);
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a student to update.",
                     "Selection Error", JOptionPane.WARNING_MESSAGE);
@@ -287,11 +377,12 @@ public class StudentList extends JFrame {
                             firstName,
                             lastName,
                             student.getGender(),
-                            ageField.getText().trim(), // DOB
+                            dobField.getText().trim(), // DOB
                             classComboBox.getSelectedItem().toString(),
                             student.getRoll(),
-                            majorField.getText().trim(), // Department
-                            student.getStatus()
+                            updateDepartmentCombo.getSelectedItem().toString(), // Department
+                            student.getStatus(),
+                            Double.parseDouble(gpaField.getText().trim())
                     );
 
                     // Update the accounts map
@@ -341,8 +432,8 @@ public class StudentList extends JFrame {
     private void clearFields() {
         nameField.setText("");
         emailField.setText("");
-        ageField.setText("");
-        majorField.setText("");
+        dobField.setText("");
+        updateDepartmentCombo.setSelectedIndex(0);
         gpaField.setText("");
         classComboBox.setSelectedIndex(0);
         studentTable.clearSelection();
@@ -353,8 +444,8 @@ public class StudentList extends JFrame {
         if (selectedRow != -1) {
             nameField.setText(tableModel.getValueAt(selectedRow, 1).toString());
             emailField.setText(tableModel.getValueAt(selectedRow, 3).toString());
-            ageField.setText(tableModel.getValueAt(selectedRow, 4).toString()); // DOB
-            majorField.setText(tableModel.getValueAt(selectedRow, 5).toString()); // Department
+            dobField.setText(tableModel.getValueAt(selectedRow, 4).toString()); // DOB
+            updateDepartmentCombo.setSelectedItem(tableModel.getValueAt(selectedRow, 5).toString()); // Department
             gpaField.setText(tableModel.getValueAt(selectedRow, 6).toString()); // GPA
             classComboBox.setSelectedItem(tableModel.getValueAt(selectedRow, 7).toString()); // Class
         }
@@ -363,8 +454,8 @@ public class StudentList extends JFrame {
     private boolean validateFields() {
         if (nameField.getText().trim().isEmpty() ||
                 emailField.getText().trim().isEmpty() ||
-                ageField.getText().trim().isEmpty() ||
-                majorField.getText().trim().isEmpty() ||
+                dobField.getText().trim().isEmpty() ||
+                updateDepartmentCombo.getSelectedItem().equals("Select") ||
                 gpaField.getText().trim().isEmpty()) {
 
             JOptionPane.showMessageDialog(this, "Please fill in all fields.",
@@ -388,30 +479,64 @@ public class StudentList extends JFrame {
         return true;
     }
 
-    // Fixed: Simplified filtering logic
+    // Enhanced filtering logic with new filters
     private void filterStudents() {
         String selectedClass = classFilterComboBox.getSelectedItem().toString();
         String selectedDept = departmentComboBox.getSelectedItem().toString();
+        String rollFilter = rollFilterField.getText().trim();
+        String idFilter = idFilterField.getText().trim().toLowerCase();
+        String cgpaFilter = cgpaFilterField.getText().trim();
 
         tableModel.setRowCount(0);
+        
+        // Reset filtered student count
+        filteredStudentCount = 0;
 
         for (int i = 0; i < allStudentsModel.getRowCount(); i++) {
             String studentClass = allStudentsModel.getValueAt(i, 7) != null ?
-                    allStudentsModel.getValueAt(i, 7).toString() : ""; // Class is now column 7
+                    allStudentsModel.getValueAt(i, 7).toString() : "";
             String studentDept = allStudentsModel.getValueAt(i, 5) != null ?
-                    allStudentsModel.getValueAt(i, 5).toString() : ""; // Department is now column 5
+                    allStudentsModel.getValueAt(i, 5).toString() : "";
+            String studentRoll = allStudentsModel.getValueAt(i, 0) != null ?
+                    allStudentsModel.getValueAt(i, 0).toString() : "";
+            String studentId = allStudentsModel.getValueAt(i, 2) != null ?
+                    allStudentsModel.getValueAt(i, 2).toString().toLowerCase() : "";
+            String studentGpa = allStudentsModel.getValueAt(i, 6) != null ?
+                    allStudentsModel.getValueAt(i, 6).toString() : "";
 
+            // Existing filters
             boolean classMatch = selectedClass.equals("Select") || selectedClass.equals(studentClass);
             boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(studentDept);
 
-            if (classMatch && deptMatch) {
+            // New filters
+            boolean rollMatch = rollFilter.isEmpty() || studentRoll.contains(rollFilter);
+            boolean idMatch = idFilter.isEmpty() || studentId.contains(idFilter);
+
+            boolean cgpaMatch = true;
+            if (!cgpaFilter.isEmpty()) {
+                try {
+                    double filterCgpa = Double.parseDouble(cgpaFilter);
+                    double studentCgpaValue = Double.parseDouble(studentGpa);
+                    cgpaMatch = studentCgpaValue >= filterCgpa;
+                } catch (NumberFormatException e) {
+                    cgpaMatch = true; // If invalid number, don't filter
+                }
+            }
+
+            if (classMatch && deptMatch && rollMatch && idMatch && cgpaMatch) {
                 Vector<Object> rowData = new Vector<>();
                 for (int j = 0; j < allStudentsModel.getColumnCount(); j++) {
                     rowData.add(allStudentsModel.getValueAt(i, j));
                 }
                 tableModel.addRow(rowData);
+                
+                // Increment filtered student count
+                filteredStudentCount++;
             }
         }
+        
+        // Update filtered count label
+        filteredCountLabel.setText("Students: " + filteredStudentCount + " / " + totalStudents + " (filtered/total)");
 
         studentTable.clearSelection();
         selectedRow = -1;
@@ -420,8 +545,10 @@ public class StudentList extends JFrame {
 
     private void loadStudentsFromAccounts() {
         allStudentsModel.setRowCount(0);
+        totalStudents = 0;
+        
         for (Account acc : accounts.values()) {
-            if (acc instanceof StudentAccount) {
+            if (acc.getStatus().equals("Student")) {
                 StudentAccount student = (StudentAccount) acc;
                 Vector<Object> row = new Vector<>();
                 row.add(student.getRoll());
@@ -433,12 +560,10 @@ public class StudentList extends JFrame {
                 row.add(student.getCg());
                 row.add(student.getClassNo());
                 allStudentsModel.addRow(row);
+                totalStudents++;
             }
         }
         filterStudents();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new StudentList());
-    }
 }
