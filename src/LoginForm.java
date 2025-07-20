@@ -182,7 +182,15 @@ public class LoginForm extends JFrame {
                 } else if (!account.getPassword().equals(password)) {
                     JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Login Successful!!\n\n" + account, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Login Successful!!\n\n", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+
+                    if (account.getStatus().equals("Student")) {
+                        new StudentPanel(account);
+                    }
+                    else if (account.getStatus().equals("Teacher")) {
+                        new TeacherPanel(account);
+                    }
                 }
             }
         });

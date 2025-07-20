@@ -65,7 +65,6 @@ public class SignInFrame extends JFrame {
     private void initializeFrame() {
 
         setTitle("Sign In");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setSize(800, 600);
         setLocationRelativeTo(null);

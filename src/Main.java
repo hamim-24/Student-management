@@ -1,31 +1,79 @@
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-    static Map<String, Account> accounts = new HashMap<>();
+    private static final Map<String, Account> accounts = new HashMap<>();
+
+    public static Map<String, Account> getAccounts() {
+        return accounts;
+    }
 
     public static void main(String[] args) {
+        StudentAccount s1 = new StudentAccount("S001", "pass1", "s1@mail.com", "John", "Doe", "Male", "2000-01-01", "10A", 1, "CSE", "Student", 3.5);
+        StudentAccount s2 = new StudentAccount("S002", "pass2", "s2@mail.com", "Jane", "Smith", "Female", "2000-02-02", "10A", 2, "CSE", "Student", 3.7);
+        StudentAccount s3 = new StudentAccount("S003", "pass3", "s3@mail.com", "Mike", "Johnson", "Male", "2000-03-03", "10B", 3, "EEE", "Student", 2.9);
+        StudentAccount s4 = new StudentAccount("S004", "pass4", "s4@mail.com", "Emily", "Davis", "Female", "2000-04-04", "10C", 4, "CSE", "Student", 3.2);
+        StudentAccount s5 = new StudentAccount("S005", "pass5", "s5@mail.com", "Chris", "Brown", "Male", "2000-05-05", "10D", 5, "BBA", "Student", 3.0);
+        StudentAccount s6 = new StudentAccount("S006", "pass6", "s6@mail.com", "Anna", "Taylor", "Female", "2000-06-06", "10E", 6, "CSE", "Student", 2.4);
+        StudentAccount s7 = new StudentAccount("S007", "pass7", "s7@mail.com", "Robert", "Wilson", "Male", "2000-07-07", "10F", 7, "CSE", "Student", 3.9);
+        StudentAccount s8 = new StudentAccount("S008", "pass8", "s8@mail.com", "Sophia", "Martinez", "Female", "2000-08-08", "10G", 8, "EEE", "Student", 2.8);
+        StudentAccount s9 = new StudentAccount("S009", "pass9", "s9@mail.com", "David", "Anderson", "Male", "2000-09-09", "10H", 9, "CSE", "Student", 3.6);
+        StudentAccount s10 = new StudentAccount("S010", "pass10", "s10@mail.com", "Mia", "Thomas", "Female", "2000-10-10", "10I", 10, "CSE", "Student", 2.5);
+        StudentAccount s11 = new StudentAccount("S011", "pass11", "s11@mail.com", "Ethan", "Jackson", "Male", "2000-11-11", "10J", 11, "BBA", "Student", 3.3);
+        StudentAccount s12 = new StudentAccount("S012", "pass12", "s12@mail.com", "Ava", "White", "Female", "2000-12-12", "10A", 12, "CSE", "Student", 3.8);
+        StudentAccount s13 = new StudentAccount("S013", "pass13", "s13@mail.com", "Liam", "Harris", "Male", "2000-01-13", "10B", 13, "EEE", "Student", 2.6);
+        StudentAccount s14 = new StudentAccount("S014", "pass14", "s14@mail.com", "Olivia", "Martin", "Female", "2000-02-14", "10C", 14, "CSE", "Student", 3.1);
+        StudentAccount s15 = new StudentAccount("S015", "pass15", "s15@mail.com", "Noah", "Thompson", "Male", "2000-03-15", "10D", 15, "CSE", "Student", 2.7);
+        StudentAccount s16 = new StudentAccount("S016", "pass16", "s16@mail.com", "Isabella", "Garcia", "Female", "2000-04-16", "10E", 16, "BBA", "Student", 3.4);
+        StudentAccount s17 = new StudentAccount("S017", "pass17", "s17@mail.com", "Lucas", "Martinez", "Male", "2000-05-17", "10F", 17, "CSE", "Student", 3.0);
+        StudentAccount s18 = new StudentAccount("S018", "pass18", "s18@mail.com", "Charlotte", "Rodriguez", "Female", "2000-06-18", "10G", 18, "EEE", "Student", 2.3);
+        StudentAccount s19 = new StudentAccount("S019", "pass19", "s19@mail.com", "James", "Lee", "Male", "2000-07-19", "10H", 19, "CSE", "Student", 3.6);
+        StudentAccount s20 = new StudentAccount("S020", "pass20", "s20@mail.com", "Amelia", "Walker", "Female", "2000-08-20", "10I", 20, "CSE", "Student", 2.2);
 
-        Account t1 = new TeacherAccount("T001", "teach123", "alice@mail.com", "Alice", "Brown", "Female", "1980-05-12", "CSE", "Teacher");
-        Account t2 = new TeacherAccount("T002", "pass234", "bob@mail.com", "Bob", "Smith", "Male", "1975-08-20", "EEE", "Teacher");
-        Account t3 = new TeacherAccount("T003", "pwd321", "carol@mail.com", "Carol", "Johnson", "Female", "1983-03-15", "BBA", "Teacher");
-        Account t4 = new TeacherAccount("T004", "secure444", "dan@mail.com", "Dan", "Williams", "Male", "1988-12-01", "Civil", "Teacher");
-        Account t5 = new TeacherAccount("T005", "tpass555", "eve@mail.com", "Eve", "Davis", "Female", "1979-10-28", "CSE", "Teacher");
-        Account t6 = new TeacherAccount("T006", "login666", "frank@mail.com", "Frank", "Garcia", "Male", "1982-07-07", "EEE", "Teacher");
-        Account t7 = new TeacherAccount("T007", "safe777", "grace@mail.com", "Grace", "Martinez", "Female", "1985-11-14", "BBA", "Teacher");
-        Account t8 = new TeacherAccount("T008", "pass888", "henry@mail.com", "Henry", "Rodriguez", "Male", "1981-04-23", "Civil", "Teacher");
-        Account t9 = new TeacherAccount("T009", "alpha999", "irene@mail.com", "Irene", "Lopez", "Female", "1978-01-30", "CSE", "Teacher");
-        Account t10 = new TeacherAccount("T010", "omega000", "jack@mail.com", "Jack", "Gonzalez", "Male", "1986-06-19", "EEE", "Teacher");
-        Account t11 = new TeacherAccount("T011", "teach111", "karen@mail.com", "Karen", "Wilson", "Female", "1976-02-12", "BBA", "Teacher");
-        Account t12 = new TeacherAccount("T012", "word222", "leo@mail.com", "Leo", "Anderson", "Male", "1977-09-01", "Civil", "Teacher");
-        Account t13 = new TeacherAccount("T013", "secure333", "mia@mail.com", "Mia", "Thomas", "Female", "1984-08-18", "CSE", "Teacher");
-        Account t14 = new TeacherAccount("T014", "code444", "nick@mail.com", "Nick", "Taylor", "Male", "1980-10-06", "EEE", "Teacher");
-        Account t15 = new TeacherAccount("T015", "admin555", "olivia@mail.com", "Olivia", "Moore", "Female", "1989-03-27", "BBA", "Teacher");
-        Account t16 = new TeacherAccount("T016", "login666", "peter@mail.com", "Peter", "Jackson", "Male", "1974-12-15", "Civil", "Teacher");
-        Account t17 = new TeacherAccount("T017", "qwerty777", "queen@mail.com", "Queen", "Martin", "Female", "1979-06-11", "CSE", "Teacher");
-        Account t18 = new TeacherAccount("T018", "zzpass888", "rob@mail.com", "Rob", "Lee", "Male", "1986-01-09", "EEE", "Teacher");
-        Account t19 = new TeacherAccount("T019", "strong999", "sara@mail.com", "Sara", "Perez", "Female", "1982-05-04", "BBA", "Teacher");
-        Account t20 = new TeacherAccount("T020", "login000", "tom@mail.com", "Tom", "White", "Male", "1975-11-22", "Civil", "Teacher");
+
+        accounts.put(s1.getID(), s1);
+        accounts.put(s2.getID(), s2);
+        accounts.put(s3.getID(), s3);
+        accounts.put(s4.getID(), s4);
+        accounts.put(s5.getID(), s5);
+        accounts.put(s6.getID(), s6);
+        accounts.put(s7.getID(), s7);
+        accounts.put(s8.getID(), s8);
+        accounts.put(s9.getID(), s9);
+        accounts.put(s10.getID(), s10);
+        accounts.put(s11.getID(), s11);
+        accounts.put(s12.getID(), s12);
+        accounts.put(s13.getID(), s13);
+        accounts.put(s14.getID(), s14);
+        accounts.put(s15.getID(), s15);
+        accounts.put(s16.getID(), s16);
+        accounts.put(s17.getID(), s17);
+        accounts.put(s18.getID(), s18);
+        accounts.put(s19.getID(), s19);
+        accounts.put(s20.getID(), s20);
+
+        TeacherAccount t1 = new TeacherAccount("T001", "pass1", "t1@mail.com", "Alan", "Turing", "Male", "1970-01-01",  "CSE", "Teacher");
+        TeacherAccount t2 = new TeacherAccount("T002", "pass2", "t2@mail.com", "Ada", "Lovelace", "Female", "1975-02-02",  "CSE", "Teacher");
+        TeacherAccount t3 = new TeacherAccount("T003", "pass3", "t3@mail.com", "Grace", "Hopper", "Female", "1980-03-03",  "EEE", "Teacher");
+        TeacherAccount t4 = new TeacherAccount("T004", "pass4", "t4@mail.com", "James", "Gosling", "Male", "1978-04-04", "CSE", "Teacher");
+        TeacherAccount t5 = new TeacherAccount("T005", "pass5", "t5@mail.com", "Dennis", "Ritchie", "Male", "1972-05-05", "CSE", "Teacher");
+        TeacherAccount t6 = new TeacherAccount("T006", "pass6", "t6@mail.com", "Barbara", "Liskov", "Female", "1976-06-06", "BBA", "Teacher");
+        TeacherAccount t7 = new TeacherAccount("T007", "pass7", "t7@mail.com", "Brian", "Kernighan", "Male", "1974-07-07",  "CSE", "Teacher");
+        TeacherAccount t8 = new TeacherAccount("T008", "pass8", "t8@mail.com", "Margaret", "Hamilton", "Female", "1971-08-08", "EEE", "Teacher");
+        TeacherAccount t9 = new TeacherAccount("T009", "pass9", "t9@mail.com", "Ken", "Thompson", "Male", "1982-09-09", "CSE", "Teacher");
+        TeacherAccount t10 = new TeacherAccount("T010", "pass10", "t10@mail.com", "Linus", "Torvalds", "Male", "1985-10-10",  "CSE", "Teacher");
+        TeacherAccount t11 = new TeacherAccount("T011", "pass11", "t11@mail.com", "Tim", "Berners-Lee", "Male", "1960-11-11", "BBA", "Teacher");
+        TeacherAccount t12 = new TeacherAccount("T012", "pass12", "t12@mail.com", "Sheryl", "Sandberg", "Female", "1979-12-12", "CSE", "Teacher");
+        TeacherAccount t13 = new TeacherAccount("T013", "pass13", "t13@mail.com", "Susan", "Wojcicki", "Female", "1981-01-13", "EEE", "Teacher");
+        TeacherAccount t14 = new TeacherAccount("T014", "pass14", "t14@mail.com", "Jeff", "Dean", "Male", "1983-02-14", "CSE", "Teacher");
+        TeacherAccount t15 = new TeacherAccount("T015", "pass15", "t15@mail.com", "Marissa", "Mayer", "Female", "1984-03-15", "CSE", "Teacher");
+        TeacherAccount t16 = new TeacherAccount("T016", "pass16", "t16@mail.com", "Satya", "Nadella", "Male", "1986-04-16", "BBA", "Teacher");
+        TeacherAccount t17 = new TeacherAccount("T017", "pass17", "t17@mail.com", "Sundar", "Pichai", "Male", "1987-05-17", "CSE", "Teacher");
+        TeacherAccount t18 = new TeacherAccount("T018", "pass18", "t18@mail.com", "Ginni", "Rometty", "Female", "1973-06-18",  "EEE", "Teacher");
+        TeacherAccount t19 = new TeacherAccount("T019", "pass19", "t19@mail.com", "Steve", "Wozniak", "Male", "1988-07-19", "CSE", "Teacher");
+        TeacherAccount t20 = new TeacherAccount("T020", "pass20", "t20@mail.com", "Mark", "Zuckerberg", "Male", "1989-08-20", "CSE", "Teacher");
+
         accounts.put(t1.getID(), t1);
         accounts.put(t2.getID(), t2);
         accounts.put(t3.getID(), t3);
@@ -46,56 +94,6 @@ public class Main {
         accounts.put(t18.getID(), t18);
         accounts.put(t19.getID(), t19);
         accounts.put(t20.getID(), t20);
-
-
-        Account s1 = new StudentAccount("S001", "pass123", "john1@mail.com", "John", "Doe", "Male", "2002-01-01", "1st Year", 1, "CSE", "Student", .8);
-        Account s2 = new StudentAccount("S002", "pass456", "jane2@mail.com", "Jane", "Smith", "Female", "2001-05-12", "2nd Year", 2, "EEE", "Student", 3.6);
-        Account s3 = new StudentAccount("S003", "pass789", "alex3@mail.com", "Alex", "Johnson", "Male", "2000-11-23", "3rd Year", 3, "BBA", "Student", 3.2);
-        Account s4 = new StudentAccount("S004", "pass321", "emma4@mail.com", "Emma", "Williams", "Female", "2002-07-30", "1st Year", 1, "CSE", "Student", 3.9);
-        Account s5 = new StudentAccount("S005", "pass654", "liam5@mail.com", "Liam", "Brown", "Male", "2001-03-15", "2nd Year", 2, "EEE", "Student", 3.4);
-        Account s6 = new StudentAccount("S006", "pass987", "olivia6@mail.com", "Olivia", "Jones", "Female", "2000-09-18", "3rd Year", 3, "BBA", "Student", 3.7);
-        Account s7 = new StudentAccount("S007", "pass147", "noah7@mail.com", "Noah", "Garcia", "Male", "2002-02-25", "1st Year", 1, "CSE", "Student", 3.5);
-        Account s8 = new StudentAccount("S008", "pass258", "ava8@mail.com", "Ava", "Martinez", "Female", "2001-06-11", "2nd Year", 2, "EEE", "Student", 3.3);
-        Account s9 = new StudentAccount("S009", "pass369", "will9@mail.com", "William", "Rodriguez", "Male", "2000-12-19", "3rd Year", 3, "BBA", "Student", 3.1);
-        Account s10 = new StudentAccount("S010", "pass159", "mia10@mail.com", "Mia", "Hernandez", "Female", "2002-04-03", "1st Year", 1, "CSE", "Student", 3.85);
-        Account s11 = new StudentAccount("S011", "pass753", "lucas11@mail.com", "Lucas", "Lopez", "Male", "2001-08-27", "2nd Year", 2, "EEE", "Student", 3.67);
-        Account s12 = new StudentAccount("S012", "pass852", "isabella12@mail.com", "Isabella", "Gonzalez", "Female", "2000-10-14", "3rd Year", 3, "BBA", "Student", 3.21);
-        Account s13 = new StudentAccount("S013", "pass951", "mason13@mail.com", "Mason", "Wilson", "Male", "2002-06-21", "1st Year", 1, "CSE", "Student", 3.95);
-        Account s14 = new StudentAccount("S014", "pass357", "sophia14@mail.com", "Sophia", "Anderson", "Female", "2001-01-17", "2nd Year", 2, "EEE", "Student", 3.43);
-        Account s15 = new StudentAccount("S015", "pass456", "logan15@mail.com", "Logan", "Thomas", "Male", "2000-05-29", "3rd Year", 3, "BBA", "Student", 3.29);
-        Account s16 = new StudentAccount("S016", "pass654", "charlotte16@mail.com", "Charlotte", "Taylor", "Female", "2002-09-13", "1st Year", 1, "CSE", "Student", 3.77);
-        Account s17 = new StudentAccount("S017", "pass852", "elijah17@mail.com", "Elijah", "Moore", "Male", "2001-12-07", "2nd Year", 2, "EEE", "Student", 3.62);
-        Account s18 = new StudentAccount("S018", "pass159", "amelia18@mail.com", "Amelia", "Jackson", "Female", "2000-03-22", "3rd Year", 3, "BBA", "Student", 3.12);
-        Account s19 = new StudentAccount("S019", "pass357", "james19@mail.com", "James", "Martin", "Male", "2002-11-05", "1st Year", 1, "CSE", "Student", 3.68);
-        Account s20 = new StudentAccount("S020", "pass753", "harper20@mail.com", "Harper", "Lee", "Female", "2001-02-16", "2nd Year", 2, "EEE", "Student", 3.58);
-
-        accounts.put("S001", s1);
-        accounts.put("S002", s2);
-        accounts.put("S003", s3);
-        accounts.put("S004", s4);
-        accounts.put("S005", s5);
-        accounts.put("S006", s6);
-        accounts.put("S007", s7);
-        accounts.put("S008", s8);
-        accounts.put("S009", s9);
-        accounts.put("S010", s10);
-        accounts.put("S011", s11);
-        accounts.put("S012", s12);
-        accounts.put("S013", s13);
-        accounts.put("S014", s14);
-        accounts.put("S015", s15);
-        accounts.put("S016", s16);
-        accounts.put("S017", s17);
-        accounts.put("S018", s18);
-        accounts.put("S019", s19);
-        accounts.put("S020", s20);
-
         new LoginForm();
     }
-
-
-    public static Map<String, Account> getAccounts() {
-        return accounts;
-    }
-
 }
