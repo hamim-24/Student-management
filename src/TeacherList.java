@@ -63,7 +63,18 @@ public class TeacherList extends JFrame {
         // Initialize filtered count label
         filteredCountLabel = new JLabel("Teachers: 0 / 0 (filtered/total)");
 
-        teacherTable = new JTable(tableModel);
+        teacherTable = new JTable(tableModel) {
+            @Override
+            public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (!isRowSelected(row)) {
+                    c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                } else {
+                    c.setBackground(new Color(184, 207, 229));
+                }
+                return c;
+            }
+        };
         teacherTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         teacherTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -73,39 +84,56 @@ public class TeacherList extends JFrame {
                 }
             }
         });
+        teacherTable.setRowHeight(24);
+        teacherTable.setFillsViewportHeight(true);
+        teacherTable.getTableHeader().setReorderingAllowed(false);
+        teacherTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         // Create input fields
         nameField = new JTextField(20);
+        nameField.setToolTipText("Enter full name (First Last)");
         emailField = new JTextField(20);
+        emailField.setToolTipText("Enter email address");
         dobField = new JTextField(20);
+        dobField.setToolTipText("Format: YYYY-MM-DD");
 
         // Create department combo boxes
         String[] departmentFilters = SignInFrame.departments;
         departmentComboBox = new JComboBox<>(departmentFilters);
+        departmentComboBox.setToolTipText("Select department");
         updateDepartmentCombo = new JComboBox<>(departmentFilters);
+        updateDepartmentCombo.setToolTipText("Select department");
 
         // Initialize filter components
         departmentFilterComboBox = new JComboBox<>(departmentFilters);
+        departmentFilterComboBox.setToolTipText("Filter by department");
         departmentFilterComboBox.addActionListener(e -> filterTeachers());
 
-        idFilterField = new JTextField(10);
+        idFilterField = new JTextField(20);
+        idFilterField.setToolTipText("Filter by teacher ID");
+        idFilterField.setPreferredSize(new Dimension(120, 25));
         idFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 filterTeachers();
             }
         });
 
-        clearFiltersButton = new JButton("Clear Filters");
+        clearFiltersButton = new JButton("Reset Filters");
         clearFiltersButton.setBackground(new Color(149, 165, 166));
         clearFiltersButton.setForeground(Color.WHITE);
         clearFiltersButton.setOpaque(true);
         clearFiltersButton.setBorderPainted(false);
+        clearFiltersButton.setToolTipText("Clear all filters");
 
         // Create buttons
         updateButton = new JButton("Update Teacher");
+        updateButton.setToolTipText("Update selected teacher");
         deleteButton = new JButton("Delete Teacher");
+        deleteButton.setToolTipText("Delete selected teacher");
         clearButton = new JButton("Clear Fields");
+        clearButton.setToolTipText("Clear input fields");
         backButton = new JButton("Back");
+        backButton.setToolTipText("Return to Administration Dashboard");
 
         // Set button colors
         updateButton.setBackground(new Color(52, 152, 219));
@@ -187,6 +215,8 @@ public class TeacherList extends JFrame {
         gbc.gridx = 2;
         filterPanel.add(new JLabel("Teacher ID:"), gbc);
         gbc.gridx = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
         filterPanel.add(idFilterField, gbc);
 
         // Clear filters button
