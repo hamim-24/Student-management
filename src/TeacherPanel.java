@@ -105,7 +105,7 @@ public class TeacherPanel extends JFrame {
                 qs.append("Exam Code: " + questionSet.getQuestionCode() + "\n\n");
                 int i = 1;
                 for (SingleQuestion SQ : questionSet.getSingleQuestions()) {
-                    qs.append(i + ". " + SQ.toString() + "\n");
+                    qs.append("  " + i + ". " + SQ.toString() + "\n");
                     i++;
                 }
                 JTextArea textArea = new JTextArea(qs.toString());
