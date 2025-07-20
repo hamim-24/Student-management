@@ -10,12 +10,13 @@ public class TeacherPanel extends JFrame {
     Question questionSet;
     Account account;
     private JPanel mainPanel;
+
     public TeacherPanel(Account account) {
         this.questionMap = Main.getQuestionMap();
         this.account = account;
 
         setTitle("Teacher Panel");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
 
@@ -97,7 +98,7 @@ public class TeacherPanel extends JFrame {
         searchExamButton.addActionListener(e -> {
             String searchExam = examSearchField.getText().trim();
             questionSet = questionMap.get(searchExam);
-            if(questionSet == null){
+            if (questionSet == null) {
                 JOptionPane.showMessageDialog(this, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 StringBuilder qs = new StringBuilder();
@@ -125,20 +126,24 @@ public class TeacherPanel extends JFrame {
         });
 
         examSearchField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { updateButtons(); }
-            public void removeUpdate(DocumentEvent e) { updateButtons(); }
-            public void changedUpdate(DocumentEvent e) { updateButtons(); }
+            public void insertUpdate(DocumentEvent e) {
+                updateButtons();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                updateButtons();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                updateButtons();
+            }
+
             private void updateButtons() {
                 String code = examSearchField.getText().trim();
-                if (!code.isEmpty()) {
-                    searchExamButton.setText("Search/View " + code + " Exam");
-                    publishExamButton.setText("Publish " + code + " Exam");
-                    publishResultButton.setText("Publish " + code + " Results");
-                } else {
-                    searchExamButton.setText("Search/View Exam");
-                    publishExamButton.setText("Publish Exam");
-                    publishResultButton.setText("Publish Results");
-                }
+                searchExamButton.setText("Search/View '" + code + "' Exam");
+                publishExamButton.setText("Publish '" + code + "' Exam");
+                publishResultButton.setText("Publish '" + code + "' Results");
+
                 // Add these lines to force UI refresh
                 mainPanel.revalidate();
                 mainPanel.repaint();
@@ -164,6 +169,7 @@ public class TeacherPanel extends JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(41, 128, 185));
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(52, 152, 219));
             }

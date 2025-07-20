@@ -35,6 +35,7 @@ public class TeacherList extends JFrame {
         loadTeachersFromAccounts();
 
         setTitle("Teacher Management System");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 700);
         setLocationRelativeTo(null);
         setVisible(true);
