@@ -37,8 +37,8 @@ public class StudentList extends JFrame {
         setupEventListeners();
         loadStudentsFromAccounts();
 
-        setTitle("Student Management System");
-        setSize(1400, 700); // Increased width to accommodate new filters
+        setTitle("Student List");
+        setSize(1200, 700); // Adjusted width for better fit
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -65,7 +65,18 @@ public class StudentList extends JFrame {
         // Initialize filtered count label
         filteredCountLabel = new JLabel("Students: 0 / 0 (filtered/total)");
 
-        studentTable = new JTable(tableModel);
+        studentTable = new JTable(tableModel) {
+            @Override
+            public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (!isRowSelected(row)) {
+                    c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                } else {
+                    c.setBackground(new Color(184, 207, 229));
+                }
+                return c;
+            }
+        };
         studentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         studentTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -75,6 +86,10 @@ public class StudentList extends JFrame {
                 }
             }
         });
+        studentTable.setRowHeight(24);
+        studentTable.setFillsViewportHeight(true);
+        studentTable.getTableHeader().setReorderingAllowed(false);
+        studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         // Set custom renderer to change background color for CGPA below 2.0
         studentTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -84,71 +99,92 @@ public class StudentList extends JFrame {
                 try {
                     double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
                     if (cgpa < 2.0) {
-                        c.setBackground(new Color(255, 102, 102)); // Light red
-                    } else {
-                        c.setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
+                        c.setBackground(new Color(255, 204, 204)); // Softer red
+                    } else if (!isSelected) {
+                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
                     }
                 } catch (Exception e) {
-                    c.setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
+                    if (!isSelected) {
+                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                    }
                 }
                 return c;
             }
         });
 
-        // Create input fields
+        // Create input fields with tooltips
         nameField = new JTextField(20);
+        nameField.setToolTipText("Enter full name (First Last)");
         emailField = new JTextField(20);
+        emailField.setToolTipText("Enter email address");
         dobField = new JTextField(20);
+        dobField.setToolTipText("Format: YYYY-MM-DD");
         gpaField = new JTextField(20);
+        gpaField.setToolTipText("GPA (0.0 - 4.0)");
 
         // Create class combo box for adding students
         String[] classes = SignInFrame.classes;
         classComboBox = new JComboBox<>(classes);
+        classComboBox.setToolTipText("Select class year");
 
         // Create class filter combo box
         String[] classFilters = SignInFrame.classes;
         classFilterComboBox = new JComboBox<>(classFilters);
+        classFilterComboBox.setToolTipText("Filter by class year");
         classFilterComboBox.addActionListener(e -> filterStudents());
 
         // Create department filter combo box
         String[] departmentFilters = SignInFrame.departments;
         departmentComboBox = new JComboBox<>(departmentFilters);
+        departmentComboBox.setToolTipText("Filter by department");
         departmentComboBox.addActionListener(e -> filterStudents());
         updateDepartmentCombo = new JComboBox<>(departmentFilters);
+        updateDepartmentCombo.setToolTipText("Select department");
 
-        // Initialize new filter components
-        rollFilterField = new JTextField(10);
+        // Initialize new filter components with tooltips
+        rollFilterField = new JTextField(20);
+        rollFilterField.setToolTipText("Filter by roll number");
+        rollFilterField.setPreferredSize(new Dimension(80, 25));
         rollFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 filterStudents();
             }
         });
 
-        idFilterField = new JTextField(10);
+        idFilterField = new JTextField(20);
+        idFilterField.setToolTipText("Filter by student ID");
+        idFilterField.setPreferredSize(new Dimension(100, 25));
         idFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 filterStudents();
             }
         });
 
-        cgpaFilterField = new JTextField(10);
+        cgpaFilterField = new JTextField(20);
+        cgpaFilterField.setToolTipText("Filter by minimum CGPA");
+        cgpaFilterField.setPreferredSize(new Dimension(80, 25));
         cgpaFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 filterStudents();
             }
         });
 
-        clearFiltersButton = new JButton("Clear Filters");
+        clearFiltersButton = new JButton("Reset Filters");
         clearFiltersButton.setBackground(new Color(149, 165, 166));
         clearFiltersButton.setForeground(Color.WHITE);
         clearFiltersButton.setOpaque(true);
         clearFiltersButton.setBorderPainted(false);
+        clearFiltersButton.setToolTipText("Clear all filters");
 
-        // Create buttons
+        // Create buttons with tooltips
         updateButton = new JButton("Update Student");
+        updateButton.setToolTipText("Update selected student");
         deleteButton = new JButton("Delete Student");
+        deleteButton.setToolTipText("Delete selected student");
         clearButton = new JButton("Clear Fields");
+        clearButton.setToolTipText("Clear input fields");
         backButton = new JButton("Back");
+        backButton.setToolTipText("Return to Administration Dashboard");
 
         // Set button colors
         updateButton.setBackground(new Color(52, 152, 219));
@@ -234,21 +270,28 @@ public class StudentList extends JFrame {
         gbc.gridx = 4;
         filterPanel.add(new JLabel("Roll:"), gbc);
         gbc.gridx = 5;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
         filterPanel.add(rollFilterField, gbc);
 
         gbc.gridx = 6;
-        filterPanel.add(new JLabel("Student ID:"), gbc);
+        gbc.weightx = 0;
+        filterPanel.add(new JLabel("ID:"), gbc);
         gbc.gridx = 7;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
         filterPanel.add(idFilterField, gbc);
 
         gbc.gridx = 8;
+        gbc.weightx = 0;
         filterPanel.add(new JLabel("Min CGPA:"), gbc);
         gbc.gridx = 9;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
         filterPanel.add(cgpaFilterField, gbc);
 
         // Clear filters button
         gbc.gridx = 10; gbc.gridheight = 2;
-        //gbc.fill = GridBagConstraints.VERTICAL;
         filterPanel.add(clearFiltersButton, gbc);
 
         gbc.gridx = 11; gbc.gridheight = 1;
@@ -336,7 +379,7 @@ public class StudentList extends JFrame {
     }
 
     private JPanel createButtonPanel() {
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(clearButton);

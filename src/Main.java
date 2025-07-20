@@ -4,32 +4,36 @@ import java.util.Map;
 
 public class Main {
     private static final Map<String, Account> accounts = new HashMap<>();
+    private static final Map<String, Question> questionMap = new HashMap<>();
 
+    public static Map<String, Question> getQuestionMap() {
+        return questionMap;
+    }
     public static Map<String, Account> getAccounts() {
         return accounts;
     }
 
     public static void main(String[] args) {
-        StudentAccount s1 = new StudentAccount("S001", "pass1", "s1@mail.com", "John", "Doe", "Male", "2000-01-01", "10A", 1, "CSE", "Student", 3.5);
-        StudentAccount s2 = new StudentAccount("S002", "pass2", "s2@mail.com", "Jane", "Smith", "Female", "2000-02-02", "10A", 2, "CSE", "Student", 3.7);
-        StudentAccount s3 = new StudentAccount("S003", "pass3", "s3@mail.com", "Mike", "Johnson", "Male", "2000-03-03", "10B", 3, "EEE", "Student", 2.9);
-        StudentAccount s4 = new StudentAccount("S004", "pass4", "s4@mail.com", "Emily", "Davis", "Female", "2000-04-04", "10C", 4, "CSE", "Student", 3.2);
-        StudentAccount s5 = new StudentAccount("S005", "pass5", "s5@mail.com", "Chris", "Brown", "Male", "2000-05-05", "10D", 5, "BBA", "Student", 3.0);
-        StudentAccount s6 = new StudentAccount("S006", "pass6", "s6@mail.com", "Anna", "Taylor", "Female", "2000-06-06", "10E", 6, "CSE", "Student", 2.4);
-        StudentAccount s7 = new StudentAccount("S007", "pass7", "s7@mail.com", "Robert", "Wilson", "Male", "2000-07-07", "10F", 7, "CSE", "Student", 3.9);
-        StudentAccount s8 = new StudentAccount("S008", "pass8", "s8@mail.com", "Sophia", "Martinez", "Female", "2000-08-08", "10G", 8, "EEE", "Student", 2.8);
-        StudentAccount s9 = new StudentAccount("S009", "pass9", "s9@mail.com", "David", "Anderson", "Male", "2000-09-09", "10H", 9, "CSE", "Student", 3.6);
-        StudentAccount s10 = new StudentAccount("S010", "pass10", "s10@mail.com", "Mia", "Thomas", "Female", "2000-10-10", "10I", 10, "CSE", "Student", 2.5);
-        StudentAccount s11 = new StudentAccount("S011", "pass11", "s11@mail.com", "Ethan", "Jackson", "Male", "2000-11-11", "10J", 11, "BBA", "Student", 3.3);
-        StudentAccount s12 = new StudentAccount("S012", "pass12", "s12@mail.com", "Ava", "White", "Female", "2000-12-12", "10A", 12, "CSE", "Student", 3.8);
-        StudentAccount s13 = new StudentAccount("S013", "pass13", "s13@mail.com", "Liam", "Harris", "Male", "2000-01-13", "10B", 13, "EEE", "Student", 2.6);
-        StudentAccount s14 = new StudentAccount("S014", "pass14", "s14@mail.com", "Olivia", "Martin", "Female", "2000-02-14", "10C", 14, "CSE", "Student", 3.1);
-        StudentAccount s15 = new StudentAccount("S015", "pass15", "s15@mail.com", "Noah", "Thompson", "Male", "2000-03-15", "10D", 15, "CSE", "Student", 2.7);
-        StudentAccount s16 = new StudentAccount("S016", "pass16", "s16@mail.com", "Isabella", "Garcia", "Female", "2000-04-16", "10E", 16, "BBA", "Student", 3.4);
-        StudentAccount s17 = new StudentAccount("S017", "pass17", "s17@mail.com", "Lucas", "Martinez", "Male", "2000-05-17", "10F", 17, "CSE", "Student", 3.0);
-        StudentAccount s18 = new StudentAccount("S018", "pass18", "s18@mail.com", "Charlotte", "Rodriguez", "Female", "2000-06-18", "10G", 18, "EEE", "Student", 2.3);
-        StudentAccount s19 = new StudentAccount("S019", "pass19", "s19@mail.com", "James", "Lee", "Male", "2000-07-19", "10H", 19, "CSE", "Student", 3.6);
-        StudentAccount s20 = new StudentAccount("S020", "pass20", "s20@mail.com", "Amelia", "Walker", "Female", "2000-08-20", "10I", 20, "CSE", "Student", 2.2);
+        StudentAccount s1 = new StudentAccount("S001", "pass1", "s1@mail.com", "John", "Doe", "Male", "2000-01-01", "1st Year", 1, "CSE", "Student", 3.5);
+        StudentAccount s2 = new StudentAccount("S002", "pass2", "s2@mail.com", "Jane", "Smith", "Female", "2000-02-02", "2nd Year", 2, "CSE", "Student", 3.7);
+        StudentAccount s3 = new StudentAccount("S003", "pass3", "s3@mail.com", "Mike", "Johnson", "Male", "2000-03-03", "2nd Year", 3, "EEE", "Student", 2.9);
+        StudentAccount s4 = new StudentAccount("S004", "pass4", "s4@mail.com", "Emily", "Davis", "Female", "2000-04-04", "2nd Year", 4, "CSE", "Student", 3.2);
+        StudentAccount s5 = new StudentAccount("S005", "pass5", "s5@mail.com", "Chris", "Brown", "Male", "2000-05-05", "3rd Year", 5, "BBA", "Student", 3.0);
+        StudentAccount s6 = new StudentAccount("S006", "pass6", "s6@mail.com", "Anna", "Taylor", "Female", "2000-06-06", "3rd Year", 6, "CSE", "Student", 2.4);
+        StudentAccount s7 = new StudentAccount("S007", "pass7", "s7@mail.com", "Robert", "Wilson", "Male", "2000-07-07", "3rd Year", 7, "CSE", "Student", 3.9);
+        StudentAccount s8 = new StudentAccount("S008", "pass8", "s8@mail.com", "Sophia", "Martinez", "Female", "2000-08-08", "4th Year", 8, "EEE", "Student", 2.8);
+        StudentAccount s9 = new StudentAccount("S009", "pass9", "s9@mail.com", "David", "Anderson", "Male", "2000-09-09", "4th Year", 9, "CSE", "Student", 3.6);
+        StudentAccount s10 = new StudentAccount("S010", "pass10", "s10@mail.com", "Mia", "Thomas", "Female", "2000-10-10", "4th Year", 10, "CSE", "Student", 2.5);
+        StudentAccount s11 = new StudentAccount("S011", "pass11", "s11@mail.com", "Ethan", "Jackson", "Male", "2000-11-11", "4th Year", 11, "BBA", "Student", 3.3);
+        StudentAccount s12 = new StudentAccount("S012", "pass12", "s12@mail.com", "Ava", "White", "Female", "2000-12-12", "2nd Year", 12, "CSE", "Student", 3.8);
+        StudentAccount s13 = new StudentAccount("S013", "pass13", "s13@mail.com", "Liam", "Harris", "Male", "2000-01-13", "2nd Year", 13, "EEE", "Student", 2.6);
+        StudentAccount s14 = new StudentAccount("S014", "pass14", "s14@mail.com", "Olivia", "Martin", "Female", "2000-02-14", "2nd Year", 14, "CSE", "Student", 3.1);
+        StudentAccount s15 = new StudentAccount("S015", "pass15", "s15@mail.com", "Noah", "Thompson", "Male", "2000-03-15", "3rd Year", 15, "CSE", "Student", 2.7);
+        StudentAccount s16 = new StudentAccount("S016", "pass16", "s16@mail.com", "Isabella", "Garcia", "Female", "2000-04-16", "3rd Year", 16, "BBA", "Student", 3.4);
+        StudentAccount s17 = new StudentAccount("S017", "pass17", "s17@mail.com", "Lucas", "Martinez", "Male", "2000-05-17", "3rd Year", 17, "CSE", "Student", 3.0);
+        StudentAccount s18 = new StudentAccount("S018", "pass18", "s18@mail.com", "Charlotte", "Rodriguez", "Female", "2000-06-18", "4th Year", 18, "EEE", "Student", 2.3);
+        StudentAccount s19 = new StudentAccount("S019", "pass19", "s19@mail.com", "James", "Lee", "Male", "2000-07-19", "4th Year", 19, "CSE", "Student", 3.6);
+        StudentAccount s20 = new StudentAccount("S020", "pass20", "s20@mail.com", "Amelia", "Walker", "Female", "2000-08-20", "4th Year", 20, "CSE", "Student", 2.2);
 
 
         accounts.put(s1.getID(), s1);
@@ -94,6 +98,6 @@ public class Main {
         accounts.put(t18.getID(), t18);
         accounts.put(t19.getID(), t19);
         accounts.put(t20.getID(), t20);
-        new LoginForm();
+        new MCQQuestionCreator();
     }
 }

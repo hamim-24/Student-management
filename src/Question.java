@@ -1,19 +1,17 @@
 import java.io.Serializable;
+import java.util.List;
 
-public class Question implements Serializable {
+public class Question {
 
     private String questionName;
     private String questionCode;
-    private String question;
-    private String[] options;
-    private String answer;
 
-    public Question(String question, String questionName, String questionCode, String[] options, String answer) {
+    List<SingleQuestion> singleQuestions;
+
+    public Question(List<SingleQuestion> singleQuestions, String questionName, String questionCode) {
         this.questionName = questionName;
         this.questionCode = questionCode;
-        this.question = question;
-        this.options = options;
-        this.answer = answer;
+        this.singleQuestions = singleQuestions;
     }
     
     public String getQuestionName() {
@@ -23,16 +21,8 @@ public class Question implements Serializable {
     public String getQuestionCode() {
         return questionCode;
     }
-    
-    public String getQuestion() {
-        return question;
-    }
-    
-    public String[] getOptions() {
-        return options;
-    }
-    
-    public String getAnswer() {
-        return answer;
+
+    public List<SingleQuestion> getSingleQuestions() {
+        return singleQuestions;
     }
 }
