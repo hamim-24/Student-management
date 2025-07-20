@@ -1,8 +1,9 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +14,22 @@ public class MCQQuestionCreator extends JFrame {
     private List<MCQComponent> mcqComponents;
     private int mcqCounter = 1;
 
+    ArrayList<Question> questions;
+
+    QuestionManager questionManager;
+
     public MCQQuestionCreator() {
         mcqComponents = new ArrayList<>();
+        questionManager = new QuestionManager();
+        QuestionManager loaded = QuestionManager.loadFromfile();
+        if ( loaded != null ) {
+            this.questionManager = loaded;
+        }
         initializeUI();
     }
 
     private void initializeUI() {
         setTitle("MCQ Question Creator");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         // Header Panel
@@ -41,6 +50,7 @@ public class MCQQuestionCreator extends JFrame {
 
         // Add first MCQ by default
         addMCQ();
+
 
         pack();
         setLocationRelativeTo(null);
@@ -82,6 +92,7 @@ public class MCQQuestionCreator extends JFrame {
         JButton clearButton = new JButton("Clear All");
         clearButton.addActionListener(e -> clearAll());
 
+
         buttonPanel.add(addMCQButton);
         buttonPanel.add(saveButton);
         buttonPanel.add(clearButton);
@@ -113,57 +124,34 @@ public class MCQQuestionCreator extends JFrame {
             return;
         }
 
-        try {
-            String filename = questionCode + ".txt";
-            FileWriter writer = new FileWriter(filename);
 
-            // Write question details
-            writer.write("\t\tExam Name: " + questionName + "\n");
-            writer.write("\t\tQuestion Code: " + questionCode + "\n");
-            writer.write("=" + "=".repeat(50) + "\n\n");
+        // Write MCQs
+        StringBuilder answers = new StringBuilder();
+        for (int i = 0; i < mcqComponents.size(); i++) {
+            MCQComponent mcq = mcqComponents.get(i);
+            String question = mcq.getQuestion().trim();
+            String[] options = mcq.getOptions();
+            String answer = mcq.getSelectedAnswer();
 
-            // Write MCQs
-            StringBuilder answers = new StringBuilder();
-            for (int i = 0; i < mcqComponents.size(); i++) {
-                MCQComponent mcq = mcqComponents.get(i);
-                String question = mcq.getQuestion().trim();
-                String[] options = mcq.getOptions();
-                String answer = mcq.getSelectedAnswer();
-
-                if (question.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "MCQ " + (i + 1) + " question is empty!",
-                            "Empty Question", JOptionPane.WARNING_MESSAGE);
-                    writer.close();
-                    return;
-                }
-
-                if (answer == null) {
-                    JOptionPane.showMessageDialog(this, "Please select an answer for MCQ " + (i + 1) + "!",
-                            "No Answer Selected", JOptionPane.WARNING_MESSAGE);
-                    writer.close();
-                    return;
-                }
-
-                writer.write("Q" + (i + 1) + ". " + question + "\n");
-                writer.write("A) " + options[0] + "\n");
-                writer.write("B) " + options[1] + "\n");
-                writer.write("C) " + options[2] + "\n");
-                writer.write("D) " + options[3] + "\n");
-                writer.write("\n");
-
-                answers.append(answer);
+            if (question.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "MCQ " + (i + 1) + " question is empty!",
+                        "Empty Question", JOptionPane.WARNING_MESSAGE);
+                return;
             }
 
-            // Write answers in the last line
-            writer.write(answers.toString());
-            writer.close();
+            if (answer == null) {
+                JOptionPane.showMessageDialog(this, "Please select an answer for MCQ " + (i + 1) + "!",
+                        "No Answer Selected", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            JOptionPane.showMessageDialog(this, "Question saved successfully as " + filename + "!",
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            Question newQuestion = new Question(question, questionName, questionCode, options, answer);
+            questionManager.addQuestion(newQuestion);
+
         }
+
+        JOptionPane.showMessageDialog(this, "Question saved successfully as " + questionCode + "!",
+                "Success", JOptionPane.INFORMATION_MESSAGE);
         clearAll();
     }
 
@@ -282,12 +270,5 @@ public class MCQQuestionCreator extends JFrame {
             border.setTitle("MCQ " + (i + 1));
         }
         mcqPanel.repaint();
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-
-            new MCQQuestionCreator();
-        });
     }
 }

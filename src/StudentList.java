@@ -37,7 +37,6 @@ public class StudentList extends JFrame {
         setupEventListeners();
         loadStudentsFromAccounts();
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Student Management System");
         setSize(1400, 700); // Increased width to accommodate new filters
         setLocationRelativeTo(null);
