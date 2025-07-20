@@ -331,46 +331,53 @@ public class TeacherList extends JFrame {
         }
 
         if (validateFields()) {
-            try {
-                // Get the teacher ID from the displayed table (column index 1)
-                String teacherId = tableModel.getValueAt(selectedRow, 1).toString();
 
-                // Update the actual account in the accounts map
-                Account account = accounts.get(teacherId);
-                if (account instanceof TeacherAccount) {
-                    TeacherAccount teacher = (TeacherAccount) account;
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to update this teacher?",
+                    "Confirm Update", JOptionPane.YES_NO_OPTION);
 
-                    // Create a new TeacherAccount with updated information
-                    String[] nameParts = nameField.getText().trim().split(" ", 2);
-                    String firstName = nameParts[0];
-                    String lastName = nameParts.length > 1 ? nameParts[1] : "";
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    // Get the teacher ID from the displayed table (column index 1)
+                    String teacherId = tableModel.getValueAt(selectedRow, 1).toString();
 
-                    TeacherAccount updatedTeacher = new TeacherAccount(
-                            teacher.getID(),
-                            teacher.getPassword(),
-                            emailField.getText().trim(),
-                            firstName,
-                            lastName,
-                            teacher.getGender(),
-                            dobField.getText().trim(),
-                            updateDepartmentCombo.getSelectedItem().toString(),
-                            teacher.getStatus()
-                    );
+                    // Update the actual account in the accounts map
+                    Account account = accounts.get(teacherId);
+                    if (account instanceof TeacherAccount) {
+                        TeacherAccount teacher = (TeacherAccount) account;
 
-                    // Update the accounts map
-                    accounts.put(teacherId, updatedTeacher);
+                        // Create a new TeacherAccount with updated information
+                        String[] nameParts = nameField.getText().trim().split(" ", 2);
+                        String firstName = nameParts[0];
+                        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+                        TeacherAccount updatedTeacher = new TeacherAccount(
+                                teacher.getID(),
+                                teacher.getPassword(),
+                                emailField.getText().trim(),
+                                firstName,
+                                lastName,
+                                teacher.getGender(),
+                                dobField.getText().trim(),
+                                updateDepartmentCombo.getSelectedItem().toString(),
+                                teacher.getStatus()
+                        );
+
+                        // Update the accounts map
+                        accounts.put(teacherId, updatedTeacher);
+                    }
+
+                    // Reload data and refresh view
+                    loadTeachersFromAccounts();
+                    clearFields();
+                    teacherTable.clearSelection();
+                    selectedRow = -1;
+                    JOptionPane.showMessageDialog(this, "Teacher updated successfully!");
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error updating teacher: " + ex.getMessage(),
+                            "Update Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                // Reload data and refresh view
-                loadTeachersFromAccounts();
-                clearFields();
-                teacherTable.clearSelection();
-                selectedRow = -1;
-                JOptionPane.showMessageDialog(this, "Teacher updated successfully!");
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error updating teacher: " + ex.getMessage(),
-                        "Update Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

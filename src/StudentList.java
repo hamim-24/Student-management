@@ -70,10 +70,24 @@ public class StudentList extends JFrame {
             @Override
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-                if (!isRowSelected(row)) {
-                    c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
-                } else {
-                    c.setBackground(new Color(184, 207, 229));
+                try {
+                    Object cgpaObj = getValueAt(row, 6);
+                    if (cgpaObj != null && !cgpaObj.toString().isEmpty()) {
+                        double cgpa = Double.parseDouble(cgpaObj.toString());
+                        if (cgpa < 2.0) {
+                            c.setBackground(new Color(255, 204, 204)); // Softer red
+                        } else if (isRowSelected(row)) {
+                            c.setBackground(new Color(184, 207, 229));
+                        } else {
+                            c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                        }
+                    }
+                } catch (Exception e) {
+                    if (isRowSelected(row)) {
+                        c.setBackground(new Color(184, 207, 229));
+                    } else {
+                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                    }
                 }
                 return c;
             }
@@ -419,49 +433,56 @@ public class StudentList extends JFrame {
         }
 
         if (validateFields()) {
-            try {
-                // Get the student ID from the displayed table (column index 2)
-                String studentId = tableModel.getValueAt(selectedRow, 2).toString();
 
-                // Update the actual account in the accounts map
-                Account account = accounts.get(studentId);
-                if (account instanceof StudentAccount) {
-                    StudentAccount student = (StudentAccount) account;
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to update this student?",
+                    "Confirm Update", JOptionPane.YES_NO_OPTION);
 
-                    // Create a new StudentAccount with updated information
-                    String[] nameParts = nameField.getText().trim().split(" ", 2);
-                    String firstName = nameParts[0];
-                    String lastName = nameParts.length > 1 ? nameParts[1] : "";
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    // Get the student ID from the displayed table (column index 2)
+                    String studentId = tableModel.getValueAt(selectedRow, 2).toString();
 
-                    StudentAccount updatedStudent = new StudentAccount(
-                            student.getID(),
-                            student.getPassword(),
-                            emailField.getText().trim(),
-                            firstName,
-                            lastName,
-                            student.getGender(),
-                            dobField.getText().trim(), // DOB
-                            classComboBox.getSelectedItem().toString(),
-                            student.getRoll(),
-                            updateDepartmentCombo.getSelectedItem().toString(), // Department
-                            student.getStatus(),
-                            Double.parseDouble(gpaField.getText().trim())
-                    );
+                    // Update the actual account in the accounts map
+                    Account account = accounts.get(studentId);
+                    if (account instanceof StudentAccount) {
+                        StudentAccount student = (StudentAccount) account;
 
-                    // Update the accounts map
-                    accounts.put(studentId, updatedStudent);
+                        // Create a new StudentAccount with updated information
+                        String[] nameParts = nameField.getText().trim().split(" ", 2);
+                        String firstName = nameParts[0];
+                        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+                        StudentAccount updatedStudent = new StudentAccount(
+                                student.getID(),
+                                student.getPassword(),
+                                emailField.getText().trim(),
+                                firstName,
+                                lastName,
+                                student.getGender(),
+                                dobField.getText().trim(), // DOB
+                                classComboBox.getSelectedItem().toString(),
+                                student.getRoll(),
+                                updateDepartmentCombo.getSelectedItem().toString(), // Department
+                                student.getStatus(),
+                                Double.parseDouble(gpaField.getText().trim())
+                        );
+
+                        // Update the accounts map
+                        accounts.put(studentId, updatedStudent);
+                    }
+
+                    // Reload data and refresh view
+                    loadStudentsFromAccounts();
+                    clearFields();
+                    studentTable.clearSelection();
+                    selectedRow = -1;
+                    JOptionPane.showMessageDialog(this, "Student updated successfully!");
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error updating student: " + ex.getMessage(),
+                            "Update Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                // Reload data and refresh view
-                loadStudentsFromAccounts();
-                clearFields();
-                studentTable.clearSelection();
-                selectedRow = -1;
-                JOptionPane.showMessageDialog(this, "Student updated successfully!");
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error updating student: " + ex.getMessage(),
-                        "Update Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
