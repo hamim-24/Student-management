@@ -65,6 +65,7 @@ public class SignInFrame extends JFrame {
     private void initializeFrame() {
 
         setTitle("Sign In");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -631,38 +632,48 @@ public class SignInFrame extends JFrame {
     private String getFirstName() {
         return firstNameTextField.getText().trim();
     }
+
     private String getLastName() {
         return lastNameTextField.getText().trim();
     }
+
     private String getEmail() {
         return emailTextField.getText().trim();
     }
+
     private String getPassword() {
         return String.valueOf(passwordTextField.getPassword()).trim();
     }
+
     private String getId() {
         return idTextField.getText().trim();
     }
+
     private String getGender() {
         return maleRadioButton.isSelected() ? "Male" : "Female";
     }
+
     private String getDob() {
         return dayCombo.getSelectedItem().toString().trim() + "-" + monthCombo.getSelectedItem().toString().trim() + "-" + yearCombo.getSelectedItem().toString().trim();
     }
+
     private String getStatus() {
         return statusCombo.getSelectedItem().toString().trim();
     }
+
     private String getClassNo() {
         return acYearCombo.getSelectedItem().toString().trim();
     }
+
     private String getDepartment() {
         return departmentCombo.getSelectedItem().toString().trim();
     }
+
     private int getRoll() {
         try {
             return Integer.parseInt(rollTextField.getText().trim());
         } catch (NumberFormatException e) {
-            return  -1;
+            return -1;
         }
     }
 

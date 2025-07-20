@@ -38,6 +38,7 @@ public class StudentList extends JFrame {
         loadStudentsFromAccounts();
 
         setTitle("Student List");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 700); // Adjusted width for better fit
         setLocationRelativeTo(null);
         setVisible(true);

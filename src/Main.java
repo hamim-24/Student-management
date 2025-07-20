@@ -9,6 +9,7 @@ public class Main {
     public static Map<String, Question> getQuestionMap() {
         return questionMap;
     }
+
     public static Map<String, Account> getAccounts() {
         return accounts;
     }
@@ -57,16 +58,16 @@ public class Main {
         accounts.put(s19.getID(), s19);
         accounts.put(s20.getID(), s20);
 
-        TeacherAccount t1 = new TeacherAccount("T001", "pass1", "t1@mail.com", "Alan", "Turing", "Male", "1970-01-01",  "CSE", "Teacher");
-        TeacherAccount t2 = new TeacherAccount("T002", "pass2", "t2@mail.com", "Ada", "Lovelace", "Female", "1975-02-02",  "CSE", "Teacher");
-        TeacherAccount t3 = new TeacherAccount("T003", "pass3", "t3@mail.com", "Grace", "Hopper", "Female", "1980-03-03",  "EEE", "Teacher");
+        TeacherAccount t1 = new TeacherAccount("T001", "pass1", "t1@mail.com", "Alan", "Turing", "Male", "1970-01-01", "CSE", "Teacher");
+        TeacherAccount t2 = new TeacherAccount("T002", "pass2", "t2@mail.com", "Ada", "Lovelace", "Female", "1975-02-02", "CSE", "Teacher");
+        TeacherAccount t3 = new TeacherAccount("T003", "pass3", "t3@mail.com", "Grace", "Hopper", "Female", "1980-03-03", "EEE", "Teacher");
         TeacherAccount t4 = new TeacherAccount("T004", "pass4", "t4@mail.com", "James", "Gosling", "Male", "1978-04-04", "CSE", "Teacher");
         TeacherAccount t5 = new TeacherAccount("T005", "pass5", "t5@mail.com", "Dennis", "Ritchie", "Male", "1972-05-05", "CSE", "Teacher");
         TeacherAccount t6 = new TeacherAccount("T006", "pass6", "t6@mail.com", "Barbara", "Liskov", "Female", "1976-06-06", "BBA", "Teacher");
-        TeacherAccount t7 = new TeacherAccount("T007", "pass7", "t7@mail.com", "Brian", "Kernighan", "Male", "1974-07-07",  "CSE", "Teacher");
+        TeacherAccount t7 = new TeacherAccount("T007", "pass7", "t7@mail.com", "Brian", "Kernighan", "Male", "1974-07-07", "CSE", "Teacher");
         TeacherAccount t8 = new TeacherAccount("T008", "pass8", "t8@mail.com", "Margaret", "Hamilton", "Female", "1971-08-08", "EEE", "Teacher");
         TeacherAccount t9 = new TeacherAccount("T009", "pass9", "t9@mail.com", "Ken", "Thompson", "Male", "1982-09-09", "CSE", "Teacher");
-        TeacherAccount t10 = new TeacherAccount("T010", "pass10", "t10@mail.com", "Linus", "Torvalds", "Male", "1985-10-10",  "CSE", "Teacher");
+        TeacherAccount t10 = new TeacherAccount("T010", "pass10", "t10@mail.com", "Linus", "Torvalds", "Male", "1985-10-10", "CSE", "Teacher");
         TeacherAccount t11 = new TeacherAccount("T011", "pass11", "t11@mail.com", "Tim", "Berners-Lee", "Male", "1960-11-11", "BBA", "Teacher");
         TeacherAccount t12 = new TeacherAccount("T012", "pass12", "t12@mail.com", "Sheryl", "Sandberg", "Female", "1979-12-12", "CSE", "Teacher");
         TeacherAccount t13 = new TeacherAccount("T013", "pass13", "t13@mail.com", "Susan", "Wojcicki", "Female", "1981-01-13", "EEE", "Teacher");
@@ -74,7 +75,7 @@ public class Main {
         TeacherAccount t15 = new TeacherAccount("T015", "pass15", "t15@mail.com", "Marissa", "Mayer", "Female", "1984-03-15", "CSE", "Teacher");
         TeacherAccount t16 = new TeacherAccount("T016", "pass16", "t16@mail.com", "Satya", "Nadella", "Male", "1986-04-16", "BBA", "Teacher");
         TeacherAccount t17 = new TeacherAccount("T017", "pass17", "t17@mail.com", "Sundar", "Pichai", "Male", "1987-05-17", "CSE", "Teacher");
-        TeacherAccount t18 = new TeacherAccount("T018", "pass18", "t18@mail.com", "Ginni", "Rometty", "Female", "1973-06-18",  "EEE", "Teacher");
+        TeacherAccount t18 = new TeacherAccount("T018", "pass18", "t18@mail.com", "Ginni", "Rometty", "Female", "1973-06-18", "EEE", "Teacher");
         TeacherAccount t19 = new TeacherAccount("T019", "pass19", "t19@mail.com", "Steve", "Wozniak", "Male", "1988-07-19", "CSE", "Teacher");
         TeacherAccount t20 = new TeacherAccount("T020", "pass20", "t20@mail.com", "Mark", "Zuckerberg", "Male", "1989-08-20", "CSE", "Teacher");
 
@@ -98,6 +99,6 @@ public class Main {
         accounts.put(t18.getID(), t18);
         accounts.put(t19.getID(), t19);
         accounts.put(t20.getID(), t20);
-        new TeacherPanel(null);
+        new LoginForm();
     }
 }
