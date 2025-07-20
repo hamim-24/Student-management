@@ -98,6 +98,6 @@ public class Main {
         accounts.put(t18.getID(), t18);
         accounts.put(t19.getID(), t19);
         accounts.put(t20.getID(), t20);
-        new MCQQuestionCreator();
+        new TeacherPanel(null);
     }
 }
