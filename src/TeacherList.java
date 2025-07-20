@@ -133,6 +133,7 @@ public class TeacherList extends JFrame {
     private void setupLayout() {
         setLayout(new BorderLayout());
 
+
         // Create main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
