@@ -11,9 +11,9 @@ public class StudentList extends JFrame {
     private DefaultTableModel tableModel;
     private DefaultTableModel allStudentsModel;
     private JTextField nameField, emailField, dobField, gpaField;
-    private JComboBox<String> classComboBox;
+    private JComboBox<String> yearComboBox;
     private JComboBox<String> departmentComboBox, updateDepartmentCombo;
-    private JComboBox<String> classFilterComboBox;
+    private JComboBox<String> yearFilterComboBox;
 
     // New filter components
     private JTextField rollFilterField, idFilterField, cgpaFilterField;
@@ -46,7 +46,7 @@ public class StudentList extends JFrame {
 
     private void initializeComponents() {
         // Create table with column names
-        String[] columnNames = {"Roll", "Name", "ID", "Email", "DOB", "Department", "GPA", "Class"};
+        String[] columnNames = {"Roll", "Name", "ID", "Email", "DOB", "Department", "GPA", "Year"};
 
         // Create models for all students and filtered view
         allStudentsModel = new DefaultTableModel(columnNames, 0) {
@@ -137,19 +137,19 @@ public class StudentList extends JFrame {
         gpaField = new JTextField(20);
         gpaField.setToolTipText("GPA (0.0 - 4.0)");
 
-        // Create class combo box for adding students
-        String[] classes = SignInFrame.classes;
-        classComboBox = new JComboBox<>(classes);
-        classComboBox.setToolTipText("Select class year");
+        // Create year combo box for adding students
+        String[] years = SignInFrame.YEARS;
+        yearComboBox = new JComboBox<>(years);
+        yearComboBox.setToolTipText("Select year");
 
-        // Create class filter combo box
-        String[] classFilters = SignInFrame.classes;
-        classFilterComboBox = new JComboBox<>(classFilters);
-        classFilterComboBox.setToolTipText("Filter by class year");
-        classFilterComboBox.addActionListener(e -> filterStudents());
+        // Create year filter combo box
+        String[] yearFilters = SignInFrame.YEARS;
+        yearFilterComboBox = new JComboBox<>(yearFilters);
+        yearFilterComboBox.setToolTipText("Filter by year");
+        yearFilterComboBox.addActionListener(e -> filterStudents());
 
         // Create department filter combo box
-        String[] departmentFilters = SignInFrame.departments;
+        String[] departmentFilters = SignInFrame.DEPARTMENTS;
         departmentComboBox = new JComboBox<>(departmentFilters);
         departmentComboBox.setToolTipText("Filter by department");
         departmentComboBox.addActionListener(e -> filterStudents());
@@ -274,7 +274,7 @@ public class StudentList extends JFrame {
         gbc.gridx = 0; gbc.gridy = 0;
         filterPanel.add(new JLabel("Year:"), gbc);
         gbc.gridx = 1;
-        filterPanel.add(classFilterComboBox, gbc);
+        filterPanel.add(yearFilterComboBox, gbc);
 
         gbc.gridx = 2;
         filterPanel.add(new JLabel("Department:"), gbc);
@@ -371,12 +371,12 @@ public class StudentList extends JFrame {
         updateDepartmentCombo.setPreferredSize(new Dimension(180, 25));
         inputPanel.add(updateDepartmentCombo, gbc);
 
-        // Class field
+        // year field
         gbc.gridx = 0; gbc.gridy = 6;
-        inputPanel.add(new JLabel("Class Year:"), gbc);
+        inputPanel.add(new JLabel("Year:"), gbc);
         gbc.gridx = 1;
-        classComboBox.setPreferredSize(new Dimension(180, 25));
-        inputPanel.add(classComboBox, gbc);
+        yearComboBox.setPreferredSize(new Dimension(180, 25));
+        inputPanel.add(yearComboBox, gbc);
 
         // GPA field
         gbc.gridx = 0; gbc.gridy = 7;
@@ -416,7 +416,7 @@ public class StudentList extends JFrame {
     }
 
     private void clearAllFilters() {
-        classFilterComboBox.setSelectedIndex(0);
+        yearFilterComboBox.setSelectedIndex(0);
         departmentComboBox.setSelectedIndex(0);
         rollFilterField.setText("");
         idFilterField.setText("");
@@ -461,7 +461,7 @@ public class StudentList extends JFrame {
                                 lastName,
                                 student.getGender(),
                                 dobField.getText().trim(), // DOB
-                                classComboBox.getSelectedItem().toString(),
+                                yearComboBox.getSelectedItem().toString(),
                                 student.getRoll(),
                                 updateDepartmentCombo.getSelectedItem().toString(), // Department
                                 student.getStatus(),
@@ -519,7 +519,7 @@ public class StudentList extends JFrame {
         dobField.setText("");
         updateDepartmentCombo.setSelectedIndex(0);
         gpaField.setText("");
-        classComboBox.setSelectedIndex(0);
+        yearComboBox.setSelectedIndex(0);
         studentTable.clearSelection();
         selectedRow = -1;
     }
@@ -531,7 +531,7 @@ public class StudentList extends JFrame {
             dobField.setText(tableModel.getValueAt(selectedRow, 4).toString()); // DOB
             updateDepartmentCombo.setSelectedItem(tableModel.getValueAt(selectedRow, 5).toString()); // Department
             gpaField.setText(tableModel.getValueAt(selectedRow, 6).toString()); // GPA
-            classComboBox.setSelectedItem(tableModel.getValueAt(selectedRow, 7).toString()); // Class
+            yearComboBox.setSelectedItem(tableModel.getValueAt(selectedRow, 7).toString()); // year
         }
     }
 
@@ -565,7 +565,7 @@ public class StudentList extends JFrame {
 
     // Enhanced filtering logic with new filters
     private void filterStudents() {
-        String selectedClass = classFilterComboBox.getSelectedItem().toString();
+        String selectedYear = yearFilterComboBox.getSelectedItem().toString();
         String selectedDept = departmentComboBox.getSelectedItem().toString();
         String rollFilter = rollFilterField.getText().trim();
         String idFilter = idFilterField.getText().trim().toLowerCase();
@@ -577,7 +577,7 @@ public class StudentList extends JFrame {
         filteredStudentCount = 0;
 
         for (int i = 0; i < allStudentsModel.getRowCount(); i++) {
-            String studentClass = allStudentsModel.getValueAt(i, 7) != null ?
+            String studentYear = allStudentsModel.getValueAt(i, 7) != null ?
                     allStudentsModel.getValueAt(i, 7).toString() : "";
             String studentDept = allStudentsModel.getValueAt(i, 5) != null ?
                     allStudentsModel.getValueAt(i, 5).toString() : "";
@@ -589,7 +589,7 @@ public class StudentList extends JFrame {
                     allStudentsModel.getValueAt(i, 6).toString() : "";
 
             // Existing filters
-            boolean classMatch = selectedClass.equals("Select") || selectedClass.equals(studentClass);
+            boolean yearMatch = selectedYear.equals("Select") || selectedYear.equals(studentYear);
             boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(studentDept);
 
             // New filters
@@ -607,7 +607,7 @@ public class StudentList extends JFrame {
                 }
             }
 
-            if (classMatch && deptMatch && rollMatch && idMatch && cgpaMatch) {
+            if (yearMatch && deptMatch && rollMatch && idMatch && cgpaMatch) {
                 Vector<Object> rowData = new Vector<>();
                 for (int j = 0; j < allStudentsModel.getColumnCount(); j++) {
                     rowData.add(allStudentsModel.getValueAt(i, j));
@@ -642,7 +642,7 @@ public class StudentList extends JFrame {
                 row.add(student.getDob());
                 row.add(student.getDepartment()); // Department column
                 row.add(student.getCg());
-                row.add(student.getClassNo());
+                row.add(student.getYear());
                 allStudentsModel.addRow(row);
                 totalStudents++;
             }

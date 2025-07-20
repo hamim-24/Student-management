@@ -99,7 +99,7 @@ public class TeacherList extends JFrame {
         dobField.setToolTipText("Format: YYYY-MM-DD");
 
         // Create department combo boxes
-        String[] departmentFilters = SignInFrame.departments;
+        String[] departmentFilters = SignInFrame.DEPARTMENTS;
         departmentComboBox = new JComboBox<>(departmentFilters);
         departmentComboBox.setToolTipText("Select department");
         updateDepartmentCombo = new JComboBox<>(departmentFilters);

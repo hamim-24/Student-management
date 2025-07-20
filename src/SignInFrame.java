@@ -32,11 +32,11 @@ public class SignInFrame extends JFrame {
     final String DEFAULT_FILE_PATH = "No Path Selected";
     private boolean studentFieldsVisible = false;
 
-    public static final String[] departments = {
+    public static final String[] DEPARTMENTS = {
             "Select", "CSE", "EEE", "BBA", "Civil"
     };
 
-    private static final String[] months = {
+    private static final String[] MONTHS = {
             "01", "02", "03", "04", "05", "06",
             "07", "08", "09", "10", "11", "12"
     };
@@ -45,7 +45,7 @@ public class SignInFrame extends JFrame {
             "^[A-Za-z0-9+_.-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$"
     );
 
-    public static final String[] classes = {
+    public static final String[] YEARS = {
             "Select", "1st Year", "2nd Year", "3rd Year", "4th Year"
     };
 
@@ -134,14 +134,14 @@ public class SignInFrame extends JFrame {
         for (int i = 0; i < 31; i++) {
             dayCombo.addItem(String.format("%02d", i + 1));
         }
-        monthCombo = new JComboBox<>(months);
+        monthCombo = new JComboBox<>(MONTHS);
         yearCombo = new JComboBox<>();
         for (int i = 0; i < 50; i++) {
             yearCombo.addItem(String.valueOf(LocalDate.now().getYear() - i));
         }
         statusCombo = new JComboBox<>(new String[]{"Select", "Teacher", "Student"});
-        acYearCombo = new JComboBox<>(classes);
-        departmentCombo = new JComboBox<>(departments);
+        acYearCombo = new JComboBox<>(YEARS);
+        departmentCombo = new JComboBox<>(DEPARTMENTS);
 
         // Title labels
         titleLabel = new JLabel("PERSONAL INFORMATION:");
@@ -189,7 +189,7 @@ public class SignInFrame extends JFrame {
         addFormField(mainPanel, emailLabel, emailTextField, gbc, nextLine());
         addFormField(mainPanel, departmentLabel, departmentCombo, gbc, nextLine());
         addFormField(mainPanel, statusLabel, statusCombo, gbc, nextLine());
-        line1 = nextLine(); // for class
+        line1 = nextLine(); // for year
         line2 = nextLine(); // for roll
 
         // Gender field
@@ -455,8 +455,8 @@ public class SignInFrame extends JFrame {
         }
 
         if (getStatus().equals("Student")) {
-            if (getClassNo().equals("Select")) {
-                errorMessage.append("- Class is required\n");
+            if (getYear().equals("Select")) {
+                errorMessage.append("- Year is required\n");
                 isValid = false;
             }
             if (rollTextField.getText().trim().isEmpty()) {
@@ -508,7 +508,7 @@ public class SignInFrame extends JFrame {
             if (getStatus().equals("Teacher")) {
                 account = new TeacherAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getDepartment(), getStatus());
             } else if (getStatus().equals("Student")) {
-                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getClassNo(), getRoll(), getDepartment(), getStatus(), 0.0);
+                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getYear(), getRoll(), getDepartment(), getStatus(), 0.0);
             }
 
             // Add to the main accounts map instead of local map
@@ -661,7 +661,7 @@ public class SignInFrame extends JFrame {
         return statusCombo.getSelectedItem().toString().trim();
     }
 
-    private String getClassNo() {
+    private String getYear() {
         return acYearCombo.getSelectedItem().toString().trim();
     }
 
