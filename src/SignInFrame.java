@@ -14,13 +14,13 @@ public class SignInFrame extends JFrame {
 
     private Account account;
     private JLabel PasswordStatusLabel, mainTitleLabel, titleLabel, accountLabel, firstNameLabel, lastNameLabel, idLabel, idStatusLabel,
-            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel, classLabel, rollLabel, departmentLabel;
+            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel, yearLabel, rollLabel, departmentLabel;
     private JTextField firstNameTextField, lastNameTextField, emailTextField, idTextField, rollTextField;
     private JPasswordField passwordTextField, confirmPasswordTextField;
     private JButton createButton, resetButton, choosePhotoButton, loginButton;
     private JRadioButton maleRadioButton, femaleRadioButton;
     private ButtonGroup genderGroup;
-    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo, classCombo, departmentCombo;
+    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo, acYearCombo, departmentCombo;
     String filePath;
 
     JPanel mainPanel;
@@ -37,8 +37,8 @@ public class SignInFrame extends JFrame {
     };
 
     private static final String[] months = {
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
+            "01", "02", "03", "04", "05", "06",
+            "07", "08", "09", "10", "11", "12"
     };
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
@@ -94,7 +94,7 @@ public class SignInFrame extends JFrame {
         idLabel = new JLabel("ID/Registration Number:");
         photoLabel = new JLabel("Photo(optional):");
         statusLabel = new JLabel("Status:");
-        classLabel = new JLabel("Class:");
+        yearLabel = new JLabel("Year:");
         rollLabel = new JLabel("Roll:");
         departmentLabel = new JLabel("Department:");
 
@@ -140,7 +140,7 @@ public class SignInFrame extends JFrame {
             yearCombo.addItem(String.valueOf(LocalDate.now().getYear() - i));
         }
         statusCombo = new JComboBox<>(new String[]{"Select", "Teacher", "Student"});
-        classCombo = new JComboBox<>(classes);
+        acYearCombo = new JComboBox<>(classes);
         departmentCombo = new JComboBox<>(departments);
 
         // Title labels
@@ -354,7 +354,7 @@ public class SignInFrame extends JFrame {
 
             if (selectedStatus.equals("Student") && !studentFieldsVisible) {
                 // Show student fields
-                addFormField(mainPanel, classLabel, classCombo, gbc, line1);
+                addFormField(mainPanel, yearLabel, acYearCombo, gbc, line1);
                 addFormField(mainPanel, rollLabel, rollTextField, gbc, line2);
                 studentFieldsVisible = true;
 
@@ -363,14 +363,14 @@ public class SignInFrame extends JFrame {
 
             } else if (!selectedStatus.equals("Student") && studentFieldsVisible) {
                 // Hide student fields
-                mainPanel.remove(classLabel);
-                mainPanel.remove(classCombo);
+                mainPanel.remove(yearLabel);
+                mainPanel.remove(acYearCombo);
                 mainPanel.remove(rollLabel);
                 mainPanel.remove(rollTextField);
                 studentFieldsVisible = false;
 
                 // Clear the text fields
-                classCombo.setSelectedIndex(0);
+                acYearCombo.setSelectedIndex(0);
                 rollTextField.setText("");
 
                 // Shift other components up
@@ -522,6 +522,7 @@ public class SignInFrame extends JFrame {
 
             dispose();
             new LoginForm();
+
         } else if (!isValid) {
             JOptionPane.showMessageDialog(this,
                     errorMessage.toString(),
@@ -590,7 +591,7 @@ public class SignInFrame extends JFrame {
         idTextField.setText("");
         passwordTextField.setText("");
         confirmPasswordTextField.setText("");
-        classCombo.setSelectedIndex(0);
+        acYearCombo.setSelectedIndex(0);
         rollTextField.setText("");
 
         // Reset background colors
@@ -612,8 +613,8 @@ public class SignInFrame extends JFrame {
 
         // Hide student fields if they were visible
         if (studentFieldsVisible) {
-            mainPanel.remove(classLabel);
-            mainPanel.remove(classCombo);
+            mainPanel.remove(yearLabel);
+            mainPanel.remove(acYearCombo);
             mainPanel.remove(rollLabel);
             mainPanel.remove(rollTextField);
             studentFieldsVisible = false;
@@ -653,7 +654,7 @@ public class SignInFrame extends JFrame {
         return statusCombo.getSelectedItem().toString().trim();
     }
     private String getClassNo() {
-        return classCombo.getSelectedItem().toString().trim();
+        return acYearCombo.getSelectedItem().toString().trim();
     }
     private String getDepartment() {
         return departmentCombo.getSelectedItem().toString().trim();

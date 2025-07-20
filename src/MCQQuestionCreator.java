@@ -1,9 +1,6 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -155,9 +152,6 @@ public class MCQQuestionCreator extends JFrame {
                 writer.write("\n");
 
                 answers.append(answer);
-                if (i < mcqComponents.size() - 1) {
-                    answers.append(", ");
-                }
             }
 
             // Write answers in the last line
@@ -170,6 +164,7 @@ public class MCQQuestionCreator extends JFrame {
             JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+        clearAll();
     }
 
     private void clearAll() {
