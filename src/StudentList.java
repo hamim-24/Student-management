@@ -421,7 +421,6 @@ public class StudentList extends JFrame {
     }
 
     private void updateStudent() {
-        getRootPane().setDefaultButton(updateButton);
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a student to update.",
                     "Selection Error", JOptionPane.WARNING_MESSAGE);
@@ -429,7 +428,6 @@ public class StudentList extends JFrame {
         }
 
         if (validateFields()) {
-
             int confirm = JOptionPane.showConfirmDialog(this,
                     "Are you sure you want to update this student?",
                     "Confirm Update", JOptionPane.YES_NO_OPTION);
@@ -437,10 +435,24 @@ public class StudentList extends JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     // Get the student ID from the displayed table (column index 2)
-                    String studentId = tableModel.getValueAt(selectedRow, 2).toString();
+                    String studentId = null;
+                    try {
+                        studentId = tableModel.getValueAt(selectedRow, 2).toString();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error retrieving student ID: " + ex.getMessage(),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
                     // Update the actual account in the accounts map
-                    Account account = accounts.get(studentId);
+                    Account account = null;
+                    try {
+                        account = accounts.get(studentId);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error accessing account: " + ex.getMessage(),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     if (account instanceof StudentAccount) {
                         StudentAccount student = (StudentAccount) account;
 
@@ -448,7 +460,14 @@ public class StudentList extends JFrame {
                         String[] nameParts = nameField.getText().trim().split(" ", 2);
                         String firstName = nameParts[0];
                         String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
+                        double gpa = 0.0;
+                        try {
+                            gpa = Double.parseDouble(gpaField.getText().trim());
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(this, "Invalid GPA: " + ex.getMessage(),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
                         StudentAccount updatedStudent = new StudentAccount(
                                 student.getID(),
                                 student.getPassword(),
@@ -461,9 +480,8 @@ public class StudentList extends JFrame {
                                 student.getRoll(),
                                 updateDepartmentCombo.getSelectedItem().toString(), // Department
                                 student.getStatus(),
-                                Double.parseDouble(gpaField.getText().trim())
+                                gpa
                         );
-
                         // Update the accounts map
                         accounts.put(studentId, updatedStudent);
                     }
@@ -495,17 +513,24 @@ public class StudentList extends JFrame {
                 "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            // Get the student ID from the displayed table (column index 2)
-            String studentId = tableModel.getValueAt(selectedRow, 2).toString();
-
-            // Remove from the main accounts map
-            accounts.remove(studentId);
-
-            // Reload data and refresh view
-            loadStudentsFromAccounts();
-            clearFields();
-            selectedRow = -1;
-            JOptionPane.showMessageDialog(this, "Student deleted successfully!");
+            try {
+                String studentId = null;
+                try {
+                    studentId = tableModel.getValueAt(selectedRow, 2).toString();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error retrieving student ID: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                accounts.remove(studentId);
+                loadStudentsFromAccounts();
+                clearFields();
+                selectedRow = -1;
+                JOptionPane.showMessageDialog(this, "Student deleted successfully!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error deleting student: " + ex.getMessage(),
+                        "Delete Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -554,6 +579,10 @@ public class StudentList extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter a valid number for GPA.",
                     "Validation Error", JOptionPane.ERROR_MESSAGE);
             return false;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Unexpected error: " + e.getMessage(),
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
 
         return true;
@@ -561,66 +590,63 @@ public class StudentList extends JFrame {
 
     // Enhanced filtering logic with new filters
     private void filterStudents() {
-        String selectedYear = yearFilterComboBox.getSelectedItem().toString();
-        String selectedDept = departmentComboBox.getSelectedItem().toString();
-        String rollFilter = rollFilterField.getText().trim();
-        String idFilter = idFilterField.getText().trim().toLowerCase();
-        String cgpaFilter = cgpaFilterField.getText().trim();
+        try {
+            String selectedYear = yearFilterComboBox.getSelectedItem().toString();
+            String selectedDept = departmentComboBox.getSelectedItem().toString();
+            String rollFilter = rollFilterField.getText().trim();
+            String idFilter = idFilterField.getText().trim().toLowerCase();
+            String cgpaFilter = cgpaFilterField.getText().trim();
 
-        tableModel.setRowCount(0);
-        
-        // Reset filtered student count
-        filteredStudentCount = 0;
+            tableModel.setRowCount(0);
+            filteredStudentCount = 0;
 
-        for (int i = 0; i < allStudentsModel.getRowCount(); i++) {
-            String studentYear = allStudentsModel.getValueAt(i, 7) != null ?
-                    allStudentsModel.getValueAt(i, 7).toString() : "";
-            String studentDept = allStudentsModel.getValueAt(i, 5) != null ?
-                    allStudentsModel.getValueAt(i, 5).toString() : "";
-            String studentRoll = allStudentsModel.getValueAt(i, 0) != null ?
-                    allStudentsModel.getValueAt(i, 0).toString() : "";
-            String studentId = allStudentsModel.getValueAt(i, 2) != null ?
-                    allStudentsModel.getValueAt(i, 2).toString().toLowerCase() : "";
-            String studentGpa = allStudentsModel.getValueAt(i, 6) != null ?
-                    allStudentsModel.getValueAt(i, 6).toString() : "";
+            for (int i = 0; i < allStudentsModel.getRowCount(); i++) {
+                String studentYear = allStudentsModel.getValueAt(i, 7) != null ?
+                        allStudentsModel.getValueAt(i, 7).toString() : "";
+                String studentDept = allStudentsModel.getValueAt(i, 5) != null ?
+                        allStudentsModel.getValueAt(i, 5).toString() : "";
+                String studentRoll = allStudentsModel.getValueAt(i, 0) != null ?
+                        allStudentsModel.getValueAt(i, 0).toString() : "";
+                String studentId = allStudentsModel.getValueAt(i, 2) != null ?
+                        allStudentsModel.getValueAt(i, 2).toString().toLowerCase() : "";
+                String studentGpa = allStudentsModel.getValueAt(i, 6) != null ?
+                        allStudentsModel.getValueAt(i, 6).toString() : "";
 
-            // Existing filters
-            boolean yearMatch = selectedYear.equals("Select") || selectedYear.equals(studentYear);
-            boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(studentDept);
+                boolean yearMatch = selectedYear.equals("Select") || selectedYear.equals(studentYear);
+                boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(studentDept);
+                boolean rollMatch = rollFilter.isEmpty() || studentRoll.contains(rollFilter);
+                boolean idMatch = idFilter.isEmpty() || studentId.contains(idFilter);
 
-            // New filters
-            boolean rollMatch = rollFilter.isEmpty() || studentRoll.contains(rollFilter);
-            boolean idMatch = idFilter.isEmpty() || studentId.contains(idFilter);
+                boolean cgpaMatch = true;
+                if (!cgpaFilter.isEmpty()) {
+                    try {
+                        double filterCgpa = Double.parseDouble(cgpaFilter);
+                        double studentCgpaValue = Double.parseDouble(studentGpa);
+                        cgpaMatch = studentCgpaValue >= filterCgpa;
+                    } catch (NumberFormatException e) {
+                        cgpaMatch = true; // If invalid number, don't filter
+                    } catch (Exception e) {
+                        cgpaMatch = true;
+                    }
+                }
 
-            boolean cgpaMatch = true;
-            if (!cgpaFilter.isEmpty()) {
-                try {
-                    double filterCgpa = Double.parseDouble(cgpaFilter);
-                    double studentCgpaValue = Double.parseDouble(studentGpa);
-                    cgpaMatch = studentCgpaValue >= filterCgpa;
-                } catch (NumberFormatException e) {
-                    cgpaMatch = true; // If invalid number, don't filter
+                if (yearMatch && deptMatch && rollMatch && idMatch && cgpaMatch) {
+                    Vector<Object> rowData = new Vector<>();
+                    for (int j = 0; j < allStudentsModel.getColumnCount(); j++) {
+                        rowData.add(allStudentsModel.getValueAt(i, j));
+                    }
+                    tableModel.addRow(rowData);
+                    filteredStudentCount++;
                 }
             }
-
-            if (yearMatch && deptMatch && rollMatch && idMatch && cgpaMatch) {
-                Vector<Object> rowData = new Vector<>();
-                for (int j = 0; j < allStudentsModel.getColumnCount(); j++) {
-                    rowData.add(allStudentsModel.getValueAt(i, j));
-                }
-                tableModel.addRow(rowData);
-                
-                // Increment filtered student count
-                filteredStudentCount++;
-            }
+            filteredCountLabel.setText("Students: " + filteredStudentCount + " / " + totalStudents + " (filtered/total)");
+            studentTable.clearSelection();
+            selectedRow = -1;
+            clearFields();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error filtering students: " + e.getMessage(),
+                    "Filter Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        // Update filtered count label
-        filteredCountLabel.setText("Students: " + filteredStudentCount + " / " + totalStudents + " (filtered/total)");
-
-        studentTable.clearSelection();
-        selectedRow = -1;
-        clearFields();
     }
 
     private void loadStudentsFromAccounts() {
