@@ -99,7 +99,7 @@ public class TeacherList extends JFrame {
         dobField.setToolTipText("Format: YYYY-MM-DD");
 
         // Create department combo boxes
-        String[] departmentFilters = SignInFrame.DEPARTMENTS;
+        String[] departmentFilters = utils.DEPARTMENTS;
         departmentComboBox = new JComboBox<>(departmentFilters);
         departmentComboBox.setToolTipText("Select department");
         updateDepartmentCombo = new JComboBox<>(departmentFilters);
@@ -158,11 +158,12 @@ public class TeacherList extends JFrame {
 
         // Create center panel with table and input form
         JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 32, 20, 10));
 
         // Table panel
         JScrollPane scrollPane = new JScrollPane(teacherTable);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Teacher Information", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         scrollPane.setPreferredSize(new Dimension(700, 400));
@@ -220,7 +221,7 @@ public class TeacherList extends JFrame {
     private JPanel createInputPanel() {
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createEmptyBorder(10, 10, 0, 20),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Edit Information", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         inputPanel.setPreferredSize(new Dimension(320, 400));
@@ -232,7 +233,7 @@ public class TeacherList extends JFrame {
 
         // Personal Information Section
         JLabel personalLabel = new JLabel("Personal Information");
-        personalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
+        personalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         personalLabel.setForeground(new Color(70, 130, 180));
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         inputPanel.add(personalLabel, gbc);
@@ -261,7 +262,7 @@ public class TeacherList extends JFrame {
 
         // Academic Information Section
         JLabel academicLabel = new JLabel("Academic Information");
-        academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
+        academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         academicLabel.setForeground(new Color(70, 130, 220));
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         gbc.insets = new Insets(15, 8, 8, 8);

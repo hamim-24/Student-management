@@ -1,9 +1,9 @@
 public class SingleQuestion {
 
-
     private String question;
     private String[] options;
     String answer;
+
     public SingleQuestion(String question, String[] options, String answer) {
         this.question = question;
         this.options = options;

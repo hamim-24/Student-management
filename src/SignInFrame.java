@@ -6,10 +6,8 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
-
 public class SignInFrame extends JFrame {
-    // Remove the static local accounts map - we'll use Main.getAccounts() instead
+
     private Map<String, Account> accounts = new HashMap<>();
 
     private Account account;
@@ -26,28 +24,10 @@ public class SignInFrame extends JFrame {
     JPanel mainPanel;
     GridBagConstraints gbc;
 
+    public boolean studentFieldsVisible = false;
+
     private int lineNumber = -1;
     private int line1, line2;
-
-    final String DEFAULT_FILE_PATH = "No Path Selected";
-    private boolean studentFieldsVisible = false;
-
-    public static final String[] DEPARTMENTS = {
-            "Select", "CSE", "EEE", "BBA", "Civil"
-    };
-
-    private static final String[] MONTHS = {
-            "01", "02", "03", "04", "05", "06",
-            "07", "08", "09", "10", "11", "12"
-    };
-
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[A-Za-z0-9+_.-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$"
-    );
-
-    public static final String[] YEARS = {
-            "Select", "1st Year", "2nd Year", "3rd Year", "4th Year"
-    };
 
     public SignInFrame() {
         // Get reference to the main accounts map
@@ -106,7 +86,7 @@ public class SignInFrame extends JFrame {
         genderGroup.add(femaleRadioButton);
 
         // File path label
-        filePathLabel = new JLabel(DEFAULT_FILE_PATH);
+        filePathLabel = new JLabel(utils.DEFAULT_FILE_PATH);
         filePathLabel.setForeground(Color.GRAY);
         filePathLabel.setPreferredSize(new Dimension(200, 30));
 
@@ -134,14 +114,14 @@ public class SignInFrame extends JFrame {
         for (int i = 0; i < 31; i++) {
             dayCombo.addItem(String.format("%02d", i + 1));
         }
-        monthCombo = new JComboBox<>(MONTHS);
+        monthCombo = new JComboBox<>(utils.MONTHS);
         yearCombo = new JComboBox<>();
         for (int i = 0; i < 50; i++) {
             yearCombo.addItem(String.valueOf(LocalDate.now().getYear() - i));
         }
         statusCombo = new JComboBox<>(new String[]{"Select", "Teacher", "Student"});
-        acYearCombo = new JComboBox<>(YEARS);
-        departmentCombo = new JComboBox<>(DEPARTMENTS);
+        acYearCombo = new JComboBox<>(utils.YEARS);
+        departmentCombo = new JComboBox<>(utils.DEPARTMENTS);
 
         // Title labels
         titleLabel = new JLabel("PERSONAL INFORMATION:");
@@ -438,7 +418,7 @@ public class SignInFrame extends JFrame {
         if (getEmail().isEmpty()) {
             errorMessage.append("- Email is required\n");
             isValid = false;
-        } else if (!EMAIL_PATTERN.matcher(getEmail()).matches()) {
+        } else if (!utils.EMAIL_PATTERN.matcher(getEmail()).matches()) {
             errorMessage.append("- Email format is invalid\n");
             emailTextField.setBackground(new Color(255, 230, 230));
             isValid = false;
@@ -538,7 +518,7 @@ public class SignInFrame extends JFrame {
 
             if (source == emailTextField) {
                 String email = emailTextField.getText().trim();
-                if (!email.isEmpty() && !EMAIL_PATTERN.matcher(email).matches()) {
+                if (!email.isEmpty() && !utils.EMAIL_PATTERN.matcher(email).matches()) {
                     emailTextField.setBackground(new Color(255, 230, 230));
                 } else {
                     emailTextField.setBackground(Color.WHITE);
@@ -607,7 +587,7 @@ public class SignInFrame extends JFrame {
         yearCombo.setSelectedIndex(0);
         statusCombo.setSelectedIndex(0);
         departmentCombo.setSelectedIndex(0);
-        filePathLabel.setText(DEFAULT_FILE_PATH);
+        filePathLabel.setText(utils.DEFAULT_FILE_PATH);
         filePathLabel.setForeground(Color.GRAY);
         filePath = null;
 

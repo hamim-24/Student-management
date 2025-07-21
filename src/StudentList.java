@@ -66,6 +66,7 @@ public class StudentList extends JFrame {
         // Initialize filtered count label
         filteredCountLabel = new JLabel("Students: 0 / 0 (filtered/total)");
 
+        // backgroud is red if cgpa < 2
         studentTable = new JTable(tableModel) {
             @Override
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
@@ -107,25 +108,25 @@ public class StudentList extends JFrame {
         studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         // Set custom renderer to change background color for CGPA below 2.0
-        studentTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                try {
-                    double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
-                    if (cgpa < 2.0) {
-                        c.setBackground(new Color(255, 204, 204)); // Softer red
-                    } else if (!isSelected) {
-                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
-                    }
-                } catch (Exception e) {
-                    if (!isSelected) {
-                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
-                    }
-                }
-                return c;
-            }
-        });
+//        studentTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+//            @Override
+//            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//                try {
+//                    double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
+//                    if (cgpa < 2.0) {
+//                        c.setBackground(new Color(255, 204, 204)); // Softer red
+//                    } else if (!isSelected) {
+//                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+//                    }
+//                } catch (Exception e) {
+//                    if (!isSelected) {
+//                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+//                    }
+//                }
+//                return c;
+//            }
+//        });
 
         // Create input fields with tooltips
         nameField = new JTextField(20);
@@ -138,18 +139,18 @@ public class StudentList extends JFrame {
         gpaField.setToolTipText("GPA (0.0 - 4.0)");
 
         // Create year combo box for adding students
-        String[] years = SignInFrame.YEARS;
+        String[] years = utils.YEARS;
         yearComboBox = new JComboBox<>(years);
         yearComboBox.setToolTipText("Select year");
 
         // Create year filter combo box
-        String[] yearFilters = SignInFrame.YEARS;
+        String[] yearFilters = utils.YEARS;
         yearFilterComboBox = new JComboBox<>(yearFilters);
         yearFilterComboBox.setToolTipText("Filter by year");
         yearFilterComboBox.addActionListener(e -> filterStudents());
 
         // Create department filter combo box
-        String[] departmentFilters = SignInFrame.DEPARTMENTS;
+        String[] departmentFilters = utils.DEPARTMENTS;
         departmentComboBox = new JComboBox<>(departmentFilters);
         departmentComboBox.setToolTipText("Filter by department");
         departmentComboBox.addActionListener(e -> filterStudents());
@@ -205,6 +206,7 @@ public class StudentList extends JFrame {
     }
 
     private void setupLayout() {
+
         setLayout(new BorderLayout());
 
         // Create main panel
@@ -224,10 +226,12 @@ public class StudentList extends JFrame {
         // Create center panel with table and input form
         JPanel centerPanel = new JPanel(new BorderLayout());
 
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 32, 20, 32));
+
         // Table panel
         JScrollPane scrollPane = new JScrollPane(studentTable);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Student List", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         scrollPane.setPreferredSize(new Dimension(900, 400)); // Adjusted width
@@ -248,13 +252,14 @@ public class StudentList extends JFrame {
     }
 
     private JPanel createEnhancedFilterPanel() {
+
         JPanel filterPanel = new JPanel(new GridBagLayout());
         filterPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(24, 32, 24, 32),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Filter:", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(5, 5, 10, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
         // First row - existing filters
@@ -293,7 +298,7 @@ public class StudentList extends JFrame {
         filterPanel.add(cgpaFilterField, gbc);
 
         // Clear filters button
-        gbc.gridx = 10; gbc.gridheight = 2;
+        gbc.gridx = 10;
         filterPanel.add(clearFiltersButton, gbc);
 
         gbc.gridx = 11; gbc.gridheight = 1;
@@ -303,9 +308,10 @@ public class StudentList extends JFrame {
     }
 
     private JPanel createInputPanel() {
+
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createEmptyBorder(10, 10, 0, 0),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Edit Student Information", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         inputPanel.setPreferredSize(new Dimension(320, 450));
@@ -317,7 +323,7 @@ public class StudentList extends JFrame {
 
         // Personal Information Section
         JLabel personalLabel = new JLabel("Personal Information");
-        personalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
+        personalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         personalLabel.setForeground(new Color(70, 130, 180));
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         inputPanel.add(personalLabel, gbc);
@@ -346,7 +352,7 @@ public class StudentList extends JFrame {
 
         // Academic Information Section
         JLabel academicLabel = new JLabel("Academic Information");
-        academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
+        academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         academicLabel.setForeground(new Color(70, 130, 180));
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         gbc.insets = new Insets(15, 8, 8, 8);
@@ -384,7 +390,7 @@ public class StudentList extends JFrame {
     }
 
     private JPanel createButtonPanel() {
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 20));
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(clearButton);
