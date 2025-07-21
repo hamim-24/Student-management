@@ -44,7 +44,7 @@ public class TeacherPanel extends JFrame {
 
         // Create Exam Button
         JButton createExamButton = new JButton("Create New Exam");
-        styleButton(createExamButton);
+        utils.styleButton(createExamButton);
         createExamButton.setToolTipText("Create a new MCQ exam");
         mainPanel.add(createExamButton, gbc);
 
@@ -65,7 +65,7 @@ public class TeacherPanel extends JFrame {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         JButton searchExamButton = new JButton("Search/View Exam");
-        styleButton(searchExamButton);
+        utils.styleButton(searchExamButton);
         searchExamButton.setToolTipText("Search for an existing exam by code");
         mainPanel.add(searchExamButton, gbc);
 
@@ -73,21 +73,21 @@ public class TeacherPanel extends JFrame {
         // Publish Exam Button
         gbc.gridy++;
         JButton publishExamButton = new JButton("Publish Exam");
-        styleButton(publishExamButton);
+        utils.styleButton(publishExamButton);
         publishExamButton.setToolTipText("Publish an exam for students");
         mainPanel.add(publishExamButton, gbc);
 
         // Publish Results Button
         gbc.gridy++;
         JButton publishResultButton = new JButton("Publish Results");
-        styleButton(publishResultButton);
+        utils.styleButton(publishResultButton);
         publishResultButton.setToolTipText("Publish results for an exam");
         mainPanel.add(publishResultButton, gbc);
 
         // Back Button
         gbc.gridy++;
         JButton backButton = new JButton("Back to Main Menu");
-        styleButton(backButton);
+        utils.styleButton(backButton);
         backButton.setToolTipText("Return to main menu");
         mainPanel.add(backButton, gbc);
 
@@ -121,8 +121,8 @@ public class TeacherPanel extends JFrame {
         publishExamButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Publish Exam coming soon!"));
         publishResultButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Publish Results coming soon!"));
         backButton.addActionListener(e -> {
-            new LoginForm();
             dispose();
+            new LoginForm();
         });
 
         examSearchField.getDocument().addDocumentListener(new DocumentListener() {
@@ -156,23 +156,4 @@ public class TeacherPanel extends JFrame {
         setVisible(true);
     }
 
-    private void styleButton(JButton button) {
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setBackground(new Color(52, 152, 219));
-        button.setForeground(Color.BLACK);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(41, 128, 185)),
-                BorderFactory.createEmptyBorder(8, 18, 8, 18)));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(41, 128, 185));
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(52, 152, 219));
-            }
-        });
-    }
 } 

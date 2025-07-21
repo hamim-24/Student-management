@@ -120,10 +120,7 @@ public class TeacherList extends JFrame {
         });
 
         clearFiltersButton = new JButton("Reset Filters");
-        clearFiltersButton.setBackground(new Color(149, 165, 166));
-        clearFiltersButton.setForeground(Color.WHITE);
-        clearFiltersButton.setOpaque(true);
-        clearFiltersButton.setBorderPainted(false);
+        utils.styleButton(clearFiltersButton);
         clearFiltersButton.setToolTipText("Clear all filters");
 
         // Create buttons
@@ -136,31 +133,14 @@ public class TeacherList extends JFrame {
         backButton = new JButton("Back");
         backButton.setToolTipText("Return to Administration Dashboard");
 
-        // Set button colors
-        updateButton.setBackground(new Color(52, 152, 219));
-        updateButton.setForeground(Color.WHITE);
-        deleteButton.setBackground(new Color(231, 76, 60));
-        deleteButton.setForeground(Color.WHITE);
-        clearButton.setBackground(new Color(149, 165, 166));
-        clearButton.setForeground(Color.WHITE);
-        backButton.setBackground(new Color(231, 76, 60));
-        backButton.setForeground(Color.WHITE);
-
-        // Make buttons opaque for color to show
-        updateButton.setOpaque(true);
-        deleteButton.setOpaque(true);
-        clearButton.setOpaque(true);
-        backButton.setOpaque(true);
-
-        updateButton.setBorderPainted(false);
-        deleteButton.setBorderPainted(false);
-        clearButton.setBorderPainted(false);
-        backButton.setBorderPainted(false);
+        utils.styleButton(backButton);
+        utils.styleButton(clearButton);
+        utils.styleButton(updateButton);
+        utils.styleButton(deleteButton);
     }
 
     private void setupLayout() {
         setLayout(new BorderLayout());
-
 
         // Create main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -181,7 +161,10 @@ public class TeacherList extends JFrame {
 
         // Table panel
         JScrollPane scrollPane = new JScrollPane(teacherTable);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Teacher List"));
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Teacher Information", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+        ));
         scrollPane.setPreferredSize(new Dimension(700, 400));
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
@@ -201,7 +184,10 @@ public class TeacherList extends JFrame {
 
     private JPanel createFilterPanel() {
         JPanel filterPanel = new JPanel(new GridBagLayout());
-        filterPanel.setBorder(BorderFactory.createTitledBorder("Filters"));
+        filterPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Filters:", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+        ));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
@@ -233,7 +219,10 @@ public class TeacherList extends JFrame {
 
     private JPanel createInputPanel() {
         JPanel inputPanel = new JPanel(new GridBagLayout());
-        inputPanel.setBorder(BorderFactory.createTitledBorder("Edit Teacher Information"));
+        inputPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Edit Information", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+        ));
         inputPanel.setPreferredSize(new Dimension(320, 400));
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -253,27 +242,27 @@ public class TeacherList extends JFrame {
         gbc.gridx = 0; gbc.gridy = 1;
         inputPanel.add(new JLabel("Full Name:"), gbc);
         gbc.gridx = 1;
-        nameField.setPreferredSize(new Dimension(180, 25));
+        nameField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(nameField, gbc);
 
         // Email field
         gbc.gridx = 0; gbc.gridy = 2;
         inputPanel.add(new JLabel("Email:"), gbc);
         gbc.gridx = 1;
-        emailField.setPreferredSize(new Dimension(180, 25));
+        emailField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(emailField, gbc);
 
         // DOB field
         gbc.gridx = 0; gbc.gridy = 3;
         inputPanel.add(new JLabel("Date of Birth:"), gbc);
         gbc.gridx = 1;
-        dobField.setPreferredSize(new Dimension(180, 25));
+        dobField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(dobField, gbc);
 
         // Academic Information Section
         JLabel academicLabel = new JLabel("Academic Information");
         academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
-        academicLabel.setForeground(new Color(70, 130, 180));
+        academicLabel.setForeground(new Color(70, 130, 220));
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         gbc.insets = new Insets(15, 8, 8, 8);
         inputPanel.add(academicLabel, gbc);
@@ -284,7 +273,7 @@ public class TeacherList extends JFrame {
         gbc.gridx = 0; gbc.gridy = 5;
         inputPanel.add(new JLabel("Department:"), gbc);
         gbc.gridx = 1;
-        updateDepartmentCombo.setPreferredSize(new Dimension(180, 25));
+        updateDepartmentCombo.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(updateDepartmentCombo, gbc);
 
         // Add some spacing at the bottom

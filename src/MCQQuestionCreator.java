@@ -32,7 +32,6 @@ public class MCQQuestionCreator extends JFrame {
         mcqPanel = new JPanel();
         mcqPanel.setLayout(new BoxLayout(mcqPanel, BoxLayout.Y_AXIS));
         mcqPanel.setBackground(new Color(255, 255, 255));
-        mcqPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         JScrollPane scrollPane = new JScrollPane(mcqPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(850, 400));
@@ -56,7 +55,7 @@ public class MCQQuestionCreator extends JFrame {
         JPanel headerPanel = new JPanel(new GridBagLayout());
         headerPanel.setBackground(new Color(236, 240, 241));
         TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Question Details", TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94));
-        headerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(16, 16, 8, 16), border));
+        headerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(24, 32, 24, 32), border));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
@@ -213,8 +212,10 @@ public class MCQQuestionCreator extends JFrame {
 
         public MCQComponent(int number) {
             setBackground(new Color(236, 240, 241));
-            setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "MCQ " + number, TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 15), new Color(52, 73, 94)));
-            setLayout(new GridBagLayout());
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                    BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "MCQ", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+            ));            setLayout(new GridBagLayout());
             initializeComponents();
         }
 
