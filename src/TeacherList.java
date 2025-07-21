@@ -321,26 +321,33 @@ public class TeacherList extends JFrame {
         }
 
         if (validateFields()) {
-
             int confirm = JOptionPane.showConfirmDialog(this,
                     "Are you sure you want to update this teacher?",
                     "Confirm Update", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
-                    // Get the teacher ID from the displayed table (column index 1)
-                    String teacherId = tableModel.getValueAt(selectedRow, 1).toString();
-
-                    // Update the actual account in the accounts map
-                    Account account = accounts.get(teacherId);
+                    String teacherId = null;
+                    try {
+                        teacherId = tableModel.getValueAt(selectedRow, 1).toString();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error retrieving teacher ID: " + ex.getMessage(),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    Account account = null;
+                    try {
+                        account = accounts.get(teacherId);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Error accessing account: " + ex.getMessage(),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     if (account instanceof TeacherAccount) {
                         TeacherAccount teacher = (TeacherAccount) account;
-
-                        // Create a new TeacherAccount with updated information
                         String[] nameParts = nameField.getText().trim().split(" ", 2);
                         String firstName = nameParts[0];
                         String lastName = nameParts.length > 1 ? nameParts[1] : "";
-
                         TeacherAccount updatedTeacher = new TeacherAccount(
                                 teacher.getID(),
                                 teacher.getPassword(),
@@ -352,18 +359,13 @@ public class TeacherList extends JFrame {
                                 updateDepartmentCombo.getSelectedItem().toString(),
                                 teacher.getStatus()
                         );
-
-                        // Update the accounts map
                         accounts.put(teacherId, updatedTeacher);
                     }
-
-                    // Reload data and refresh view
                     loadTeachersFromAccounts();
                     clearFields();
                     teacherTable.clearSelection();
                     selectedRow = -1;
                     JOptionPane.showMessageDialog(this, "Teacher updated successfully!");
-
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error updating teacher: " + ex.getMessage(),
                             "Update Error", JOptionPane.ERROR_MESSAGE);
@@ -384,17 +386,24 @@ public class TeacherList extends JFrame {
                 "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            // Get the teacher ID from the displayed table (column index 1)
-            String teacherId = tableModel.getValueAt(selectedRow, 1).toString();
-
-            // Remove from the main accounts map
-            accounts.remove(teacherId);
-
-            // Reload data and refresh view
-            loadTeachersFromAccounts();
-            clearFields();
-            selectedRow = -1;
-            JOptionPane.showMessageDialog(this, "Teacher deleted successfully!");
+            try {
+                String teacherId = null;
+                try {
+                    teacherId = tableModel.getValueAt(selectedRow, 1).toString();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error retrieving teacher ID: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                accounts.remove(teacherId);
+                loadTeachersFromAccounts();
+                clearFields();
+                selectedRow = -1;
+                JOptionPane.showMessageDialog(this, "Teacher deleted successfully!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error deleting teacher: " + ex.getMessage(),
+                        "Delete Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -431,41 +440,37 @@ public class TeacherList extends JFrame {
     }
 
     private void filterTeachers() {
-        String selectedDept = departmentFilterComboBox.getSelectedItem().toString();
-        String idFilter = idFilterField.getText().trim().toLowerCase();
-
-        tableModel.setRowCount(0);
-        
-        // Reset filtered teacher count
-        filteredTeacherCount = 0;
-
-        for (int i = 0; i < allTeachersModel.getRowCount(); i++) {
-            String teacherDept = allTeachersModel.getValueAt(i, 4) != null ?
-                    allTeachersModel.getValueAt(i, 4).toString() : "";
-            String teacherId = allTeachersModel.getValueAt(i, 1) != null ?
-                    allTeachersModel.getValueAt(i, 1).toString().toLowerCase() : "";
-
-            boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(teacherDept);
-            boolean idMatch = idFilter.isEmpty() || teacherId.contains(idFilter);
-
-            if (deptMatch && idMatch) {
-                Vector<Object> rowData = new Vector<>();
-                for (int j = 0; j < allTeachersModel.getColumnCount(); j++) {
-                    rowData.add(allTeachersModel.getValueAt(i, j));
+        try {
+            String selectedDept = departmentFilterComboBox.getSelectedItem().toString();
+            String idFilter = idFilterField.getText().trim().toLowerCase();
+            tableModel.setRowCount(0);
+            filteredTeacherCount = 0;
+            for (int i = 0; i < allTeachersModel.getRowCount(); i++) {
+                String teacherDept = allTeachersModel.getValueAt(i, 4) != null ?
+                        allTeachersModel.getValueAt(i, 4).toString() : "";
+                String teacherId = allTeachersModel.getValueAt(i, 1) != null ?
+                        allTeachersModel.getValueAt(i, 1).toString().toLowerCase() : "";
+                String teacherName = allTeachersModel.getValueAt(i, 0) != null ?
+                        allTeachersModel.getValueAt(i, 0).toString() : "";
+                boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(teacherDept);
+                boolean idMatch = idFilter.isEmpty() || teacherId.contains(idFilter);
+                if (deptMatch && idMatch) {
+                    Vector<Object> rowData = new Vector<>();
+                    for (int j = 0; j < allTeachersModel.getColumnCount(); j++) {
+                        rowData.add(allTeachersModel.getValueAt(i, j));
+                    }
+                    tableModel.addRow(rowData);
+                    filteredTeacherCount++;
                 }
-                tableModel.addRow(rowData);
-                
-                // Increment filtered teacher count
-                filteredTeacherCount++;
             }
+            filteredCountLabel.setText("Teachers: " + filteredTeacherCount + " / " + totalTeachers + " (filtered/total)");
+            teacherTable.clearSelection();
+            selectedRow = -1;
+            clearFields();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error filtering teachers: " + e.getMessage(),
+                    "Filter Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        // Update filtered count label
-        filteredCountLabel.setText("Teachers: " + filteredTeacherCount + " / " + totalTeachers + " (filtered/total)");
-
-        teacherTable.clearSelection();
-        selectedRow = -1;
-        clearFields();
     }
 
     private void loadTeachersFromAccounts() {

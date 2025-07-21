@@ -20,13 +20,32 @@ public class StudentExamFrame extends JFrame {
     public StudentExamFrame(Account account) {
 
         this.account = account;
-
-        this.question = Main.getQuestionMap().get(utils.QUESTION_CODE);
+        this.account = account;
+        Question q = null;
+        try {
+            q = Main.getQuestionMap().get(utils.QUESTION_CODE);
+            if (q == null) {
+                throw new Exception("No exam found for the given code!");
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
+            // Assign dummy values to final fields to satisfy the compiler
+            this.question = null;
+            this.singleQuestions = null;
+            this.totalQuestions = 0;
+            this.answerGroups = null;
+            this.optionButtons = null;
+            this.timer = null;
+            this.timerLabel = null;
+            return;
+        }
+        this.question = q;
         this.singleQuestions = question.getSingleQuestions();
         this.totalQuestions = singleQuestions.size();
         this.answerGroups = new ButtonGroup[totalQuestions];
         this.optionButtons = new JRadioButton[totalQuestions][4];
-        this.timeLeft = totalQuestions * 30; // 1/2 minute per question
+        this.timeLeft = totalQuestions * 30; 
 
         setTitle("Exam: " + question.getExamName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
