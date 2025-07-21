@@ -103,8 +103,14 @@ public class Main {
         accounts.put(t20.getID(), t20);
 
         List<SingleQuestion> singleQuestionList1 = new ArrayList<SingleQuestion>();
-        singleQuestionList1.add(new SingleQuestion("1+1=?", new String[]{"1", "2", "3", "4"}, "1"));
+        singleQuestionList1.add(new SingleQuestion("1+1=?", new String[]{"1", "2", "3", "4"}, "2"));
+        singleQuestionList1.add(new SingleQuestion("1-1=?", new String[]{"0", "2", "3", "4"}, "0"));
+        singleQuestionList1.add(new SingleQuestion("1+2=?", new String[]{"1", "2", "3", "4"}, "3"));
+        singleQuestionList1.add(new SingleQuestion("1*1=?", new String[]{"1", "2", "3", "4"}, "1"));
+        singleQuestionList1.add(new SingleQuestion("1+3=?", new String[]{"1", "2", "3", "4"}, "4"));
+        singleQuestionList1.add(new SingleQuestion("4-1=?", new String[]{"1", "2", "3", "4"}, "3"));
         Question q1 = new Question(singleQuestionList1, "Semester Final Exam", "100");
+
 
         questionMap.put(q1.getQuestionCode(), q1);
         //new TeacherPanel(null);

@@ -101,7 +101,14 @@ public class StudentPanel extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
 
         // Button actions
-
+        examButton.addActionListener(e -> {
+            if (utils.IS_PUBLISHED) {
+                dispose();
+                new StudentExamFrame(utils.QUESTION_CODE);
+            } else  {
+                JOptionPane.showMessageDialog(StudentPanel.this, "No exam found", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         searchExamButton.addActionListener(e -> {
             String searchExam = examSearchField.getText().trim();
             questionSet = questionMap.get(searchExam);
