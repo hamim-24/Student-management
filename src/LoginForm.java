@@ -43,7 +43,9 @@ public class LoginForm extends JFrame {
     private void createComponents() {
 
         idField = new JTextField(20);
+        idField.setFont(new Font("Arial", Font.PLAIN, 16));
         passwordField = new JPasswordField(20);
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
 
         idField.setFocusable(true);
         passwordField.setFocusable(true);
@@ -64,14 +66,16 @@ public class LoginForm extends JFrame {
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
+        // add title label
         JLabel titleLabel = new JLabel("Log In");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
         c.insets = new Insets(20, 0, 20, 0);
         add(titleLabel, c);
 
+        // add id field
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 2;
@@ -79,12 +83,14 @@ public class LoginForm extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
         add(idField, c);
 
+        // add password field
         c.gridx = 0;
         c.gridy = 2;
         c.gridwidth = 2;
         c.insets = new Insets(5, 20, 5, 20);
         add(passwordField, c);
 
+        // add buttons
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(loginButton);
         buttonPanel.add(studentLoginButton);
@@ -107,6 +113,7 @@ public class LoginForm extends JFrame {
         passwordField.setEchoChar((char) 0);
 
         idField.addFocusListener(new FocusListener() {
+
             @Override
             public void focusGained(FocusEvent e) {
                 if (idField.getText().equals(ID_PLACE_HOLDER)) {
@@ -125,6 +132,7 @@ public class LoginForm extends JFrame {
         });
 
         passwordField.addFocusListener(new FocusListener() {
+
             @Override
             public void focusGained(FocusEvent e) {
                 if (String.valueOf(passwordField.getPassword()).equals(PASSWORD_PLACE_HOLDER)) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MCQQuestionCreator extends JFrame {
+
     private JTextField questionNameField;
     private JTextField questionCodeField;
     private JPanel mcqPanel;
@@ -52,6 +53,7 @@ public class MCQQuestionCreator extends JFrame {
     }
 
     private JPanel createHeaderPanel() {
+
         JPanel headerPanel = new JPanel(new GridBagLayout());
         headerPanel.setBackground(new Color(236, 240, 241));
         TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Question Details", TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94));
@@ -86,6 +88,7 @@ public class MCQQuestionCreator extends JFrame {
     }
 
     private JPanel createButtonPanel() {
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 24, 12));
         buttonPanel.setBackground(new Color(245, 247, 250));
 
@@ -97,12 +100,26 @@ public class MCQQuestionCreator extends JFrame {
         JButton saveButton = new JButton("Save Question");
         styleButton(saveButton);
         saveButton.setToolTipText("Save the exam and all MCQs");
-        saveButton.addActionListener(e -> saveQuestion());
+        saveButton.addActionListener(e -> {
+            saveQuestion();
+            dispose();
+        });
 
         JButton clearButton = new JButton("Clear All");
         styleButton(clearButton);
         clearButton.setToolTipText("Clear all fields and MCQs");
-        clearButton.addActionListener(e -> clearAll());
+
+        clearButton.addActionListener(e -> {
+
+            int result = JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to clear all data?",
+                    "Confirm Clear",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (result == JOptionPane.YES_OPTION) {
+                clearAll();
+            }
+        });
 
         buttonPanel.add(addMCQButton);
         buttonPanel.add(saveButton);
@@ -112,6 +129,7 @@ public class MCQQuestionCreator extends JFrame {
     }
 
     private void styleButton(JButton button) {
+
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setBackground(new Color(52, 152, 219));
         button.setForeground(Color.BLACK);
@@ -120,6 +138,7 @@ public class MCQQuestionCreator extends JFrame {
                 BorderFactory.createLineBorder(new Color(41, 128, 185)),
                 BorderFactory.createEmptyBorder(8, 18, 8, 18)));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(41, 128, 185));
@@ -131,6 +150,7 @@ public class MCQQuestionCreator extends JFrame {
     }
 
     private void addMCQ() {
+
         MCQComponent mcqComponent = new MCQComponent(mcqCounter++);
         mcqComponents.add(mcqComponent);
         mcqPanel.add(Box.createVerticalStrut(12));
@@ -140,6 +160,7 @@ public class MCQQuestionCreator extends JFrame {
     }
 
     private void saveQuestion() {
+
         String questionName = questionNameField.getText().trim();
         String questionCode = questionCodeField.getText().trim();
 
@@ -183,15 +204,11 @@ public class MCQQuestionCreator extends JFrame {
         JOptionPane.showMessageDialog(this, "Question saved successfully as " + questionCode + "!",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
         clearAll();
+
     }
 
     private void clearAll() {
-        int result = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to clear all data?",
-                "Confirm Clear",
-                JOptionPane.YES_NO_OPTION);
 
-        if (result == JOptionPane.YES_OPTION) {
             questionNameField.setText("");
             questionCodeField.setText("");
             mcqComponents.clear();
@@ -200,11 +217,12 @@ public class MCQQuestionCreator extends JFrame {
             addMCQ(); // Add one MCQ by default
             mcqPanel.revalidate();
             mcqPanel.repaint();
-        }
+
     }
 
     // Inner class for MCQ components
     private class MCQComponent extends JPanel {
+
         private JTextArea questionArea;
         private JTextField[] optionFields;
         private ButtonGroup answerGroup;
@@ -220,6 +238,7 @@ public class MCQQuestionCreator extends JFrame {
         }
 
         private void initializeComponents() {
+
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(6, 6, 6, 6);
             gbc.anchor = GridBagConstraints.WEST;
@@ -248,6 +267,7 @@ public class MCQQuestionCreator extends JFrame {
             optionFields = new JTextField[4];
             answerButtons = new JRadioButton[4];
             answerGroup = new ButtonGroup();
+
             for (int i = 0; i < 4; i++) {
                 gbc.gridx = 1; gbc.gridy = 1 + i; gbc.gridwidth = 1;
                 optionFields[i] = new JTextField(25);
@@ -275,6 +295,7 @@ public class MCQQuestionCreator extends JFrame {
         }
 
         private void removeMCQ() {
+
             mcqComponents.remove(this);
             mcqPanel.remove(this);
             mcqPanel.revalidate();
@@ -282,10 +303,12 @@ public class MCQQuestionCreator extends JFrame {
         }
 
         public String getQuestion() {
+
             return questionArea.getText();
         }
 
         public String[] getOptions() {
+
             String[] options = new String[4];
             for (int i = 0; i < 4; i++) {
                 options[i] = optionFields[i].getText();
@@ -294,6 +317,7 @@ public class MCQQuestionCreator extends JFrame {
         }
 
         public String getSelectedAnswer() {
+
             for (int i = 0; i < 4; i++) {
                 if (answerButtons[i].isSelected()) {
                     return optionFields[i].getText();

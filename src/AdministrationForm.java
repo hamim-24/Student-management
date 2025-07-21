@@ -108,7 +108,7 @@ public class AdministrationForm extends JFrame {
             }
         });
         backButton.addActionListener(e -> {
-            dispose();
+            this.dispose();
             new LoginForm();
         });
 
