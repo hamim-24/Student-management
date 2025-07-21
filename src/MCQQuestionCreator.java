@@ -15,14 +15,12 @@ public class MCQQuestionCreator extends JFrame {
     private int mcqCounter = 1;
 
     ArrayList<SingleQuestion> questionList;
-    Map<String, Question> questionMap;
     Account account;
 
     public MCQQuestionCreator(Account account) {
 
         this.account = account;
 
-        this.questionMap = Main.getQuestionMap();
         mcqComponents = new ArrayList<>();
         initializeUI();
     }
@@ -205,7 +203,7 @@ public class MCQQuestionCreator extends JFrame {
         }
 
         Question questionSet = new Question(questionList, questionName, questionCode);
-        questionMap.put(questionCode, questionSet);
+        Main.getQuestionMap().put(questionCode, questionSet);
 
         JOptionPane.showMessageDialog(this, "Question saved successfully as " + questionCode + "!",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
