@@ -85,8 +85,14 @@ public class AdministrationForm extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
 
         // Button actions
-        studentButton.addActionListener(e -> new StudentList());
-        teacherButton.addActionListener(e -> new TeacherList());
+        studentButton.addActionListener(e -> {
+            this.dispose();
+            new StudentList();
+        });
+        teacherButton.addActionListener(e -> {
+            this.dispose();
+            new TeacherList();
+        });
         getRootPane().setDefaultButton(searchButton);
         searchButton.addActionListener(e -> {
             String searchID = searchField.getText().trim();

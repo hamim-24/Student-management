@@ -1,3 +1,4 @@
+import javax.accessibility.AccessibleComponent;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -15,8 +16,12 @@ public class MCQQuestionCreator extends JFrame {
 
     ArrayList<SingleQuestion> questionList;
     Map<String, Question> questionMap;
+    Account account;
 
-    public MCQQuestionCreator() {
+    public MCQQuestionCreator(Account account) {
+
+        this.account = account;
+
         this.questionMap = Main.getQuestionMap();
         mcqComponents = new ArrayList<>();
         initializeUI();
@@ -102,7 +107,8 @@ public class MCQQuestionCreator extends JFrame {
         saveButton.setToolTipText("Save the exam and all MCQs");
         saveButton.addActionListener(e -> {
             saveQuestion();
-            dispose();
+            this.dispose();
+            new TeacherPanel(account);
         });
 
         JButton clearButton = new JButton("Clear All");

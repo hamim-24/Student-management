@@ -1,5 +1,7 @@
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -99,6 +101,12 @@ public class Main {
         accounts.put(t18.getID(), t18);
         accounts.put(t19.getID(), t19);
         accounts.put(t20.getID(), t20);
+
+        List<SingleQuestion> singleQuestionList1 = new ArrayList<SingleQuestion>();
+        singleQuestionList1.add(new SingleQuestion("1+1=?", new String[]{"1", "2", "3", "4"}, "1"));
+        Question q1 = new Question(singleQuestionList1, "Semester Final Exam", "100");
+
+        questionMap.put(q1.getQuestionCode(), q1);
         //new TeacherPanel(null);
         new LoginForm();
     }

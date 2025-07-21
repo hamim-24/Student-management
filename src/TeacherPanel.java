@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -10,6 +9,8 @@ public class TeacherPanel extends JFrame {
     Question questionSet;
     Account account;
     private JPanel mainPanel;
+    JTextField examSearchField;
+    JLabel questionStatusLabel = new JLabel();
 
     public TeacherPanel(Account account) {
         this.questionMap = Main.getQuestionMap();
@@ -42,6 +43,13 @@ public class TeacherPanel extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        questionStatusLabel = new JLabel(utils.PUBLISHED_STATUS);
+        questionStatusLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        questionStatusLabel.setForeground(new Color(231, 76, 60));
+        questionStatusLabel.setPreferredSize(new Dimension(250, 20));
+        mainPanel.add(questionStatusLabel, gbc);
+        gbc.gridy++;
+
         // Create Exam Button
         JButton createExamButton = new JButton("Create New Exam");
         utils.styleButton(createExamButton);
@@ -56,7 +64,8 @@ public class TeacherPanel extends JFrame {
         mainPanel.add(searchLabel, gbc);
 
         gbc.gridx = 1;
-        JTextField examSearchField = new JTextField(15);
+
+        examSearchField = new JTextField(15);
         examSearchField.setFont(new Font("Arial", Font.PLAIN, 15));
         mainPanel.add(examSearchField, gbc);
 
@@ -94,7 +103,10 @@ public class TeacherPanel extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
 
         // Button actions
-        createExamButton.addActionListener(e -> new MCQQuestionCreator());
+        createExamButton.addActionListener(e -> {
+            dispose();
+            new MCQQuestionCreator(account);
+        });
         searchExamButton.addActionListener(e -> {
             String searchExam = examSearchField.getText().trim();
             questionSet = questionMap.get(searchExam);
@@ -102,7 +114,7 @@ public class TeacherPanel extends JFrame {
                 JOptionPane.showMessageDialog(this, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 StringBuilder qs = new StringBuilder();
-                qs.append("Exam Name: " + questionSet.getQuestionName() + "\n");
+                qs.append("Exam Name: " + questionSet.getExamName() + "\n");
                 qs.append("Exam Code: " + questionSet.getQuestionCode() + "\n\n");
                 int i = 1;
                 for (SingleQuestion SQ : questionSet.getSingleQuestions()) {
@@ -118,10 +130,31 @@ public class TeacherPanel extends JFrame {
                 JOptionPane.showMessageDialog(this, scrollPane, "Exam Details", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-        publishExamButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Publish Exam coming soon!"));
-        publishResultButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Publish Results coming soon!"));
+        publishExamButton.addActionListener(e -> {
+            if (questionMap.get(examSearchField.getText().trim()) != null) {
+                int result = JOptionPane.showConfirmDialog(this, "Are you sure to publish question code: " + questionSet.getQuestionCode() + "?", "Publish Results", JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION) {
+                    String publishExam = examSearchField.getText().trim();
+                    utils.QUESTION_CODE = publishExam;
+                    utils.IS_PUBLISHED = true;
+                    utils.PUBLISHED_STATUS = "Exam code: '" + publishExam + "' Running";
+                    questionStatusLabel.setText(utils.PUBLISHED_STATUS);
+                    questionStatusLabel.setText(utils.PUBLISHED_STATUS);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Question is not found", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        publishResultButton.addActionListener(e -> {
+            if (utils.IS_PUBLISHED) {
+                utils.QUESTION_CODE = null;
+                utils.IS_PUBLISHED = false;
+                utils.PUBLISHED_STATUS = "No Exam is running";
+                questionStatusLabel.setText(utils.PUBLISHED_STATUS);
+            }
+        });
         backButton.addActionListener(e -> {
-            dispose();
+            this.dispose();
             new LoginForm();
         });
 

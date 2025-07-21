@@ -2,6 +2,8 @@ import java.util.Date;
 
 public class Account {
 
+    private static int i = 0;
+
     private final String ID;
     private String password;
     private final String email;
@@ -13,8 +15,8 @@ public class Account {
     private final String department;
     private final String status;
 
-    public Account(String id, String password,  String email, String firstName, String lastName,  String gender, String dob, String department, String status) {
-        this.ID = id;
+    public Account(String ID, String password,  String email, String firstName, String lastName,  String gender, String dob, String department, String status) {
+        this.ID = ID;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
@@ -55,6 +57,11 @@ public class Account {
     }
     public String getStatus() {
         return status;
+    }
+
+    public static String generateID(String prefix) {
+        i++;
+        return String.format("%s%03d", prefix, i);
     }
     public String toString() {
         return String.format("""

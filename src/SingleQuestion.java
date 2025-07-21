@@ -2,7 +2,7 @@ public class SingleQuestion {
 
     private String question;
     private String[] options;
-    String answer;
+    String answer; // not correct option correct answer
 
     public SingleQuestion(String question, String[] options, String answer) {
         this.question = question;

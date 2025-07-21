@@ -388,6 +388,7 @@ public class SignInFrame extends JFrame {
                 new LoginForm();
             }
         }
+
     }
 
     private void validateAndCreateAccount() {

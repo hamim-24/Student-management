@@ -5,7 +5,8 @@ import java.util.regex.Pattern;
 public class utils {
 
     public static boolean IS_PUBLISHED = false;
-    public static String QUESTION_NAME;
+    public static String QUESTION_CODE;
+    public static String PUBLISHED_STATUS = "No Exam is running";
 
     public static final String DEFAULT_FILE_PATH = "No Path Selected";
 
