@@ -2,19 +2,19 @@ import java.util.List;
 
 public class Question {
 
-    private String questionName;
+    private String examName;
     private String questionCode;
 
     List<SingleQuestion> singleQuestions;
 
-    public Question(List<SingleQuestion> singleQuestions, String questionName, String questionCode) {
-        this.questionName = questionName;
+    public Question(List<SingleQuestion> singleQuestions, String examName, String questionCode) {
+        this.examName = examName;
         this.questionCode = questionCode;
         this.singleQuestions = singleQuestions;
     }
     
-    public String getQuestionName() {
-        return questionName;
+    public String getExamName() {
+        return examName;
     }
     
     public String getQuestionCode() {

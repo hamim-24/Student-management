@@ -108,25 +108,25 @@ public class StudentList extends JFrame {
         studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         // Set custom renderer to change background color for CGPA below 2.0
-//        studentTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-//            @Override
-//            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-//                try {
-//                    double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
-//                    if (cgpa < 2.0) {
-//                        c.setBackground(new Color(255, 204, 204)); // Softer red
-//                    } else if (!isSelected) {
-//                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
-//                    }
-//                } catch (Exception e) {
-//                    if (!isSelected) {
-//                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
-//                    }
-//                }
-//                return c;
-//            }
-//        });
+        studentTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                try {
+                    double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
+                    if (cgpa < 2.0) {
+                        c.setBackground(new Color(255, 204, 204)); // Softer red
+                    } else if (!isSelected) {
+                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                    }
+                } catch (Exception e) {
+                    if (!isSelected) {
+                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                    }
+                }
+                return c;
+            }
+        });
 
         // Create input fields with tooltips
         nameField = new JTextField(20);
@@ -403,7 +403,7 @@ public class StudentList extends JFrame {
         deleteButton.addActionListener(e -> deleteStudent());
         clearButton.addActionListener(e -> clearFields());
         backButton.addActionListener(e -> {
-            dispose();
+            this.dispose();
             new AdministrationForm();
         });
 

@@ -299,7 +299,7 @@ public class TeacherList extends JFrame {
         deleteButton.addActionListener(e -> deleteTeacher());
         clearButton.addActionListener(e -> clearFields());
         backButton.addActionListener(e -> {
-            dispose();
+            this.dispose();
             new AdministrationForm();
         });
 

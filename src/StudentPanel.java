@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -10,6 +9,7 @@ public class StudentPanel extends JFrame {
     Question questionSet;
     Account account;
     private JPanel mainPanel;
+    JLabel questionStatusLabel;
 
     public StudentPanel(Account account) {
         this.questionMap = Main.getQuestionMap();
@@ -42,11 +42,18 @@ public class StudentPanel extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        questionStatusLabel = new JLabel(utils.PUBLISHED_STATUS);
+        questionStatusLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        questionStatusLabel.setForeground(new Color(231, 76, 60));
+        questionStatusLabel.setPreferredSize(new Dimension(250, 20));
+        mainPanel.add(questionStatusLabel, gbc);
+        gbc.gridy++;
+
         // Create Exam Button
-        JButton createExamButton = new JButton("Create New Exam");
-        utils.styleButton(createExamButton);
-        createExamButton.setToolTipText("Create a new MCQ exam");
-        mainPanel.add(createExamButton, gbc);
+        JButton examButton = new JButton("EXAM");
+        utils.styleButton(examButton);
+        examButton.setToolTipText("EXAM");
+        mainPanel.add(examButton, gbc);
 
         // Search area
         gbc.gridy++;
@@ -94,15 +101,17 @@ public class StudentPanel extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
 
         // Button actions
-        createExamButton.addActionListener(e -> new MCQQuestionCreator());
+
         searchExamButton.addActionListener(e -> {
             String searchExam = examSearchField.getText().trim();
             questionSet = questionMap.get(searchExam);
             if (questionSet == null) {
                 JOptionPane.showMessageDialog(this, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (questionSet.getQuestionCode().equals(utils.QUESTION_CODE)) {
+                JOptionPane.showMessageDialog(this, "The Exam is running", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 StringBuilder qs = new StringBuilder();
-                qs.append("Exam Name: " + questionSet.getQuestionName() + "\n");
+                qs.append("Exam Name: " + questionSet.getExamName() + "\n");
                 qs.append("Exam Code: " + questionSet.getQuestionCode() + "\n\n");
                 int i = 1;
                 for (SingleQuestion SQ : questionSet.getSingleQuestions()) {
@@ -121,7 +130,7 @@ public class StudentPanel extends JFrame {
         showInfo.addActionListener(e -> JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE));
         publishResultButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Publish Results coming soon!"));
         backButton.addActionListener(e -> {
-            dispose();
+            this.dispose();
             new LoginForm();
         });
 
@@ -142,8 +151,6 @@ public class StudentPanel extends JFrame {
 
                 String code = examSearchField.getText().trim();
                 searchExamButton.setText("Search/View '" + code + "' Exam");
-                showInfo.setText("Publish '" + code + "' Exam");
-                publishResultButton.setText("Publish '" + code + "' Results");
 
                 // Add these lines to force UI refresh
                 mainPanel.revalidate();
