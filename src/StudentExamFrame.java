@@ -15,8 +15,13 @@ public class StudentExamFrame extends JFrame {
     private final int totalQuestions;
     private boolean submitted = false;
 
-    public StudentExamFrame(String questionCode) {
-        this.question = Main.getQuestionMap().get(questionCode);
+    Account account;
+
+    public StudentExamFrame(Account account) {
+
+        this.account = account;
+
+        this.question = Main.getQuestionMap().get(utils.QUESTION_CODE);
         this.singleQuestions = question.getSingleQuestions();
         this.totalQuestions = singleQuestions.size();
         this.answerGroups = new ButtonGroup[totalQuestions];
@@ -112,6 +117,7 @@ public class StudentExamFrame extends JFrame {
                 submitted = true;
                 timer.stop();
                 submitExam();
+                new StudentPanel(account);
             }
         });
 

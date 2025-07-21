@@ -104,7 +104,7 @@ public class StudentPanel extends JFrame {
         examButton.addActionListener(e -> {
             if (utils.IS_PUBLISHED) {
                 dispose();
-                new StudentExamFrame(utils.QUESTION_CODE);
+                new StudentExamFrame(account);
             } else  {
                 JOptionPane.showMessageDialog(StudentPanel.this, "No exam found", "Error", JOptionPane.ERROR_MESSAGE);
             }
