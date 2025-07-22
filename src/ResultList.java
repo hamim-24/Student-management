@@ -100,6 +100,7 @@ public class ResultList extends JFrame {
         // Info panel for department, year, total MCQ
         infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 24, 6));
         infoPanel.setBackground(new Color(255, 255, 255));
+        infoPanel.setPreferredSize(new Dimension(852, 50));
         infoPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(220, 220, 220)),
                 BorderFactory.createEmptyBorder(8, 24, 8, 24)));
@@ -176,8 +177,11 @@ public class ResultList extends JFrame {
         if (!selectedResultCode.equals("All")) {
             for (Result result : resultMap.values()) {
                 if (selectedResultCode.equals(result.getResultCode())) {
-                    departmentLabel.setText("Department: " + (result.getDepartment() != null ? result.getDepartment() : ""));
-                    yearLabel.setText("Year: " + (result.getYear() != null ? result.getYear() : "") + ", Total MCQ: " + result.getTotalQuestions());
+                    departmentLabel.setText("Department: " + (result.getDepartment() != null ? result.getDepartment() : "") +
+                            ",   Question Code: " + (result.getQuestionCode() != null ? result.getQuestionCode() : ""));
+                    yearLabel.setText(",   Year: " + (result.getYear() != null ? result.getYear() : "") +
+                            ",   Total MCQ: " + result.getTotalQuestions() +
+                            ",   Exam: " + (result.getQuestionName() != null ? result.getQuestionName() : ""));
                     break;
                 }
             }
