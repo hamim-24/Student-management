@@ -11,25 +11,25 @@ public class ResultList extends JFrame {
     private JTextField idFilterField, cgpaFilterField;
     private JButton clearFiltersButton, backButton;
     private JLabel filteredCountLabel;
-    private JLabel departmentLabel,  yearLabel;
-
+    private JLabel departmentLabel, yearLabel;
+    private JPanel infoPanel;
     Map<String, Result> resultMap;
-
     Result result;
 
     public ResultList() {
-
         this.resultMap = Main.getResultMap();
-
-        setTitle("Result List");
+        setTitle("Exam Results");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 600);
+        setSize(1000, 700);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout(0, 0));
 
-        departmentLabel = new JLabel();
-        departmentLabel.setPreferredSize(new Dimension(100, 20));
-        yearLabel = new JLabel();
-        yearLabel.setPreferredSize(new Dimension(300, 20));
+        // Title label
+        JLabel titleLabel = new JLabel("Exam Results", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 12, 0));
+        titleLabel.setForeground(new Color(44, 62, 80));
+        add(titleLabel, BorderLayout.NORTH);
 
         // Table columns
         String[] columnNames = {"Roll", "Name", "ID", "Marks", "Correct", "Incorrect", "GPA"};
@@ -40,27 +40,34 @@ public class ResultList extends JFrame {
             }
         };
         resultTable = new JTable(tableModel);
-        resultTable.setRowHeight(24);
+        resultTable.setRowHeight(26);
+        resultTable.setFont(new Font("Arial", Font.PLAIN, 15));
+        resultTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
         resultTable.setFillsViewportHeight(true);
         resultTable.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(resultTable);
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Student Results", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+        ));
+        scrollPane.setPreferredSize(new Dimension(900, 400));
 
         // Filter panel
         JPanel filterPanel = new JPanel(new GridBagLayout());
+        filterPanel.setBackground(new Color(245, 247, 250));
         filterPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(16, 16, 16, 16),
+                BorderFactory.createEmptyBorder(16, 16, 8, 16),
                 BorderFactory.createTitledBorder("Filter Results")));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 10, 5, 10);
+        gbc.insets = new Insets(5, 12, 5, 12);
         gbc.anchor = GridBagConstraints.WEST;
-
-        // Result code filter
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridy = 0;
+        gbc.gridx = 0;
         filterPanel.add(new JLabel("Result Code:"), gbc);
         gbc.gridx++;
         resultCodeComboBox = new JComboBox<>();
+        resultCodeComboBox.setFont(new Font("Arial", Font.PLAIN, 15));
         resultCodeComboBox.addItem("All");
-        // Populate ComboBox with unique result codes from Result objects
         resultCodeComboBox.removeAllItems();
         resultCodeComboBox.addItem("All");
         java.util.Set<String> uniqueResultCodes = new java.util.HashSet<>();
@@ -73,34 +80,39 @@ public class ResultList extends JFrame {
             resultCodeComboBox.addItem(code);
         }
         filterPanel.add(resultCodeComboBox, gbc);
-
-        // ID filter
         gbc.gridx++;
         filterPanel.add(new JLabel("ID:"), gbc);
         gbc.gridx++;
         idFilterField = new JTextField(10);
+        idFilterField.setFont(new Font("Arial", Font.PLAIN, 15));
         filterPanel.add(idFilterField, gbc);
-
-        // Min CGPA filter
         gbc.gridx++;
         filterPanel.add(new JLabel("Min CGPA:"), gbc);
         gbc.gridx++;
         cgpaFilterField = new JTextField(6);
+        cgpaFilterField.setFont(new Font("Arial", Font.PLAIN, 15));
         filterPanel.add(cgpaFilterField, gbc);
-
-        // Filtered count label
         gbc.gridx++;
         filteredCountLabel = new JLabel();
+        filteredCountLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         filterPanel.add(filteredCountLabel, gbc);
 
-        gbc.gridy = 2;
-        gbc.gridx = 0;
-        filterPanel.add(departmentLabel, gbc);
-        gbc.gridx++;
-        filterPanel.add(yearLabel, gbc);
+        // Info panel for department, year, total MCQ
+        infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 24, 6));
+        infoPanel.setBackground(new Color(255, 255, 255));
+        infoPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 220, 220)),
+                BorderFactory.createEmptyBorder(8, 24, 8, 24)));
+        departmentLabel = new JLabel();
+        departmentLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        yearLabel = new JLabel();
+        yearLabel.setFont(new Font("Arial", Font.BOLD, 15));
+        infoPanel.add(departmentLabel);
+        infoPanel.add(yearLabel);
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setBackground(new Color(245, 247, 250));
         clearFiltersButton = new JButton("Clear Filter");
         backButton = new JButton("Back");
         utils.styleButton(clearFiltersButton);
@@ -108,10 +120,16 @@ public class ResultList extends JFrame {
         buttonPanel.add(clearFiltersButton);
         buttonPanel.add(backButton);
 
-        // Layout
-        setLayout(new BorderLayout());
-        add(filterPanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        // Main content panel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBackground(new Color(245, 247, 250));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 24, 0));
+        mainPanel.add(filterPanel);
+        mainPanel.add(infoPanel);
+        mainPanel.add(scrollPane);
+
+        add(mainPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
         // Listeners
