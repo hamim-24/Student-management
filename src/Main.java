@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +6,11 @@ import java.util.Map;
 public class Main {
     private static final Map<String, Account> accounts = new HashMap<>();
     private static final Map<String, Question> questionMap = new HashMap<>();
+    private static final Map<String, Result> resultMap = new HashMap<>();
+
+    public static Map<String, Result> getResultMap() {
+        return resultMap;
+    }
 
     public static Map<String, Question> getQuestionMap() {
         return questionMap;
@@ -111,8 +115,11 @@ public class Main {
         singleQuestionList1.add(new SingleQuestion("4-1=?", new String[]{"1", "2", "3", "4"}, "3"));
         Question q1 = new Question(singleQuestionList1, "Semester Final Exam", "100");
 
-
         questionMap.put(q1.getQuestionCode(), q1);
+
+        Result result = new Result("100");
+
+        resultMap.put(result.getQuestionCode(), result);
         //new TeacherPanel(null);
         new LoginForm();
     }

@@ -46,12 +46,17 @@ public class AdministrationForm extends JFrame {
 
         // Search/View Exam Button
         gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
         JButton teacherButton = new JButton("Teacher List");
         utils.styleButton(teacherButton);
         teacherButton.setToolTipText("Show Teacher List");
         mainPanel.add(teacherButton, gbc);
+
+        // Search/View Result Button
+        gbc.gridy++;
+        JButton resultButton = new JButton("Result List");
+        utils.styleButton(resultButton);
+        resultButton.setToolTipText("Show Result List");
+        mainPanel.add(resultButton, gbc);
 
         // Search area
         gbc.gridy++;
@@ -112,6 +117,10 @@ public class AdministrationForm extends JFrame {
                 scrollPane.setPreferredSize(new Dimension(400, 250));
                 JOptionPane.showMessageDialog(this, scrollPane, "Account Details", JOptionPane.INFORMATION_MESSAGE);
             }
+        });
+        resultButton.addActionListener(e -> {
+            dispose();
+            new ResultList();
         });
         backButton.addActionListener(e -> {
             this.dispose();

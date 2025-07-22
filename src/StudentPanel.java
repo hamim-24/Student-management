@@ -10,10 +10,8 @@ public class StudentPanel extends JFrame {
     StudentAccount account;
     private JPanel mainPanel;
     JLabel questionStatusLabel;
-    String id;
 
     public StudentPanel(String id) {
-        this.id = id;
         this.questionMap = Main.getQuestionMap();
         this.account = (StudentAccount) Main.getAccounts().get(id);
 
@@ -104,14 +102,20 @@ public class StudentPanel extends JFrame {
 
         // Button actions
         examButton.addActionListener(e -> {
-            if (utils.IS_PUBLISHED && !account.getEXAM_DONE()) {
-                account.setEXAM_DONE(true);
-                dispose();
-                new StudentExamFrame(id);
-            } else if (account.getEXAM_DONE()) {
-                JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "No exam found", "Error", JOptionPane.ERROR_MESSAGE);
+            String examYear = Main.getQuestionMap().get(utils.QUESTION_CODE).getYear();
+            String examDepartment = Main.getQuestionMap().get(utils.QUESTION_CODE).getDepartment();
+            if (account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear)) {
+                if (utils.IS_PUBLISHED && !account.getEXAM_DONE()) {
+                    account.setEXAM_DONE(true);
+                    dispose();
+                    new StudentExamFrame(id);
+                } else if (account.getEXAM_DONE()) {
+                    JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No exam found", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else  {
+                JOptionPane.showMessageDialog(this, "Exam is not for you!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         searchExamButton.addActionListener(e -> {
