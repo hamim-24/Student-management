@@ -194,6 +194,7 @@ public class StudentExamFrame extends JFrame {
 
     private void submitExam() {
         int correct = 0;
+        int incorrect = 0;
         StringBuilder result = new StringBuilder();
         result.append("Exam: ").append(question.getExamName()).append("\n");
         result.append("Code: ").append(question.getQuestionCode()).append("\n\n");
@@ -213,13 +214,19 @@ public class StudentExamFrame extends JFrame {
             if (selected != null && selected.equals(correctAnswer)) {
                 result.append("Result: Correct\n\n");
                 correct++;
-            } else {
+            } else if (selected != null && !selected.equals(correctAnswer)) {
+                incorrect++;
                 result.append("Result: Incorrect\n\n");
+            } else {
+                result.append("Result: Skipped\n\n");
             }
         }
         result.append("Total Score: ").append(correct).append(" / ").append(totalQuestions);
         account.setResultInfo(result.toString());
         account.setCg(calculateCGPA(correct, totalQuestions));
+        account.setCorrect(correct);
+        account.setIncorrect(incorrect);
+        account.setMark(correct / totalQuestions * 100);
 
         dispose();
     }

@@ -1,10 +1,8 @@
-import javax.accessibility.AccessibleComponent;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MCQQuestionCreator extends JFrame {
 

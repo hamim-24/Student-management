@@ -2,10 +2,13 @@ public class StudentAccount extends Account {
 
     private String year;
     private int roll;
-    private double cg;
+    private double cg = 0.0;
     private final String status;
     private boolean EXAM_DONE = false;
     private String resultInfo = "";
+    private double mark = 0.0;
+    private int correct = 0;
+    private int incorrect = 0;
 
     public StudentAccount(String id, String password, String email, String firstName, String lastName, String gender, String dob, String year,  int roll, String department, String status, double cg) {
         super(id, password, email, firstName, lastName, gender, dob, department, status);
@@ -38,6 +41,24 @@ public class StudentAccount extends Account {
     }
     public void setResultInfo(String resultInfo) {
         this.resultInfo = resultInfo;
+    }
+    public double getMark() {
+        return mark;
+    }
+    public void setMark(int mark) {
+        this.mark = mark;
+    }
+    public int getCorrect() {
+        return correct;
+    }
+    public void setCorrect(int correct) {
+        this.incorrect = correct;
+    }
+    public int getIncorrect() {
+        return incorrect;
+    }
+    public void setIncorrect(int incorrect) {
+        this.incorrect = incorrect;
     }
 
     @Override

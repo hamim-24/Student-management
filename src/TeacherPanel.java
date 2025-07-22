@@ -132,14 +132,41 @@ public class TeacherPanel extends JFrame {
             }
         });
         publishExamButton.addActionListener(e -> {
-            String publishExam = examSearchField.getText().trim();
-            questionSet = questionMap.get(publishExam);
+            String publishExamCode = examSearchField.getText().trim();
+            questionSet = questionMap.get(publishExamCode);
             if (questionSet != null && !utils.IS_PUBLISHED) {
-                int result = JOptionPane.showConfirmDialog(this, "Are you sure to publish question code: " + questionSet.getQuestionCode() + "?", "Publish Results", JOptionPane.YES_NO_OPTION);
+                // 1. Ask for department
+                String department = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Select Department:",
+                        "Department",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        utils.DEPARTMENTS,
+                        utils.DEPARTMENTS[0]
+                );
+                if (department == null || department.equals("Select")) return;
+
+                // 2. Ask for year
+                String year = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Select Year:",
+                        "Year",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        utils.YEARS,
+                        utils.YEARS[0]
+                );
+                if (year == null || year.equals("Select")) return;
+
+                int result = JOptionPane.showConfirmDialog(this, "Are you sure to publish question code: " + questionSet.getQuestionCode() + " for Department: " + department + " Year: " + year + "?", "Publish Results", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
-                    utils.QUESTION_CODE = publishExam;
+                    Question question = Main.getQuestionMap().get(publishExamCode);
+                    question.setDepartment(department);
+                    question.setYear(year);
+                    utils.QUESTION_CODE = publishExamCode;
                     utils.IS_PUBLISHED = true;
-                    utils.PUBLISHED_STATUS = "Exam code: '" + publishExam + "' Running";
+                    utils.PUBLISHED_STATUS = "Running Exam code: '" + publishExamCode + "' for " + year + ", " + department;
                     questionStatusLabel.setText(utils.PUBLISHED_STATUS);
                     questionStatusLabel.setText(utils.PUBLISHED_STATUS);
                 }
@@ -150,23 +177,34 @@ public class TeacherPanel extends JFrame {
             }
         });
         publishResultButton.addActionListener(e -> {
+            String questionCode = examSearchField.getText().trim();
+            questionSet = questionMap.get(questionCode);
             if (utils.IS_PUBLISHED) {
-                int res = JOptionPane.showConfirmDialog(this, "Are you sure to publish results?", "Results", JOptionPane.YES_NO_OPTION);
-                if  (res == JOptionPane.YES_OPTION) {
+
+                int res = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure to publish results?",
+                    "Results",
+                    JOptionPane.YES_NO_OPTION
+                );
+                if (res == JOptionPane.YES_OPTION) {
                     utils.QUESTION_CODE = null;
                     utils.IS_PUBLISHED = false;
                     utils.PUBLISHED_STATUS = "No Exam is running";
 
                     Map<String, Account> studentAccounts = Main.getAccounts();
                     for (Account acc : studentAccounts.values()) {
-                        if (acc.getStatus().equals("Student")) {
+                        if (acc instanceof StudentAccount) {
                             StudentAccount studentAccount = (StudentAccount) acc;
-                            if (studentAccount.getEXAM_DONE() == false) {
+                            if (studentAccount.getEXAM_DONE() == false && studentAccount.getDepartment().equals(questionSet.getDepartment()) && studentAccount.getYear().equals(questionSet.getYear())) {
                                 studentAccount.setResultInfo("You didn't participate in the exam");
                             }
                             ((StudentAccount) acc).setEXAM_DONE(false);
                         }
                     }
+
+                    Result result = new Result(questionSet.getQuestionCode());
+                    Main.getResultMap().put(result.getQuestionCode(), result);
 
                     questionStatusLabel.setText(utils.PUBLISHED_STATUS);
                     JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
