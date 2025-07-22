@@ -47,7 +47,16 @@ public class ResultList extends JFrame {
         gbc.gridx = 1;
         resultCodeComboBox = new JComboBox<>();
         resultCodeComboBox.addItem("All");
-        for (String code : Main.getResultMap().keySet()) {
+        // Populate ComboBox with unique result codes from Result objects
+        resultCodeComboBox.removeAllItems();
+        resultCodeComboBox.addItem("All");
+        java.util.Set<String> uniqueResultCodes = new java.util.HashSet<>();
+        for (Result result : Main.getResultMap().values()) {
+            if (result.getResultCode() != null && !result.getResultCode().isEmpty()) {
+                uniqueResultCodes.add(result.getResultCode());
+            }
+        }
+        for (String code : uniqueResultCodes) {
             resultCodeComboBox.addItem(code);
         }
         filterPanel.add(resultCodeComboBox, gbc);
@@ -127,10 +136,9 @@ public class ResultList extends JFrame {
         int total = 0, filtered = 0;
         Map<String, Result> resultMap = Main.getResultMap();
 
-        for (Map.Entry<String, Result> entry : resultMap.entrySet()) {
-            String code = entry.getKey();
-            Result result = entry.getValue();
-            if (!selectedResultCode.equals("All") && !code.equals(selectedResultCode)) continue;
+        for (Result result : resultMap.values()) {
+            String code = result.getResultCode();
+            if (!selectedResultCode.equals("All") && (code == null || !code.equals(selectedResultCode))) continue;
 
             // For each student in this result
             for (int i = 0; i < result.getIDs().size(); i++) {

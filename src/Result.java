@@ -72,6 +72,9 @@ public class Result {
     public String getResultCode() {
         return resultCode;
     }
+    public void setResultCode(String resultCode) {
+        this.resultCode = resultCode;
+    }
     public String getQuestionName() {
         return questionName;
     }
