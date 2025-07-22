@@ -157,10 +157,16 @@ public class TeacherPanel extends JFrame {
                         utils.YEARS,
                         utils.YEARS[0]
                 );
-                if (year == null || year.equals("Select")) return;
+                if (year == null || year.equals("Select")) {
+                    JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 String name = JOptionPane.showInputDialog(this, "Enter exam name: ", "Exam name", JOptionPane.QUESTION_MESSAGE).trim();
-                if (name.isEmpty()) return;
+                if (name.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid exam name", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 int result = JOptionPane.showConfirmDialog(this, "Are you sure to publish question?" + "\nName: " + name + "\nCode: " + publishExamCode + "\nDepartment: " + department + "\nYear: " + year, "Publish Results", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
@@ -181,11 +187,23 @@ public class TeacherPanel extends JFrame {
             }
         });
         publishResultButton.addActionListener(e -> {
-            String questionCode = examSearchField.getText().trim();
-            questionSet = questionMap.get(questionCode);
+            String publishExamCode = examSearchField.getText().trim();
+            questionSet = questionMap.get(publishExamCode);
+            if (questionSet == null) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             if (utils.IS_PUBLISHED) {
 
                 String resultCode = JOptionPane.showInputDialog(this, "Enter Result Code:", "Result", JOptionPane.QUESTION_MESSAGE).trim();
+                if (resultCode.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid result code", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (Main.getResultMap().get(resultCode) != null) {
+                    JOptionPane.showMessageDialog(this, "Exam code exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 int res = JOptionPane.showConfirmDialog(
                     this,
@@ -204,12 +222,14 @@ public class TeacherPanel extends JFrame {
                             StudentAccount studentAccount = (StudentAccount) acc;
                             if (studentAccount.getEXAM_DONE() == false && studentAccount.getDepartment().equals(questionSet.getDepartment()) && studentAccount.getYear().equals(questionSet.getYear())) {
                                 studentAccount.setResultInfo("You didn't participate in the exam");
+                                studentAccount.setCg(0.0);
+                                ((StudentAccount) acc).setEXAM_DONE(false);
                             }
-                            ((StudentAccount) acc).setEXAM_DONE(false);
                         }
                     }
 
                     Result result = new Result(questionSet.getQuestionCode());
+                    result.setResultCode(resultCode);
                     Main.getResultMap().put(resultCode, result);
 
                     questionStatusLabel.setText(utils.PUBLISHED_STATUS);
@@ -255,4 +275,8 @@ public class TeacherPanel extends JFrame {
         setVisible(true);
     }
 
-} 
+    private static void extracted() {
+        return;
+    }
+
+}
