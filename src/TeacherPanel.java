@@ -159,11 +159,15 @@ public class TeacherPanel extends JFrame {
                 );
                 if (year == null || year.equals("Select")) return;
 
-                int result = JOptionPane.showConfirmDialog(this, "Are you sure to publish question code: " + questionSet.getQuestionCode() + " for Department: " + department + " Year: " + year + "?", "Publish Results", JOptionPane.YES_NO_OPTION);
+                String name = JOptionPane.showInputDialog(this, "Enter exam name: ", "Exam name", JOptionPane.QUESTION_MESSAGE).trim();
+                if (name.isEmpty()) return;
+
+                int result = JOptionPane.showConfirmDialog(this, "Are you sure to publish question?" + "\nName: " + name + "\nCode: " + publishExamCode + "\nDepartment: " + department + "\nYear: " + year, "Publish Results", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
                     Question question = Main.getQuestionMap().get(publishExamCode);
                     question.setDepartment(department);
                     question.setYear(year);
+                    question.setExamName(name);
                     utils.QUESTION_CODE = publishExamCode;
                     utils.IS_PUBLISHED = true;
                     utils.PUBLISHED_STATUS = "Running Exam code: '" + publishExamCode + "' for " + year + ", " + department;
@@ -180,6 +184,8 @@ public class TeacherPanel extends JFrame {
             String questionCode = examSearchField.getText().trim();
             questionSet = questionMap.get(questionCode);
             if (utils.IS_PUBLISHED) {
+
+                String resultCode = JOptionPane.showInputDialog(this, "Enter Result Code:", "Result", JOptionPane.QUESTION_MESSAGE).trim();
 
                 int res = JOptionPane.showConfirmDialog(
                     this,
@@ -204,7 +210,7 @@ public class TeacherPanel extends JFrame {
                     }
 
                     Result result = new Result(questionSet.getQuestionCode());
-                    Main.getResultMap().put(result.getQuestionCode(), result);
+                    Main.getResultMap().put(resultCode, result);
 
                     questionStatusLabel.setText(utils.PUBLISHED_STATUS);
                     JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
