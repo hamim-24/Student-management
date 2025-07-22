@@ -11,12 +11,25 @@ public class ResultList extends JFrame {
     private JTextField idFilterField, cgpaFilterField;
     private JButton clearFiltersButton, backButton;
     private JLabel filteredCountLabel;
+    private JLabel departmentLabel,  yearLabel;
+
+    Map<String, Result> resultMap;
+
+    Result result;
 
     public ResultList() {
+
+        this.resultMap = Main.getResultMap();
+
         setTitle("Result List");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 600);
         setLocationRelativeTo(null);
+
+        departmentLabel = new JLabel();
+        departmentLabel.setPreferredSize(new Dimension(100, 20));
+        yearLabel = new JLabel();
+        yearLabel.setPreferredSize(new Dimension(300, 20));
 
         // Table columns
         String[] columnNames = {"Roll", "Name", "ID", "Marks", "Correct", "Incorrect", "GPA"};
@@ -44,7 +57,7 @@ public class ResultList extends JFrame {
         // Result code filter
         gbc.gridx = 0; gbc.gridy = 0;
         filterPanel.add(new JLabel("Result Code:"), gbc);
-        gbc.gridx = 1;
+        gbc.gridx++;
         resultCodeComboBox = new JComboBox<>();
         resultCodeComboBox.addItem("All");
         // Populate ComboBox with unique result codes from Result objects
@@ -62,23 +75,29 @@ public class ResultList extends JFrame {
         filterPanel.add(resultCodeComboBox, gbc);
 
         // ID filter
-        gbc.gridx = 2;
+        gbc.gridx++;
         filterPanel.add(new JLabel("ID:"), gbc);
-        gbc.gridx = 3;
+        gbc.gridx++;
         idFilterField = new JTextField(10);
         filterPanel.add(idFilterField, gbc);
 
         // Min CGPA filter
-        gbc.gridx = 4;
+        gbc.gridx++;
         filterPanel.add(new JLabel("Min CGPA:"), gbc);
-        gbc.gridx = 5;
+        gbc.gridx++;
         cgpaFilterField = new JTextField(6);
         filterPanel.add(cgpaFilterField, gbc);
 
         // Filtered count label
-        gbc.gridx = 6;
+        gbc.gridx++;
         filteredCountLabel = new JLabel();
         filterPanel.add(filteredCountLabel, gbc);
+
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+        filterPanel.add(departmentLabel, gbc);
+        gbc.gridx++;
+        filterPanel.add(yearLabel, gbc);
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -134,12 +153,26 @@ public class ResultList extends JFrame {
 
         tableModel.setRowCount(0);
         int total = 0, filtered = 0;
-        Map<String, Result> resultMap = Main.getResultMap();
+
+        // Show department, year, totalMcq only if a specific result code is selected
+        if (!selectedResultCode.equals("All")) {
+            for (Result result : resultMap.values()) {
+                if (selectedResultCode.equals(result.getResultCode())) {
+                    departmentLabel.setText("Department: " + (result.getDepartment() != null ? result.getDepartment() : ""));
+                    yearLabel.setText("Year: " + (result.getYear() != null ? result.getYear() : "") + ", Total MCQ: " + result.getTotalQuestions());
+                    break;
+                }
+            }
+        } else {
+            departmentLabel.setText("");
+            yearLabel.setText("");
+        }
 
         for (Result result : resultMap.values()) {
             String code = result.getResultCode();
-            if (!selectedResultCode.equals("All") && (code == null || !code.equals(selectedResultCode))) continue;
-
+            if (!selectedResultCode.equals("All") && (code == null || !code.equals(selectedResultCode))) {
+                continue;
+            }
             // For each student in this result
             for (int i = 0; i < result.getIDs().size(); i++) {
                 String studentId = result.getIDs().get(i);
@@ -147,7 +180,6 @@ public class ResultList extends JFrame {
                 int roll = result.getRolls().get(i);
                 double mark = result.getMarks().get(i);
                 double cgpa = result.getCgpas().get(i);
-                // For correct/incorrect, if available
                 int correct = 0, incorrect = 0;
                 try {
                     correct = result.getCorrect().get(i);
@@ -171,5 +203,26 @@ public class ResultList extends JFrame {
             }
         }
         filteredCountLabel.setText("Results: " + filtered + " / " + total + " (filtered/total)");
+        // Set row background color for GPA < 2.0
+        resultTable.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                try {
+                    double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
+                    if (cgpa < 2.0) {
+                        c.setBackground(new Color(255, 204, 204)); // Softer red
+                    } else if (!isSelected) {
+                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                    }
+                } catch (Exception e) {
+                    if (!isSelected) {
+                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                    }
+                }
+                return c;
+            }
+        });
+        resultTable.repaint();
     }
 }
