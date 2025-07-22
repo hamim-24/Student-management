@@ -147,6 +147,45 @@ public class StudentExamFrame extends JFrame {
         setVisible(true);
     }
 
+    private double calculateCGPA(int correctAnswer, int totalAnswers) {
+        double mark = correctAnswer / (double) totalAnswers * 100;
+        if (mark >= 80) {
+            return 4.0;
+        } else if (mark >= 75) {
+            return 3.75;
+        } else if (mark >= 70) {
+            return 3.50;
+        }  else if (mark >= 65) {
+            return 3.25;
+        } else if (mark >= 60) {
+            return 3.0;
+        } else if (mark >= 55) {
+            return 2.75;
+        } else if (mark >= 50) {
+            return 2.5;
+        } else if (mark >= 45) {
+            return 2.25;
+        } else if (mark >= 40) {
+            return 2.0;
+        } else if (mark >= 35) {
+            return 1.75;
+        } else if (mark >= 30) {
+            return 1.5;
+        } else if (mark >= 25) {
+            return 1.25;
+        } else if (mark >= 20) {
+            return 1.0;
+        } else if (mark >= 15) {
+            return 0.75;
+        } else if (mark >= 10) {
+            return 0.5;
+        } else if (mark >= 5) {
+            return 0.25;
+        } else {
+            return 0.0;
+        }
+    }
+
     private void updateTimerLabel() {
         int minutes = timeLeft / 60;
         int seconds = timeLeft % 60;
@@ -180,6 +219,7 @@ public class StudentExamFrame extends JFrame {
         }
         result.append("Total Score: ").append(correct).append(" / ").append(totalQuestions);
         account.setResultInfo(result.toString());
+        account.setCg(calculateCGPA(correct, totalQuestions));
 
         dispose();
     }
