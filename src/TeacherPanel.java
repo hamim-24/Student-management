@@ -13,6 +13,7 @@ public class TeacherPanel extends JFrame {
     JLabel questionStatusLabel = new JLabel();
 
     public TeacherPanel(Account account) {
+
         this.questionMap = Main.getQuestionMap();
         this.account = account;
 
@@ -131,26 +132,47 @@ public class TeacherPanel extends JFrame {
             }
         });
         publishExamButton.addActionListener(e -> {
-            if (questionMap.get(examSearchField.getText().trim()) != null) {
+            String publishExam = examSearchField.getText().trim();
+            questionSet = questionMap.get(publishExam);
+            if (questionSet != null && !utils.IS_PUBLISHED) {
                 int result = JOptionPane.showConfirmDialog(this, "Are you sure to publish question code: " + questionSet.getQuestionCode() + "?", "Publish Results", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
-                    String publishExam = examSearchField.getText().trim();
                     utils.QUESTION_CODE = publishExam;
                     utils.IS_PUBLISHED = true;
                     utils.PUBLISHED_STATUS = "Exam code: '" + publishExam + "' Running";
                     questionStatusLabel.setText(utils.PUBLISHED_STATUS);
                     questionStatusLabel.setText(utils.PUBLISHED_STATUS);
                 }
+            } else if (utils.IS_PUBLISHED) {
+                JOptionPane.showMessageDialog(this, "Exam Code: '" + utils.QUESTION_CODE + "' is already published", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Question is not found", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         publishResultButton.addActionListener(e -> {
             if (utils.IS_PUBLISHED) {
-                utils.QUESTION_CODE = null;
-                utils.IS_PUBLISHED = false;
-                utils.PUBLISHED_STATUS = "No Exam is running";
-                questionStatusLabel.setText(utils.PUBLISHED_STATUS);
+                int res = JOptionPane.showConfirmDialog(this, "Are you sure to publish results?", "Results", JOptionPane.YES_NO_OPTION);
+                if  (res == JOptionPane.YES_OPTION) {
+                    utils.QUESTION_CODE = null;
+                    utils.IS_PUBLISHED = false;
+                    utils.PUBLISHED_STATUS = "No Exam is running";
+
+                    Map<String, Account> studentAccounts = Main.getAccounts();
+                    for (Account acc : studentAccounts.values()) {
+                        if (acc.getStatus().equals("Student")) {
+                            StudentAccount studentAccount = (StudentAccount) acc;
+                            if (studentAccount.getEXAM_DONE() == false) {
+                                studentAccount.setResultInfo("You didn't participate in the exam");
+                            }
+                            ((StudentAccount) acc).setEXAM_DONE(false);
+                        }
+                    }
+
+                    questionStatusLabel.setText(utils.PUBLISHED_STATUS);
+                    JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Question is not found", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         backButton.addActionListener(e -> {

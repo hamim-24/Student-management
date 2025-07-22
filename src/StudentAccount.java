@@ -4,6 +4,8 @@ public class StudentAccount extends Account {
     private int roll;
     private double cg;
     private final String status;
+    private boolean EXAM_DONE = false;
+    private String resultInfo = "";
 
     public StudentAccount(String id, String password, String email, String firstName, String lastName, String gender, String dob, String year,  int roll, String department, String status, double cg) {
         super(id, password, email, firstName, lastName, gender, dob, department, status);
@@ -21,6 +23,21 @@ public class StudentAccount extends Account {
     }
     public double getCg() {
         return cg;
+    }
+    public void setCg(double cg) {
+        this.cg = cg;
+    }
+    public void setEXAM_DONE(boolean EXAM_DONE) {
+        this.EXAM_DONE = EXAM_DONE;
+    }
+    public boolean getEXAM_DONE() {
+        return this.EXAM_DONE;
+    }
+    public String getResultInfo() {
+        return resultInfo;
+    }
+    public void setResultInfo(String resultInfo) {
+        this.resultInfo = resultInfo;
     }
 
     @Override

@@ -7,13 +7,15 @@ import javax.swing.event.DocumentListener;
 public class StudentPanel extends JFrame {
     Map<String, Question> questionMap;
     Question questionSet;
-    Account account;
+    StudentAccount account;
     private JPanel mainPanel;
     JLabel questionStatusLabel;
+    String id;
 
-    public StudentPanel(Account account) {
+    public StudentPanel(String id) {
+        this.id = id;
         this.questionMap = Main.getQuestionMap();
-        this.account = account;
+        this.account = (StudentAccount) Main.getAccounts().get(id);
 
         setTitle("Student Panel");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,10 +88,10 @@ public class StudentPanel extends JFrame {
 
         // Publish Results Button
         gbc.gridy++;
-        JButton publishResultButton = new JButton("Results");
-        utils.styleButton(publishResultButton);
-        publishResultButton.setToolTipText("show results");
-        mainPanel.add(publishResultButton, gbc);
+        JButton resultButton = new JButton("Results");
+        utils.styleButton(resultButton);
+        resultButton.setToolTipText("show results");
+        mainPanel.add(resultButton, gbc);
 
         // Back Button
         gbc.gridy++;
@@ -102,11 +104,14 @@ public class StudentPanel extends JFrame {
 
         // Button actions
         examButton.addActionListener(e -> {
-            if (utils.IS_PUBLISHED) {
+            if (utils.IS_PUBLISHED && !account.getEXAM_DONE()) {
+                account.setEXAM_DONE(true);
                 dispose();
-                new StudentExamFrame(account);
-            } else  {
-                JOptionPane.showMessageDialog(StudentPanel.this, "No exam found", "Error", JOptionPane.ERROR_MESSAGE);
+                new StudentExamFrame(id);
+            } else if (account.getEXAM_DONE()) {
+                JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "No exam found", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         searchExamButton.addActionListener(e -> {
@@ -135,7 +140,19 @@ public class StudentPanel extends JFrame {
             }
         });
         showInfo.addActionListener(e -> JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE));
-        publishResultButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Publish Results coming soon!"));
+        resultButton.addActionListener(e -> {
+            if (!utils.IS_PUBLISHED) {
+                JTextArea textArea = new JTextArea(account.getResultInfo().toString());
+                textArea.setEditable(false);
+                textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+                textArea.setBackground(new Color(245, 247, 250));
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                scrollPane.setPreferredSize(new Dimension(400, 250));
+                JOptionPane.showMessageDialog(this, scrollPane, "Result Details", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Result didn't published", "Result Details", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         backButton.addActionListener(e -> {
             this.dispose();
             new LoginForm();

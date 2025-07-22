@@ -105,8 +105,6 @@ public class MCQQuestionCreator extends JFrame {
         saveButton.setToolTipText("Save the exam and all MCQs");
         saveButton.addActionListener(e -> {
             saveQuestion();
-            this.dispose();
-            new TeacherPanel(account);
         });
 
         JButton clearButton = new JButton("Clear All");
@@ -125,9 +123,18 @@ public class MCQQuestionCreator extends JFrame {
             }
         });
 
+        JButton exitButton = new JButton("Back");
+        styleButton(exitButton);
+        exitButton.setToolTipText("Exit the Question Creator");
+        exitButton.addActionListener(e -> {
+            dispose();
+            new TeacherPanel(account);
+        });
+
         buttonPanel.add(addMCQButton);
         buttonPanel.add(saveButton);
         buttonPanel.add(clearButton);
+        buttonPanel.add(exitButton);
 
         return buttonPanel;
     }

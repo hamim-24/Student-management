@@ -15,12 +15,15 @@ public class StudentExamFrame extends JFrame {
     private final int totalQuestions;
     private boolean submitted = false;
 
-    Account account;
+    StudentAccount account;
+    String id;
 
-    public StudentExamFrame(Account account) {
+    public StudentExamFrame(String id) {
 
-        this.account = account;
-        this.account = account;
+        this.id = id;
+        this.account = (StudentAccount) Main.getAccounts().get(id);
+
+
         Question q = null;
         try {
             q = Main.getQuestionMap().get(utils.QUESTION_CODE);
@@ -136,7 +139,7 @@ public class StudentExamFrame extends JFrame {
                 submitted = true;
                 timer.stop();
                 submitExam();
-                new StudentPanel(account);
+                new StudentPanel(id);
             }
         });
 
@@ -176,13 +179,8 @@ public class StudentExamFrame extends JFrame {
             }
         }
         result.append("Total Score: ").append(correct).append(" / ").append(totalQuestions);
-        JTextArea textArea = new JTextArea(result.toString());
-        textArea.setEditable(false);
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        textArea.setBackground(new Color(245, 247, 250));
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(400, 250));
-        JOptionPane.showMessageDialog(this, scrollPane, "Exam Result", JOptionPane.INFORMATION_MESSAGE);
+        account.setResultInfo(result.toString());
+
         dispose();
     }
 } 
