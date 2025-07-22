@@ -194,7 +194,7 @@ public class LoginForm extends JFrame {
                     dispose();
 
                     if (account.getStatus().equals("Student")) {
-                        new StudentPanel(account);
+                        new StudentPanel(id);
                     }
                     else if (account.getStatus().equals("Teacher")) {
                         new TeacherPanel(account);
