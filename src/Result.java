@@ -8,6 +8,8 @@ public class Result {
     private String questionCode;
     private String questionName;
     private int totalQuestions;
+    private String department;
+    private String year;
     private List<String> names;
     private List<String> IDs;
     private List<Integer> rolls;
@@ -19,8 +21,10 @@ public class Result {
     Map<String, Account> accounts;
     Question question;
 
-    public Result(String questionCode) {
+    public Result(String questionCode, String department, String year) {
 
+        this.department = department;
+        this.year = year;
         this.questionCode = questionCode;
         question = Main.getQuestionMap().get(questionCode);
         this.questionName = question.getExamName();
@@ -62,6 +66,12 @@ public class Result {
     }
     public List<String> getNames() {
         return names;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public String getYear() {
+        return year;
     }
     public int getTotalQuestions() {
         return totalQuestions;

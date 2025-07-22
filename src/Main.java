@@ -117,7 +117,7 @@ public class Main {
 
         questionMap.put(q1.getQuestionCode(), q1);
 
-        Result result = new Result("100");
+        Result result = new Result("100", "CSE", "1st Year");
 
         resultMap.put(result.getResultCode(), result);
         new TeacherPanel(null);

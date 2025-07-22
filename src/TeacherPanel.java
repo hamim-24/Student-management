@@ -11,6 +11,7 @@ public class TeacherPanel extends JFrame {
     private JPanel mainPanel;
     JTextField examSearchField;
     JLabel questionStatusLabel = new JLabel();
+    String department, year;
 
     public TeacherPanel(Account account) {
 
@@ -189,6 +190,8 @@ public class TeacherPanel extends JFrame {
         publishResultButton.addActionListener(e -> {
             String publishExamCode = examSearchField.getText().trim();
             questionSet = questionMap.get(publishExamCode);
+            department =  questionSet.getDepartment();
+            year =  questionSet.getYear();
             if (questionSet == null) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -228,7 +231,7 @@ public class TeacherPanel extends JFrame {
                         }
                     }
 
-                    Result result = new Result(questionSet.getQuestionCode());
+                    Result result = new Result(questionSet.getQuestionCode(), department, year);
                     result.setResultCode(resultCode);
                     Main.getResultMap().put(resultCode, result);
 
