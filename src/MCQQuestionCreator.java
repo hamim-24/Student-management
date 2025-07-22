@@ -6,7 +6,6 @@ import java.util.List;
 
 public class MCQQuestionCreator extends JFrame {
 
-    private JTextField questionNameField;
     private JTextField questionCodeField;
     private JPanel mcqPanel;
     private List<MCQComponent> mcqComponents;
@@ -63,19 +62,8 @@ public class MCQQuestionCreator extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Question Name
-        gbc.gridx = 0; gbc.gridy = 0;
-        JLabel nameLabel = new JLabel("Exam Name:");
-        nameLabel.setFont(new Font("Arial", Font.PLAIN, 15));
-        headerPanel.add(nameLabel, gbc);
-        gbc.gridx = 1;
-        questionNameField = new JTextField(30);
-        questionNameField.setFont(new Font("Arial", Font.PLAIN, 15));
-        questionNameField.setToolTipText("Enter the name of the exam");
-        headerPanel.add(questionNameField, gbc);
-
         // Question Code
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0; gbc.gridy = 0;
         JLabel codeLabel = new JLabel("Question Code:");
         codeLabel.setFont(new Font("Arial", Font.PLAIN, 15));
         headerPanel.add(codeLabel, gbc);
@@ -169,12 +157,10 @@ public class MCQQuestionCreator extends JFrame {
     }
 
     private void saveQuestion() {
-
-        String questionName = questionNameField.getText().trim();
         String questionCode = questionCodeField.getText().trim();
 
-        if (questionName.isEmpty() || questionCode.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter both Question Name and Question Code!",
+        if (questionCode.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter Question Code!",
                     "Missing Information", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -207,7 +193,7 @@ public class MCQQuestionCreator extends JFrame {
             questionList.add(singleQuestion);
         }
 
-        Question questionSet = new Question(questionList, questionName, questionCode);
+        Question questionSet = new Question(questionList, questionCode);
         Main.getQuestionMap().put(questionCode, questionSet);
 
         JOptionPane.showMessageDialog(this, "Question saved successfully as " + questionCode + "!",
@@ -218,7 +204,6 @@ public class MCQQuestionCreator extends JFrame {
 
     private void clearAll() {
 
-            questionNameField.setText("");
             questionCodeField.setText("");
             mcqComponents.clear();
             mcqPanel.removeAll();

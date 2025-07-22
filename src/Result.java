@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class Result {
 
+    private String resultCode;
     private String questionCode;
     private String questionName;
     private int totalQuestions;
@@ -68,10 +69,19 @@ public class Result {
     public String getQuestionCode() {
         return questionCode;
     }
+    public String getResultCode() {
+        return resultCode;
+    }
     public String getQuestionName() {
         return questionName;
     }
     public List<Double> getMarks() {
         return marks;
+    }
+    public List<Integer> getCorrect() {
+        return correct;
+    }
+    public List<Integer> getIncorrect() {
+        return incorrect;
     }
 }
