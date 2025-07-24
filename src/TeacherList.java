@@ -86,6 +86,8 @@ public class TeacherList extends JFrame {
             }
         });
         teacherTable.setRowHeight(24);
+        teacherTable.setFont(new Font("Arial", Font.PLAIN, 15));
+        teacherTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
         teacherTable.setFillsViewportHeight(true);
         teacherTable.getTableHeader().setReorderingAllowed(false);
         teacherTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);

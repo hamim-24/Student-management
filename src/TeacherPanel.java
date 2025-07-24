@@ -110,27 +110,7 @@ public class TeacherPanel extends JFrame {
             new MCQQuestionCreator(account);
         });
         searchExamButton.addActionListener(e -> {
-            String searchExam = examSearchField.getText().trim();
-            questionSet = questionMap.get(searchExam);
-            if (questionSet == null) {
-                JOptionPane.showMessageDialog(this, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                StringBuilder qs = new StringBuilder();
-                qs.append("Exam Name: " + questionSet.getExamName() + "\n");
-                qs.append("Exam Code: " + questionSet.getQuestionCode() + "\n\n");
-                int i = 1;
-                for (SingleQuestion SQ : questionSet.getSingleQuestions()) {
-                    qs.append("  " + i + ". " + SQ.toString() + "\n");
-                    i++;
-                }
-                JTextArea textArea = new JTextArea(qs.toString());
-                textArea.setEditable(false);
-                textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-                textArea.setBackground(new Color(245, 247, 250));
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                scrollPane.setPreferredSize(new Dimension(400, 250));
-                JOptionPane.showMessageDialog(this, scrollPane, "Exam Details", JOptionPane.INFORMATION_MESSAGE);
-            }
+            StudentPanel.searchExam(examSearchField, this);
         });
         publishExamButton.addActionListener(e -> {
             String publishExamCode = examSearchField.getText().trim();
@@ -190,12 +170,12 @@ public class TeacherPanel extends JFrame {
         publishResultButton.addActionListener(e -> {
             String publishExamCode = examSearchField.getText().trim();
             questionSet = questionMap.get(publishExamCode);
-            department =  questionSet.getDepartment();
-            year =  questionSet.getYear();
             if (questionSet == null) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            department =  questionSet.getDepartment();
+            year =  questionSet.getYear();
             if (utils.IS_PUBLISHED) {
 
                 String resultCode = JOptionPane.showInputDialog(this, "Enter Result Code:", "Result", JOptionPane.QUESTION_MESSAGE).trim();
@@ -276,10 +256,6 @@ public class TeacherPanel extends JFrame {
         setMinimumSize(new Dimension(500, 600));
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    private static void extracted() {
-        return;
     }
 
 }
