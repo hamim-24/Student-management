@@ -51,6 +51,10 @@ public class ResultList extends JFrame {
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Student Results", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         scrollPane.setPreferredSize(new Dimension(900, 400));
+        JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+        verticalScrollBar.setUnitIncrement(resultTable.getRowHeight());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(resultTable.getRowHeight());
+        scrollPane.setWheelScrollingEnabled(true);
 
         // Filter panel
         JPanel filterPanel = new JPanel(new GridBagLayout());

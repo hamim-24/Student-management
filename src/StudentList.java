@@ -103,6 +103,8 @@ public class StudentList extends JFrame {
             }
         });
         studentTable.setRowHeight(24);
+        studentTable.setFont(new Font("Arial", Font.PLAIN, 15));
+        studentTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
         studentTable.setFillsViewportHeight(true);
         studentTable.getTableHeader().setReorderingAllowed(false);
         studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);

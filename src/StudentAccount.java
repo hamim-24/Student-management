@@ -5,7 +5,7 @@ public class StudentAccount extends Account {
     private double cg = 0.0;
     private final String status;
     private boolean EXAM_DONE = false;
-    private String resultInfo = "";
+    private String resultInfo = "No result Found";
     private double mark = 0.0;
     private int correct = 0;
     private int incorrect = 0;
