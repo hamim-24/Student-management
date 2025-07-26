@@ -94,10 +94,12 @@ public class AdministrationForm extends JFrame {
             this.dispose();
             new StudentList();
         });
+
         teacherButton.addActionListener(e -> {
             this.dispose();
             new TeacherList();
         });
+
         getRootPane().setDefaultButton(searchButton);
         searchButton.addActionListener(e -> {
             String searchID = searchField.getText().trim();
@@ -111,10 +113,12 @@ public class AdministrationForm extends JFrame {
                 JOptionPane.showMessageDialog(this, TeacherPanel.ScrollPanel(qs), "Account Details", JOptionPane.INFORMATION_MESSAGE);
             }
         });
+
         resultButton.addActionListener(e -> {
             dispose();
             new ResultList();
         });
+
         backButton.addActionListener(e -> {
             this.dispose();
             new LoginForm();

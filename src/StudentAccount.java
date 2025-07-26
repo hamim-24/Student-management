@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class StudentAccount extends Account {
@@ -14,7 +13,8 @@ public class StudentAccount extends Account {
     private int correct = 0;
     private int incorrect = 0;
 
-    public StudentAccount(String id, String password, String email, String firstName, String lastName, String gender, String dob, String year,  int roll, String department, String status, double cg) {
+    public StudentAccount(String id, String password, String email, String firstName, String lastName, String gender, String dob, String year, int roll, String department, String status, double cg) {
+
         super(id, password, email, firstName, lastName, gender, dob, department, status);
         EXAM_DONE = new HashMap<>();
         resultInfo = new HashMap<>();
@@ -27,42 +27,55 @@ public class StudentAccount extends Account {
     public String getYear() {
         return year;
     }
+
     public int getRoll() {
         return roll;
     }
+
     public double getCg() {
         return cg;
     }
+
     public void setCg(double cg) {
         this.cg = cg;
     }
+
     public void setEXAM_DONE(String code, boolean EXAM_DONE) {
         this.EXAM_DONE.put(code, EXAM_DONE);
     }
+
     public Map<String, Boolean> getEXAM_DONE() {
         return this.EXAM_DONE;
     }
+
     public Map<String, String> getResultInfo() {
         return resultInfo;
     }
+
     public void setResultInfo(String code, String resultInfo) {
         this.resultInfo.put(code, resultInfo);
     }
+
     public double getMark() {
         return mark;
     }
+
     public void setMark(double mark) {
         this.mark = mark;
     }
+
     public int getCorrect() {
         return correct;
     }
+
     public void setCorrect(int correct) {
         this.correct = correct;
     }
+
     public int getIncorrect() {
         return incorrect;
     }
+
     public void setIncorrect(int incorrect) {
         this.incorrect = incorrect;
     }

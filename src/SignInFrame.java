@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
 public class SignInFrame extends JFrame {
 
     private Map<String, Account> accounts = new HashMap<>();

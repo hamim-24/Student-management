@@ -23,6 +23,7 @@ public class MCQQuestionCreator extends JFrame {
     }
 
     private void initializeUI() {
+
         setTitle("MCQ Question Creator");
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
@@ -63,7 +64,8 @@ public class MCQQuestionCreator extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
 
         // Question Code
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         JLabel codeLabel = new JLabel("Question Code:");
         codeLabel.setFont(new Font("Arial", Font.PLAIN, 15));
         headerPanel.add(codeLabel, gbc);
@@ -82,19 +84,19 @@ public class MCQQuestionCreator extends JFrame {
         buttonPanel.setBackground(new Color(245, 247, 250));
 
         JButton addMCQButton = new JButton("Add MCQ");
-        styleButton(addMCQButton);
+        utils.styleButton(addMCQButton);
         addMCQButton.setToolTipText("Add a new MCQ question");
         addMCQButton.addActionListener(e -> addMCQ());
 
         JButton saveButton = new JButton("Save Question");
-        styleButton(saveButton);
+        utils.styleButton(saveButton);
         saveButton.setToolTipText("Save the exam and all MCQs");
         saveButton.addActionListener(e -> {
             saveQuestion();
         });
 
         JButton clearButton = new JButton("Clear All");
-        styleButton(clearButton);
+        utils.styleButton(clearButton);
         clearButton.setToolTipText("Clear all fields and MCQs");
 
         clearButton.addActionListener(e -> {
@@ -110,7 +112,7 @@ public class MCQQuestionCreator extends JFrame {
         });
 
         JButton exitButton = new JButton("Back");
-        styleButton(exitButton);
+        utils.styleButton(exitButton);
         exitButton.setToolTipText("Exit the Question Creator");
         exitButton.addActionListener(e -> {
             dispose();
@@ -125,26 +127,6 @@ public class MCQQuestionCreator extends JFrame {
         return buttonPanel;
     }
 
-    private void styleButton(JButton button) {
-
-        button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setBackground(new Color(52, 152, 219));
-        button.setForeground(Color.BLACK);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(41, 128, 185)),
-                BorderFactory.createEmptyBorder(8, 18, 8, 18)));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(41, 128, 185));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(52, 152, 219));
-            }
-        });
-    }
 
     private void addMCQ() {
 
@@ -204,13 +186,13 @@ public class MCQQuestionCreator extends JFrame {
 
     private void clearAll() {
 
-            questionCodeField.setText("");
-            mcqComponents.clear();
-            mcqPanel.removeAll();
-            mcqCounter = 1;
-            addMCQ(); // Add one MCQ by default
-            mcqPanel.revalidate();
-            mcqPanel.repaint();
+        questionCodeField.setText("");
+        mcqComponents.clear();
+        mcqPanel.removeAll();
+        mcqCounter = 1;
+        addMCQ(); // Add one MCQ by default
+        mcqPanel.revalidate();
+        mcqPanel.repaint();
 
     }
 
@@ -223,11 +205,14 @@ public class MCQQuestionCreator extends JFrame {
         private JRadioButton[] answerButtons;
 
         public MCQComponent(int number) {
+
             setBackground(new Color(236, 240, 241));
             setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createEmptyBorder(24, 32, 24, 32),
                     BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "MCQ", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
-            ));            setLayout(new GridBagLayout());
+            ));
+
+            setLayout(new GridBagLayout());
             initializeComponents();
         }
 
@@ -238,22 +223,28 @@ public class MCQQuestionCreator extends JFrame {
             gbc.anchor = GridBagConstraints.WEST;
 
             // Question
-            gbc.gridx = 0; gbc.gridy = 0;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
             JLabel qLabel = new JLabel("Question:");
             qLabel.setFont(new Font("Arial", Font.PLAIN, 14));
             add(qLabel, gbc);
-            gbc.gridx = 1; gbc.gridwidth = 3; gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 1;
+            gbc.gridwidth = 3;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
             questionArea = new JTextArea(3, 40);
             questionArea.setLineWrap(true);
             questionArea.setWrapStyleWord(true);
             questionArea.setFont(new Font("Arial", Font.PLAIN, 14));
             questionArea.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+                    BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                    BorderFactory.createEmptyBorder(4, 4, 4, 4)));
             add(new JScrollPane(questionArea), gbc);
 
             // Options
-            gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1; gbc.fill = GridBagConstraints.NONE;
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.gridwidth = 1;
+            gbc.fill = GridBagConstraints.NONE;
             JLabel optLabel = new JLabel("Options:");
             optLabel.setFont(new Font("Arial", Font.PLAIN, 14));
             add(optLabel, gbc);
@@ -263,7 +254,9 @@ public class MCQQuestionCreator extends JFrame {
             answerGroup = new ButtonGroup();
 
             for (int i = 0; i < 4; i++) {
-                gbc.gridx = 1; gbc.gridy = 1 + i; gbc.gridwidth = 1;
+                gbc.gridx = 1;
+                gbc.gridy = 1 + i;
+                gbc.gridwidth = 1;
                 optionFields[i] = new JTextField(25);
                 optionFields[i].setFont(new Font("Arial", Font.PLAIN, 14));
                 optionFields[i].setToolTipText("Option " + (i + 1));
@@ -279,9 +272,12 @@ public class MCQQuestionCreator extends JFrame {
             }
 
             // Remove MCQ button
-            gbc.gridx = 3; gbc.gridy = 1; gbc.gridheight = 4; gbc.anchor = GridBagConstraints.NORTHEAST;
+            gbc.gridx = 3;
+            gbc.gridy = 1;
+            gbc.gridheight = 4;
+            gbc.anchor = GridBagConstraints.NORTHEAST;
             JButton removeButton = new JButton("Remove");
-            styleButton(removeButton);
+            utils.styleButton(removeButton);
             removeButton.setBackground(new Color(231, 76, 60));
             removeButton.setToolTipText("Remove this MCQ");
             removeButton.addActionListener(e -> removeMCQ());

@@ -24,10 +24,11 @@ public class Question {
     public String getDepartment() {
         return department;
     }
+
     public String getExamName() {
         return examName;
     }
-    
+
     public String getQuestionCode() {
         return questionCode;
     }

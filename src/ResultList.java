@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Vector;
 
 public class ResultList extends JFrame {
+
     private JTable resultTable;
     private DefaultTableModel tableModel;
     private JComboBox<String> resultCodeComboBox;
@@ -13,9 +14,11 @@ public class ResultList extends JFrame {
     private JLabel filteredCountLabel;
     private JLabel departmentLabel, yearLabel;
     private JPanel infoPanel;
+
     Map<String, Result> resultMap;
 
     public ResultList() {
+
         this.resultMap = Main.getResultMap();
         setTitle("Exam Results");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -139,10 +142,14 @@ public class ResultList extends JFrame {
         // Listeners
         resultCodeComboBox.addActionListener(e -> filterResults());
         idFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) { filterResults(); }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterResults();
+            }
         });
         cgpaFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) { filterResults(); }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterResults();
+            }
         });
         clearFiltersButton.addActionListener(e -> clearAllFilters());
         backButton.addActionListener(e -> {
@@ -210,7 +217,8 @@ public class ResultList extends JFrame {
                 try {
                     correct = result.getCorrect().get(i);
                     incorrect = result.getIncorrect().get(i);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
                 if (!idFilter.isEmpty() && !studentId.toLowerCase().contains(idFilter)) continue;
                 if (!cgpaFilter.isEmpty() && cgpa < minCgpa) continue;
@@ -232,6 +240,7 @@ public class ResultList extends JFrame {
         resultTable.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 try {
                     double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());

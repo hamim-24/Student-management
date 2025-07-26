@@ -1,11 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class utils {
 
@@ -32,9 +29,8 @@ public class utils {
             "Select", "1st Year", "2nd Year", "3rd Year", "4th Year"
     };
 
-
-
     public static void styleButton(JButton button) {
+
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setBackground(new Color(52, 152, 219));
         button.setForeground(Color.BLACK);
@@ -44,11 +40,14 @@ public class utils {
                 BorderFactory.createEmptyBorder(8, 18, 8, 18)));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addMouseListener(new java.awt.event.MouseAdapter() {
+
             public void mouseEntered(java.awt.event.MouseEvent evt) {
+
                 button.setBackground(new Color(41, 128, 185));
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
+
                 button.setBackground(new Color(52, 152, 219));
             }
         });
