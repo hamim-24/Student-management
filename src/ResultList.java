@@ -14,7 +14,6 @@ public class ResultList extends JFrame {
     private JLabel departmentLabel, yearLabel;
     private JPanel infoPanel;
     Map<String, Result> resultMap;
-    Result result;
 
     public ResultList() {
         this.resultMap = Main.getResultMap();
@@ -76,8 +75,8 @@ public class ResultList extends JFrame {
         resultCodeComboBox.addItem("All");
         java.util.Set<String> uniqueResultCodes = new java.util.HashSet<>();
         for (Result result : Main.getResultMap().values()) {
-            if (result.getResultCode() != null && !result.getResultCode().isEmpty()) {
-                uniqueResultCodes.add(result.getResultCode());
+            if (result.getQuestionCode() != null && !result.getQuestionCode().isEmpty()) {
+                uniqueResultCodes.add(result.getQuestionCode());
             }
         }
         for (String code : uniqueResultCodes) {
@@ -180,7 +179,7 @@ public class ResultList extends JFrame {
         // Show department, year, totalMcq only if a specific result code is selected
         if (!selectedResultCode.equals("All")) {
             for (Result result : resultMap.values()) {
-                if (selectedResultCode.equals(result.getResultCode())) {
+                if (selectedResultCode.equals(result.getQuestionCode())) {
                     departmentLabel.setText("Department: " + (result.getDepartment() != null ? result.getDepartment() : "") +
                             ",   Question Code: " + (result.getQuestionCode() != null ? result.getQuestionCode() : ""));
                     yearLabel.setText(",   Year: " + (result.getYear() != null ? result.getYear() : "") +
@@ -195,7 +194,8 @@ public class ResultList extends JFrame {
         }
 
         for (Result result : resultMap.values()) {
-            String code = result.getResultCode();
+            String code = result.getQuestionCode();
+            total++;
             if (!selectedResultCode.equals("All") && (code == null || !code.equals(selectedResultCode))) {
                 continue;
             }
@@ -212,7 +212,6 @@ public class ResultList extends JFrame {
                     incorrect = result.getIncorrect().get(i);
                 } catch (Exception e) {}
 
-                total++;
                 if (!idFilter.isEmpty() && !studentId.toLowerCase().contains(idFilter)) continue;
                 if (!cgpaFilter.isEmpty() && cgpa < minCgpa) continue;
 

@@ -1,12 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class utils {
 
-    public static boolean IS_PUBLISHED = false;
-    public static String QUESTION_CODE;
+    public static Map<String, Boolean> EXAM_CODE = new HashMap<>();
+    public static Map<String, Long> EXAM_TIMESTAMPS = new HashMap<>();
     public static String PUBLISHED_STATUS = "No Exam is running";
 
     public static final String DEFAULT_FILE_PATH = "No Path Selected";

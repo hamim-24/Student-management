@@ -8,7 +8,7 @@ public class StudentPanel extends JFrame {
     Map<String, Question> questionMap;
     StudentAccount account;
     private JPanel mainPanel;
-    JLabel questionStatusLabel;
+    JButton questionStatusButton;
     JTextField examSearchField;
 
     public StudentPanel(String id) {
@@ -42,18 +42,11 @@ public class StudentPanel extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        questionStatusLabel = new JLabel(utils.PUBLISHED_STATUS);
-        questionStatusLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        questionStatusLabel.setForeground(new Color(231, 76, 60));
-        questionStatusLabel.setPreferredSize(new Dimension(250, 20));
-        mainPanel.add(questionStatusLabel, gbc);
-        gbc.gridy++;
-
-        // Create Exam Button
-        JButton examButton = new JButton("EXAM");
-        utils.styleButton(examButton);
-        examButton.setToolTipText("EXAM");
-        mainPanel.add(examButton, gbc);
+        questionStatusButton = new JButton(utils.PUBLISHED_STATUS);
+        questionStatusButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        questionStatusButton.setForeground(new Color(231, 76, 60));
+        questionStatusButton.setPreferredSize(new Dimension(250, 20));
+        mainPanel.add(questionStatusButton, gbc);
 
         // Search area
         gbc.gridy++;
@@ -67,10 +60,17 @@ public class StudentPanel extends JFrame {
         examSearchField.setFont(new Font("Arial", Font.PLAIN, 15));
         mainPanel.add(examSearchField, gbc);
 
-        // Search/View Exam Button
+        // Exam Button
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
+        JButton examButton = new JButton("EXAM");
+        utils.styleButton(examButton);
+        examButton.setToolTipText("EXAM");
+        mainPanel.add(examButton, gbc);
+
+        // Search/View Exam Button
+        gbc.gridy++;
         JButton searchExamButton = new JButton("Search/View Exam");
         utils.styleButton(searchExamButton);
         searchExamButton.setToolTipText("Search for an existing exam by code");
@@ -102,39 +102,53 @@ public class StudentPanel extends JFrame {
 
         // Button actions
         examButton.addActionListener(e -> {
-            if (utils.IS_PUBLISHED) {
-                String examYear = Main.getQuestionMap().get(utils.QUESTION_CODE).getYear();
-                String examDepartment = Main.getQuestionMap().get(utils.QUESTION_CODE).getDepartment();
-                if (account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear)) {
-                    if (!account.getEXAM_DONE()) {
-                        account.setEXAM_DONE(true);
-                        dispose();
-                        new StudentExamFrame(id);
-                    } else if (account.getEXAM_DONE()) {
-                        JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
+
+            String examCode = examSearchField.getText().trim();
+            Boolean examRunning = utils.EXAM_CODE.get(examCode);
+            if (examRunning != null) {
+                Question question = Main.getQuestionMap().get(examCode);
+                if (question != null) {
+                    String examYear = question.getYear().trim();
+                    String examDepartment = question.getDepartment().trim();
+                    if (account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear)) {
+                        Boolean examDone = account.getEXAM_DONE().get(examCode);
+                        if (examDone == null || !examDone) {
+                            account.setEXAM_DONE(examCode, true);
+                            dispose();
+                            new StudentExamFrame(id, examCode);
+                        } else {
+                            JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(this, "No exam found", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Exam is not for you!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Exam is not for you!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Exam not found", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(this, utils.PUBLISHED_STATUS, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Exam is not found", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         searchExamButton.addActionListener(e -> {
-            searchExam(examSearchField, this);
+            searchExam(examSearchField, false, this);
         });
         showInfo.addActionListener(e -> JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE));
         resultButton.addActionListener(e -> {
-            if (!utils.IS_PUBLISHED) {
-                JTextArea textArea = new JTextArea(account.getResultInfo().toString());
-                textArea.setEditable(false);
-                textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-                textArea.setBackground(new Color(245, 247, 250));
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                scrollPane.setPreferredSize(new Dimension(400, 250));
-                JOptionPane.showMessageDialog(this, scrollPane, "Result Details", JOptionPane.INFORMATION_MESSAGE);
+            String examCode = examSearchField.getText().trim();
+            Boolean examRunning = utils.EXAM_CODE.get(examCode);
+            if (examRunning != null && !examRunning) {
+                Map<String, String> resultInfo = account.getResultInfo();
+                if (resultInfo != null && !resultInfo.isEmpty()) {
+                    JTextArea textArea = new JTextArea(resultInfo.toString());
+                    textArea.setEditable(false);
+                    textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+                    textArea.setBackground(new Color(245, 247, 250));
+                    JScrollPane scrollPane = new JScrollPane(textArea);
+                    scrollPane.setPreferredSize(new Dimension(400, 250));
+                    JOptionPane.showMessageDialog(this, scrollPane, "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No results available for this exam", "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Result didn't published", "Result Details", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -161,11 +175,17 @@ public class StudentPanel extends JFrame {
 
                 String code = examSearchField.getText().trim();
                 searchExamButton.setText("Search/View '" + code + "' Exam");
+                examButton.setText("EXAM " + code);
+                resultButton.setText("Results " + code);
 
                 // Add these lines to force UI refresh
                 mainPanel.revalidate();
                 mainPanel.repaint();
             }
+        });
+
+        questionStatusButton.addActionListener(e -> {
+           TeacherPanel.questionStatus(this);
         });
 
         pack();
@@ -174,13 +194,13 @@ public class StudentPanel extends JFrame {
         setVisible(true);
     }
 
-    public static void searchExam(JTextField examSearchField, JFrame frame) {
+    public static void searchExam(JTextField examSearchField, boolean isTeacher, JFrame frame) {
 
         String searchExam = examSearchField.getText().trim();
         Question questionSet = Main.getQuestionMap().get(searchExam);
         if (questionSet == null) {
             JOptionPane.showMessageDialog(frame, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (questionSet.getQuestionCode().equals(utils.QUESTION_CODE)) {
+        } else if (!isTeacher && utils.EXAM_CODE.get(searchExam) != null && utils.EXAM_CODE.get(searchExam)) {
             JOptionPane.showMessageDialog(frame,
                     "The Exam is running",
                     "Error",
