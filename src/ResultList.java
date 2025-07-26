@@ -202,7 +202,7 @@ public class ResultList extends JFrame {
 
         for (Result result : resultMap.values()) {
             String code = result.getQuestionCode();
-            total++;
+            total += result.getCgpas().size();
             if (!selectedResultCode.equals("All") && (code == null || !code.equals(selectedResultCode))) {
                 continue;
             }

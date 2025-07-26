@@ -13,7 +13,7 @@ public class LoginForm extends JFrame {
 
     JTextField idField;
     JPasswordField passwordField;
-    JButton loginButton, studentLoginButton, registerButton;
+    JButton loginButton, studentLoginButton, registerButton, notificationButton;
 
     private final String ID_PLACE_HOLDER = "ID/Registration Number";
     private final String PASSWORD_PLACE_HOLDER = "Password";
@@ -59,6 +59,9 @@ public class LoginForm extends JFrame {
         registerButton = new JButton("Register");
         registerButton.setFocusPainted(false);
 
+        notificationButton = new JButton("Notification");
+        notificationButton.setFocusPainted(false);
+
     }
 
     private void layoutComponents() {
@@ -77,7 +80,7 @@ public class LoginForm extends JFrame {
 
         // add id field
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy++;
         c.gridwidth = 2;
         c.insets = new Insets(5, 20, 5, 20);
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -85,7 +88,7 @@ public class LoginForm extends JFrame {
 
         // add password field
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy++;
         c.gridwidth = 2;
         c.insets = new Insets(5, 20, 5, 20);
         add(passwordField, c);
@@ -96,10 +99,14 @@ public class LoginForm extends JFrame {
         buttonPanel.add(studentLoginButton);
         buttonPanel.add(registerButton);
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy++;
         c.gridwidth = 2;
-        c.insets = new Insets(15, 15, 15, 15);
+        c.insets = new Insets(5, 20, 5, 20);
         add(buttonPanel, c);
+
+        c.gridy++;
+        c.insets = new Insets(5, 20, 25, 20);
+        add(notificationButton, c);
     }
 
     private void setPlaceHolders() {
@@ -207,6 +214,13 @@ public class LoginForm extends JFrame {
         registerButton.addActionListener(e -> {
             dispose();
             new SignInFrame();
+        });
+
+        notificationButton.addActionListener(e -> {
+
+            StringBuilder notification = new StringBuilder();
+            notification.append("Under construction");
+            JOptionPane.showMessageDialog(this, TeacherPanel.ScrollPanel(notification), "Notification", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 
