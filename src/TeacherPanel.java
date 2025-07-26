@@ -312,12 +312,13 @@ public class TeacherPanel extends JFrame {
                         result.append("Department: ").append(question.getDepartment()).append("\n");
                         result.append("Year: ").append(question.getYear()).append("\n");
                         if (isRunning) {
-                            result.append("Status: Running\n\n");
+                            result.append("Status: Running\n");
                         } else {
-                            result.append("Status: Result Published\n\n");
+                            result.append("Status: Result Published\n");
                         }
+                         result.append("=".repeat(50)).append("\n\n");
                     } else {
-                        result.append("Exam Code: ").append(examCode).append(" (Question not found)\n\n");
+                        result.append("Exam Code: ").append(examCode).append("\n (Question not found)\n\n");
                     }
                 }
             }
