@@ -113,15 +113,15 @@ public class Main {
         singleQuestionList1.add(new SingleQuestion("1*1=?", new String[]{"1", "2", "3", "4"}, "1"));
         singleQuestionList1.add(new SingleQuestion("1+3=?", new String[]{"1", "2", "3", "4"}, "4"));
         singleQuestionList1.add(new SingleQuestion("4-1=?", new String[]{"1", "2", "3", "4"}, "3"));
-        Question q1 = new Question(singleQuestionList1, "100");
+        Question q1 = new Question(singleQuestionList1, "100", "1st Yesr", "CSE", "ces");
 
         questionMap.put(q1.getQuestionCode(), q1);
 
         Result result = new Result("100", "CSE", "1st Year");
 
-        resultMap.put(result.getResultCode(), result);
-        //new TeacherPanel(null);
-        new LoginForm();
+        //resultMap.put(result.getResultCode(), result);
+        new TeacherPanel(null);
+        //new LoginForm();
         //new MCQQuestionCreator(null);
     }
 }

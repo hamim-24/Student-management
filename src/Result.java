@@ -4,7 +4,6 @@ import java.util.Map;
 
 public class Result {
 
-    private String resultCode;
     private String questionCode;
     private String questionName;
     private int totalQuestions;
@@ -26,6 +25,7 @@ public class Result {
         this.department = department;
         this.year = year;
         this.questionCode = questionCode;
+        this.question = Main.getQuestionMap().get(questionCode);
         question = Main.getQuestionMap().get(questionCode);
         this.questionName = question.getExamName();
         this.totalQuestions = question.getSingleQuestions().size();
@@ -78,12 +78,6 @@ public class Result {
     }
     public String getQuestionCode() {
         return questionCode;
-    }
-    public String getResultCode() {
-        return resultCode;
-    }
-    public void setResultCode(String resultCode) {
-        this.resultCode = resultCode;
     }
     public String getQuestionName() {
         return questionName;

@@ -17,16 +17,18 @@ public class StudentExamFrame extends JFrame {
 
     StudentAccount account;
     String id;
+    String resultCode;
 
-    public StudentExamFrame(String id) {
+    public StudentExamFrame(String id, String examCode) {
 
         this.id = id;
+        this.resultCode = examCode;
         this.account = (StudentAccount) Main.getAccounts().get(id);
 
 
         Question q = null;
         try {
-            q = Main.getQuestionMap().get(utils.QUESTION_CODE);
+            q = Main.getQuestionMap().get(examCode);
             if (q == null) {
                 throw new Exception("No exam found for the given code!");
             }
@@ -222,11 +224,11 @@ public class StudentExamFrame extends JFrame {
             }
         }
         result.append("Total Score: ").append(correct).append(" / ").append(totalQuestions);
-        account.setResultInfo(result.toString());
+        account.setResultInfo(resultCode, result.toString());
         account.setCg(calculateCGPA(correct, totalQuestions));
         account.setCorrect(correct);
         account.setIncorrect(incorrect);
-        account.setMark(correct / totalQuestions * 100);
+        account.setMark((double) correct / totalQuestions * 100);
 
         dispose();
     }

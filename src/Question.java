@@ -9,22 +9,18 @@ public class Question {
 
     List<SingleQuestion> singleQuestions;
 
-    public Question(List<SingleQuestion> singleQuestions, String questionCode) {
+    public Question(List<SingleQuestion> singleQuestions, String questionCode, String year, String department, String examName) {
         this.questionCode = questionCode;
         this.singleQuestions = singleQuestions;
-    }
-    public void setExamName(String examName) {
+        this.year = year;
+        this.department = department;
         this.examName = examName;
     }
-    public void setYear(String year) {
-        this.year = year;
-    }
+
     public String getYear() {
         return year;
     }
-    public void setDepartment(String department) {
-        this.department = department;
-    }
+
     public String getDepartment() {
         return department;
     }

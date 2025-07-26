@@ -193,7 +193,7 @@ public class MCQQuestionCreator extends JFrame {
             questionList.add(singleQuestion);
         }
 
-        Question questionSet = new Question(questionList, questionCode);
+        Question questionSet = new Question(questionList, questionCode, null, null, null);
         Main.getQuestionMap().put(questionCode, questionSet);
 
         JOptionPane.showMessageDialog(this, "Question saved successfully as " + questionCode + "!",
