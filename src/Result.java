@@ -55,39 +55,51 @@ public class Result {
             }
         }
     }
+
     public List<String> getIDs() {
         return IDs;
     }
+
     public List<Integer> getRolls() {
         return rolls;
     }
+
     public List<Double> getCgpas() {
         return cgpas;
     }
+
     public List<String> getNames() {
         return names;
     }
+
     public String getDepartment() {
         return department;
     }
+
     public String getYear() {
         return year;
     }
+
     public int getTotalQuestions() {
         return totalQuestions;
     }
+
     public String getQuestionCode() {
         return questionCode;
     }
+
     public String getQuestionName() {
         return questionName;
     }
+
     public List<Double> getMarks() {
         return marks;
     }
+
     public List<Integer> getCorrect() {
         return correct;
     }
+
     public List<Integer> getIncorrect() {
         return incorrect;
     }

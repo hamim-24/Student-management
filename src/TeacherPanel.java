@@ -5,6 +5,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class TeacherPanel extends JFrame {
+
     Map<String, Question> questionMap;
     Question questionSet;
     Account account;
@@ -107,13 +108,18 @@ public class TeacherPanel extends JFrame {
 
         // Button actions
         createExamButton.addActionListener(e -> {
+
             dispose();
             new MCQQuestionCreator(account);
         });
+
         searchExamButton.addActionListener(e -> {
+
             StudentPanel.searchExam(examSearchField, true, this);
         });
+
         publishExamButton.addActionListener(e -> {
+
             String publishExamCode = examSearchField.getText().trim();
             if (publishExamCode.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
@@ -180,6 +186,7 @@ public class TeacherPanel extends JFrame {
         });
 
         publishResultButton.addActionListener(e -> {
+
             String publishExamCode = examSearchField.getText().trim();
             if (publishExamCode.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
@@ -228,6 +235,9 @@ public class TeacherPanel extends JFrame {
                                 if ((examDone == null || examDone == false) && studentAccount.getDepartment().equals(questionSet.getDepartment()) && studentAccount.getYear().equals(questionSet.getYear())) {
                                     studentAccount.setResultInfo(publishExamCode, "You didn't participate in the exam");
                                     studentAccount.setCg(0.0);
+                                    studentAccount.setCorrect(0);
+                                    studentAccount.setMark(0);
+                                    studentAccount.setIncorrect(0);
                                     studentAccount.setEXAM_DONE(publishExamCode, false);
                                 }
                             }
@@ -245,11 +255,13 @@ public class TeacherPanel extends JFrame {
             }
         });
         backButton.addActionListener(e -> {
+
             this.dispose();
             new LoginForm();
         });
 
         examSearchField.getDocument().addDocumentListener(new DocumentListener() {
+
             public void insertUpdate(DocumentEvent e) {
                 updateButtons();
             }
@@ -316,6 +328,7 @@ public class TeacherPanel extends JFrame {
     }
 
     public static JScrollPane ScrollPanel(StringBuilder result) {
+
         JTextArea textArea = new JTextArea(result.toString());
         textArea.setEditable(false);
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));

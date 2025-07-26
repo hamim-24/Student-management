@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Vector;
 
 public class TeacherList extends JFrame {
+
     private JTable teacherTable;
     private DefaultTableModel tableModel;
     private DefaultTableModel allTeachersModel;
@@ -19,7 +20,7 @@ public class TeacherList extends JFrame {
 
     private JButton updateButton, deleteButton, clearButton, backButton;
     private int selectedRow = -1;
-    
+
     static int totalTeachers = 0;
     private int filteredTeacherCount = 0;
     private JLabel filteredCountLabel;
@@ -27,6 +28,7 @@ public class TeacherList extends JFrame {
     Map<String, Account> accounts = new HashMap<>();
 
     public TeacherList() {
+
         this.accounts = Main.getAccounts();
 
         initializeComponents();
@@ -60,13 +62,15 @@ public class TeacherList extends JFrame {
                 return false;
             }
         };
-        
+
         // Initialize filtered count label
         filteredCountLabel = new JLabel("Teachers: 0 / 0 (filtered/total)");
 
         teacherTable = new JTable(tableModel) {
+
             @Override
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+
                 Component c = super.prepareRenderer(renderer, row, column);
                 if (!isRowSelected(row)) {
                     c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
@@ -78,6 +82,7 @@ public class TeacherList extends JFrame {
         };
         teacherTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         teacherTable.getSelectionModel().addListSelectionListener(e -> {
+
             if (!e.getValueIsAdjusting()) {
                 selectedRow = teacherTable.getSelectedRow();
                 if (selectedRow != -1) {
@@ -142,6 +147,7 @@ public class TeacherList extends JFrame {
     }
 
     private void setupLayout() {
+
         setLayout(new BorderLayout());
 
         // Create main panel
@@ -186,6 +192,7 @@ public class TeacherList extends JFrame {
     }
 
     private JPanel createFilterPanel() {
+
         JPanel filterPanel = new JPanel(new GridBagLayout());
         filterPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(24, 32, 24, 32),
@@ -196,7 +203,8 @@ public class TeacherList extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
 
         // Department filter
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         filterPanel.add(new JLabel("Department:"), gbc);
         gbc.gridx = 1;
         filterPanel.add(departmentFilterComboBox, gbc);
@@ -212,7 +220,7 @@ public class TeacherList extends JFrame {
         // Clear filters button
         gbc.gridx = 4;
         filterPanel.add(clearFiltersButton, gbc);
-        
+
         // Add filtered count label
         gbc.gridx = 5;
         filterPanel.add(filteredCountLabel, gbc);
@@ -221,6 +229,7 @@ public class TeacherList extends JFrame {
     }
 
     private JPanel createInputPanel() {
+
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(10, 10, 0, 20),
@@ -237,26 +246,31 @@ public class TeacherList extends JFrame {
         JLabel personalLabel = new JLabel("Personal Information");
         personalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         personalLabel.setForeground(new Color(70, 130, 180));
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
         inputPanel.add(personalLabel, gbc);
 
         // Name field
         gbc.gridwidth = 1;
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         inputPanel.add(new JLabel("Full Name:"), gbc);
         gbc.gridx = 1;
         nameField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(nameField, gbc);
 
         // Email field
-        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         inputPanel.add(new JLabel("Email:"), gbc);
         gbc.gridx = 1;
         emailField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(emailField, gbc);
 
         // DOB field
-        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         inputPanel.add(new JLabel("Date of Birth:"), gbc);
         gbc.gridx = 1;
         dobField.setPreferredSize(new Dimension(220, 25));
@@ -266,21 +280,26 @@ public class TeacherList extends JFrame {
         JLabel academicLabel = new JLabel("Academic Information");
         academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         academicLabel.setForeground(new Color(70, 130, 220));
-        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
         gbc.insets = new Insets(15, 8, 8, 8);
         inputPanel.add(academicLabel, gbc);
 
         // Department field
         gbc.gridwidth = 1;
         gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.gridx = 0; gbc.gridy = 5;
+        gbc.gridx = 0;
+        gbc.gridy = 5;
         inputPanel.add(new JLabel("Department:"), gbc);
         gbc.gridx = 1;
         updateDepartmentCombo.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(updateDepartmentCombo, gbc);
 
         // Add some spacing at the bottom
-        gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 2;
         gbc.weighty = 1.0;
         inputPanel.add(new JLabel(), gbc);
 
@@ -288,6 +307,7 @@ public class TeacherList extends JFrame {
     }
 
     private JPanel createButtonPanel() {
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
@@ -297,6 +317,7 @@ public class TeacherList extends JFrame {
     }
 
     private void setupEventListeners() {
+
         updateButton.addActionListener(e -> updateTeacher());
         deleteButton.addActionListener(e -> deleteTeacher());
         clearButton.addActionListener(e -> clearFields());
@@ -310,12 +331,14 @@ public class TeacherList extends JFrame {
     }
 
     private void clearAllFilters() {
+
         departmentFilterComboBox.setSelectedIndex(0);
         idFilterField.setText("");
         filterTeachers();
     }
 
     private void updateTeacher() {
+
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a teacher to update.",
                     "Selection Error", JOptionPane.WARNING_MESSAGE);
@@ -377,6 +400,7 @@ public class TeacherList extends JFrame {
     }
 
     private void deleteTeacher() {
+
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a teacher to delete.",
                     "Selection Error", JOptionPane.WARNING_MESSAGE);
@@ -410,6 +434,7 @@ public class TeacherList extends JFrame {
     }
 
     private void clearFields() {
+
         nameField.setText("");
         emailField.setText("");
         dobField.setText("");
@@ -419,6 +444,7 @@ public class TeacherList extends JFrame {
     }
 
     private void populateFields() {
+
         if (selectedRow != -1) {
             nameField.setText(tableModel.getValueAt(selectedRow, 0).toString());
             emailField.setText(tableModel.getValueAt(selectedRow, 2).toString());
@@ -428,6 +454,7 @@ public class TeacherList extends JFrame {
     }
 
     private boolean validateFields() {
+
         if (nameField.getText().trim().isEmpty() ||
                 emailField.getText().trim().isEmpty() ||
                 dobField.getText().trim().isEmpty() ||
@@ -442,6 +469,7 @@ public class TeacherList extends JFrame {
     }
 
     private void filterTeachers() {
+
         try {
             String selectedDept = departmentFilterComboBox.getSelectedItem().toString();
             String idFilter = idFilterField.getText().trim().toLowerCase();
@@ -476,9 +504,10 @@ public class TeacherList extends JFrame {
     }
 
     private void loadTeachersFromAccounts() {
+
         allTeachersModel.setRowCount(0);
         totalTeachers = 0;
-        
+
         for (Account acc : accounts.values()) {
             if (acc.getStatus().equals("Teacher")) {
                 TeacherAccount teacher = (TeacherAccount) acc;

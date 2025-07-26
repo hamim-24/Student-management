@@ -5,6 +5,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class StudentPanel extends JFrame {
+
     Map<String, Question> questionMap;
     StudentAccount account;
     private JPanel mainPanel;
@@ -12,6 +13,7 @@ public class StudentPanel extends JFrame {
     JTextField examSearchField;
 
     public StudentPanel(String id) {
+
         this.questionMap = Main.getQuestionMap();
         this.account = (StudentAccount) Main.getAccounts().get(id);
 
@@ -134,10 +136,13 @@ public class StudentPanel extends JFrame {
             }
         });
         searchExamButton.addActionListener(e -> {
+
             searchExam(examSearchField, false, this);
         });
         showInfo.addActionListener(e -> JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE));
+
         resultButton.addActionListener(e -> {
+
             String examCode = examSearchField.getText().trim();
             if (examCode.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
@@ -161,11 +166,13 @@ public class StudentPanel extends JFrame {
             }
         });
         backButton.addActionListener(e -> {
+
             this.dispose();
             new LoginForm();
         });
 
         examSearchField.getDocument().addDocumentListener(new DocumentListener() {
+
             public void insertUpdate(DocumentEvent e) {
                 updateButtons();
             }
@@ -192,7 +199,8 @@ public class StudentPanel extends JFrame {
         });
 
         questionStatusButton.addActionListener(e -> {
-           TeacherPanel.questionStatus(this);
+
+            TeacherPanel.questionStatus(this);
         });
 
         pack();

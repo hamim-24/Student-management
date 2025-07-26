@@ -144,6 +144,7 @@ public class LoginForm extends JFrame {
 
             @Override
             public void focusLost(FocusEvent e) {
+
                 if (String.valueOf(passwordField.getPassword()).length() == 0) {
                     passwordField.setText(PASSWORD_PLACE_HOLDER);
                     passwordField.setForeground(Color.GRAY);
@@ -179,6 +180,7 @@ public class LoginForm extends JFrame {
         getRootPane().setDefaultButton(loginButton);
 
         studentLoginButton.addActionListener(e -> {
+
             String id = idField.getText().trim();
             String password = String.valueOf(passwordField.getPassword()).trim();
 
@@ -195,8 +197,7 @@ public class LoginForm extends JFrame {
 
                     if (account.getStatus().equals("Student")) {
                         new StudentPanel(id);
-                    }
-                    else if (account.getStatus().equals("Teacher")) {
+                    } else if (account.getStatus().equals("Teacher")) {
                         new TeacherPanel(account);
                     }
                 }

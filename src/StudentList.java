@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Vector;
 
 public class StudentList extends JFrame {
+
     private JTable studentTable;
     private DefaultTableModel tableModel;
     private DefaultTableModel allStudentsModel;
@@ -45,6 +46,7 @@ public class StudentList extends JFrame {
     }
 
     private void initializeComponents() {
+
         // Create table with column names
         String[] columnNames = {"Roll", "Name", "ID", "Email", "DOB", "Department", "GPA", "Year"};
 
@@ -68,8 +70,10 @@ public class StudentList extends JFrame {
 
         // backgroud is red if cgpa < 2
         studentTable = new JTable(tableModel) {
+
             @Override
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+
                 Component c = super.prepareRenderer(renderer, row, column);
                 try {
                     Object cgpaObj = getValueAt(row, 6);
@@ -95,6 +99,7 @@ public class StudentList extends JFrame {
         };
         studentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         studentTable.getSelectionModel().addListSelectionListener(e -> {
+
             if (!e.getValueIsAdjusting()) {
                 selectedRow = studentTable.getSelectedRow();
                 if (selectedRow != -1) {
@@ -111,8 +116,10 @@ public class StudentList extends JFrame {
 
         // Set custom renderer to change background color for CGPA below 2.0
         studentTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 try {
                     double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
