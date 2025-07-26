@@ -115,124 +115,133 @@ public class TeacherPanel extends JFrame {
         });
         publishExamButton.addActionListener(e -> {
             String publishExamCode = examSearchField.getText().trim();
-            questionSet = questionMap.get(publishExamCode);
-            if (questionSet != null) {
-                // 1. Ask for department
-                String department = (String) JOptionPane.showInputDialog(
-                        this,
-                        "Select Department:",
-                        "Department",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        utils.DEPARTMENTS,
-                        utils.DEPARTMENTS[0]
-                );
-                if (department == null || department.equals("Select")) return;
-
-                // 2. Ask for year
-                String year = (String) JOptionPane.showInputDialog(
-                        this,
-                        "Select Year:",
-                        "Year",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        utils.YEARS,
-                        utils.YEARS[0]
-                );
-                if (year == null || year.equals("Select")) {
-                    JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                String name = JOptionPane.showInputDialog(this, "Enter exam name: ", "Exam name", JOptionPane.QUESTION_MESSAGE).trim();
-                if (name.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter a valid exam name", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                String examCode = JOptionPane.showInputDialog(this, "Enter exam Code:", "Result", JOptionPane.QUESTION_MESSAGE).trim();
-                if (examCode.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (Main.getQuestionMap().get(examCode) != null) {
-                    JOptionPane.showMessageDialog(this, "Exam exists!", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                int res = JOptionPane.showConfirmDialog(this, "Are you sure to publish question?" + "\nName: " + name + "\nNew Code: " + examCode + "\nDepartment: " + department + "\nYear: " + year, "Publish Results", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    utils.EXAM_CODE.put(examCode, true);
-                    utils.PUBLISHED_STATUS = "Exam is running";
-                    questionStatusButton.setText(utils.PUBLISHED_STATUS);
-
-                    Question question1 = new Question(questionSet.getSingleQuestions(), examCode, year, department, name);
-                    questionMap.put(examCode, question1);
-
-                    Result result = new Result(examCode, department, year);
-                    Main.getResultMap().put(examCode, result);
-                }
+            if (publishExamCode.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Question is not found", "Error", JOptionPane.ERROR_MESSAGE);
+                questionSet = questionMap.get(publishExamCode);
+                if (questionSet != null) {
+                    // 1. Ask for department
+                    String department = (String) JOptionPane.showInputDialog(
+                            this,
+                            "Select Department:",
+                            "Department",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            utils.DEPARTMENTS,
+                            utils.DEPARTMENTS[0]
+                    );
+                    if (department == null || department.equals("Select")) return;
+
+                    // 2. Ask for year
+                    String year = (String) JOptionPane.showInputDialog(
+                            this,
+                            "Select Year:",
+                            "Year",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            utils.YEARS,
+                            utils.YEARS[0]
+                    );
+                    if (year == null || year.equals("Select")) {
+                        JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    String name = JOptionPane.showInputDialog(this, "Enter exam name: ", "Exam name", JOptionPane.QUESTION_MESSAGE).trim();
+                    if (name.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Please enter a valid exam name", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    String examCode = JOptionPane.showInputDialog(this, "Enter exam Code:", "Result", JOptionPane.QUESTION_MESSAGE).trim();
+                    if (examCode.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (Main.getQuestionMap().get(examCode) != null) {
+                        JOptionPane.showMessageDialog(this, "Exam exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    int res = JOptionPane.showConfirmDialog(this, "Are you sure to publish question?" + "\nName: " + name + "\nNew Code: " + examCode + "\nDepartment: " + department + "\nYear: " + year, "Publish Results", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION) {
+                        utils.EXAM_CODE.put(examCode, true);
+                        utils.PUBLISHED_STATUS = "Exam is running";
+                        questionStatusButton.setText(utils.PUBLISHED_STATUS);
+
+                        Question question1 = new Question(questionSet.getSingleQuestions(), examCode, year, department, name);
+                        questionMap.put(examCode, question1);
+
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Question is not found", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
         publishResultButton.addActionListener(e -> {
             String publishExamCode = examSearchField.getText().trim();
-            try {
-                questionSet = questionMap.get(publishExamCode);
-                department = questionSet.getDepartment();
-                year = questionSet.getYear();
-            } catch (NullPointerException ex) {
-                JOptionPane.showMessageDialog(this, "No question found", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (questionSet == null) {
+            if (publishExamCode.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            Boolean value = utils.EXAM_CODE.get(publishExamCode);
-            if (value != null && value) {
+            } else {
+                try {
+                    questionSet = questionMap.get(publishExamCode);
+                    department = questionSet.getDepartment();
+                    year = questionSet.getYear();
+                } catch (NullPointerException ex) {
+                    JOptionPane.showMessageDialog(this, "No question found", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (questionSet == null) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                Boolean value = utils.EXAM_CODE.get(publishExamCode);
+                if (value != null && value) {
 
-                int res = JOptionPane.showConfirmDialog(
-                        this,
-                        "Are you sure to publish results?",
-                        "Results",
-                        JOptionPane.YES_NO_OPTION
-                );
-                if (res == JOptionPane.YES_OPTION) {
-                    utils.EXAM_CODE.put(publishExamCode, false);
+                    int res = JOptionPane.showConfirmDialog(
+                            this,
+                            "Are you sure to publish results?",
+                            "Results",
+                            JOptionPane.YES_NO_OPTION
+                    );
+                    if (res == JOptionPane.YES_OPTION) {
+                        utils.EXAM_CODE.put(publishExamCode, false);
 
-                    boolean hasRunningExams = false;
-                    for (Boolean isRunning : utils.EXAM_CODE.values()) {
-                        if (isRunning != null && isRunning) {
-                            hasRunningExams = true;
-                            break;
-                        }
-                    }
-                    if (hasRunningExams) {
-                        utils.PUBLISHED_STATUS = "Exam is running";
-                    } else {
-                        utils.PUBLISHED_STATUS = "No Exam is running";
-                    }
-
-                    Map<String, Account> studentAccounts = Main.getAccounts();
-                    for (Account acc : studentAccounts.values()) {
-                        if (acc instanceof StudentAccount) {
-                            StudentAccount studentAccount = (StudentAccount) acc;
-                            Boolean examDone = studentAccount.getEXAM_DONE().get(publishExamCode);
-                            if ((examDone == null || examDone == false) && studentAccount.getDepartment().equals(questionSet.getDepartment()) && studentAccount.getYear().equals(questionSet.getYear())) {
-                                studentAccount.setResultInfo(publishExamCode, "You didn't participate in the exam");
-                                studentAccount.setCg(0.0);
-                                studentAccount.setEXAM_DONE(publishExamCode, false);
+                        boolean hasRunningExams = false;
+                        for (Boolean isRunning : utils.EXAM_CODE.values()) {
+                            if (isRunning != null && isRunning) {
+                                hasRunningExams = true;
+                                break;
                             }
                         }
-                    }
+                        if (hasRunningExams) {
+                            utils.PUBLISHED_STATUS = "Exam is running";
+                        } else {
+                            utils.PUBLISHED_STATUS = "No Exam is running";
+                        }
 
-                    questionStatusButton.setText(utils.PUBLISHED_STATUS);
-                    JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        Map<String, Account> studentAccounts = Main.getAccounts();
+                        for (Account acc : studentAccounts.values()) {
+                            if (acc instanceof StudentAccount) {
+                                StudentAccount studentAccount = (StudentAccount) acc;
+                                Boolean examDone = studentAccount.getEXAM_DONE().get(publishExamCode);
+                                if ((examDone == null || examDone == false) && studentAccount.getDepartment().equals(questionSet.getDepartment()) && studentAccount.getYear().equals(questionSet.getYear())) {
+                                    studentAccount.setResultInfo(publishExamCode, "You didn't participate in the exam");
+                                    studentAccount.setCg(0.0);
+                                    studentAccount.setEXAM_DONE(publishExamCode, false);
+                                }
+                            }
+                        }
+
+                        Result result = new Result(publishExamCode, department, year);
+                        Main.getResultMap().put(publishExamCode, result);
+
+                        questionStatusButton.setText(utils.PUBLISHED_STATUS);
+                        JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Question is not published", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Question is not found", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         backButton.addActionListener(e -> {
@@ -300,10 +309,20 @@ public class TeacherPanel extends JFrame {
                     }
                 }
             }
-            JOptionPane.showMessageDialog(frame, result.toString(), "Running Exams", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, ScrollPanel(result), "Exams", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(frame, utils.PUBLISHED_STATUS, "Exam Status", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    public static JScrollPane ScrollPanel(StringBuilder result) {
+        JTextArea textArea = new JTextArea(result.toString());
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        textArea.setBackground(new Color(245, 247, 250));
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(400, 250));
+        return scrollPane;
     }
 
 }

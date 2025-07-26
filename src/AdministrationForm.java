@@ -106,16 +106,9 @@ public class AdministrationForm extends JFrame {
                 JOptionPane.showMessageDialog(this, "No Account Found!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 StringBuilder qs = new StringBuilder();
-
                 qs.append(account);
 
-                JTextArea textArea = new JTextArea(qs.toString());
-                textArea.setEditable(false);
-                textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-                textArea.setBackground(new Color(245, 247, 250));
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                scrollPane.setPreferredSize(new Dimension(400, 250));
-                JOptionPane.showMessageDialog(this, scrollPane, "Account Details", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, TeacherPanel.ScrollPanel(qs), "Account Details", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         resultButton.addActionListener(e -> {
