@@ -43,6 +43,10 @@ public class AdministrationForm extends JFrame {
         utils.styleButton(studentButton);
         studentButton.setToolTipText("Show Student List");
         mainPanel.add(studentButton, gbc);
+        studentButton.addActionListener(e -> {
+            this.dispose();
+            new StudentList();
+        });
 
         // Search/View Exam Button
         gbc.gridy++;
@@ -50,6 +54,10 @@ public class AdministrationForm extends JFrame {
         utils.styleButton(teacherButton);
         teacherButton.setToolTipText("Show Teacher List");
         mainPanel.add(teacherButton, gbc);
+        teacherButton.addActionListener(e -> {
+            this.dispose();
+            new TeacherList();
+        });
 
         // Search/View Result Button
         gbc.gridy++;
@@ -57,6 +65,11 @@ public class AdministrationForm extends JFrame {
         utils.styleButton(resultButton);
         resultButton.setToolTipText("Show Result List");
         mainPanel.add(resultButton, gbc);
+        resultButton.addActionListener(e -> {
+            dispose();
+            new ResultList();
+        });
+
 
         // Search area
         gbc.gridy++;
@@ -79,28 +92,6 @@ public class AdministrationForm extends JFrame {
         utils.styleButton(searchButton);
         searchButton.setToolTipText("Show Search Account");
         mainPanel.add(searchButton, gbc);
-
-        // Back Button
-        gbc.gridy++;
-        JButton backButton = new JButton("Back to Main Menu");
-        utils.styleButton(backButton);
-        backButton.setToolTipText("Return to main menu");
-        mainPanel.add(backButton, gbc);
-
-        add(mainPanel, BorderLayout.CENTER);
-
-        // Button actions
-        studentButton.addActionListener(e -> {
-            this.dispose();
-            new StudentList();
-        });
-
-        teacherButton.addActionListener(e -> {
-            this.dispose();
-            new TeacherList();
-        });
-
-        getRootPane().setDefaultButton(searchButton);
         searchButton.addActionListener(e -> {
             String searchID = searchField.getText().trim();
             Account account = Main.getAccounts().get(searchID);
@@ -114,15 +105,45 @@ public class AdministrationForm extends JFrame {
             }
         });
 
-        resultButton.addActionListener(e -> {
-            dispose();
-            new ResultList();
+        // Announcement button
+        gbc.gridy++;
+        JButton announcementButton = new JButton("Announcement");
+        utils.styleButton(announcementButton);
+        announcementButton.setToolTipText("Set Announcement");
+        mainPanel.add(announcementButton, gbc);
+        announcementButton.addActionListener(e -> {
+           String note = JOptionPane.showInputDialog(this, "Add Announcements: ", "Announcements", JOptionPane.QUESTION_MESSAGE).trim();
+           if (note.isEmpty()) {
+               JOptionPane.showMessageDialog(this, "Please Enter Announcements!", "Error", JOptionPane.ERROR_MESSAGE);
+           } else {
+               int res = JOptionPane.showConfirmDialog(this, "Are you Sure to add this:\n'" + note + "'", "Announcement", JOptionPane.YES_NO_OPTION);
+               if (res == JOptionPane.YES_OPTION) {
+                   Notification notification = new Notification(note);
+                   Main.getNotifications().add(notification);
+                   JOptionPane.showMessageDialog(this, "Announcement Added!", "Announcement", JOptionPane.INFORMATION_MESSAGE);
+               }
+           }
         });
 
+        // Back Button
+        gbc.gridy++;
+        JButton backButton = new JButton("Back to Main Menu");
+        utils.styleButton(backButton);
+        backButton.setToolTipText("Return to main menu");
+        mainPanel.add(backButton, gbc);
         backButton.addActionListener(e -> {
             this.dispose();
             new LoginForm();
         });
+
+
+        add(mainPanel, BorderLayout.CENTER);
+
+        // Button actions
+
+
+
+        getRootPane().setDefaultButton(searchButton);
 
         pack();
         setMinimumSize(new Dimension(500, 600));

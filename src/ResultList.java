@@ -189,7 +189,7 @@ public class ResultList extends JFrame {
                 if (selectedResultCode.equals(result.getQuestionCode())) {
                     departmentLabel.setText("Department: " + (result.getDepartment() != null ? result.getDepartment() : "") +
                             ",   Question Code: " + (result.getQuestionCode() != null ? result.getQuestionCode() : ""));
-                    yearLabel.setText(",   Year: " + (result.getYear() != null ? result.getYear() : "") +
+                    yearLabel.setText(" Year: " + (result.getYear() != null ? result.getYear() : "") +
                             ",   Total MCQ: " + result.getTotalQuestions() +
                             ",   Exam: " + (result.getQuestionName() != null ? result.getQuestionName() : ""));
                     break;
