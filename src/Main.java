@@ -7,6 +7,11 @@ public class Main {
     private static final Map<String, Account> accounts = new HashMap<>();
     private static final Map<String, Question> questionMap = new HashMap<>();
     private static final Map<String, Result> resultMap = new HashMap<>();
+    private static final List<Notification> notifications = new ArrayList<>();
+
+    public static List<Notification> getNotifications() {
+        return notifications;
+    }
 
     public static Map<String, Result> getResultMap() {
         return resultMap;

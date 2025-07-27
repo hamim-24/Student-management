@@ -219,7 +219,9 @@ public class LoginForm extends JFrame {
         notificationButton.addActionListener(e -> {
 
             StringBuilder notification = new StringBuilder();
-            notification.append("Under construction");
+            for (Notification n : Main.getNotifications()) {
+                notification.append("\n#" + n.getDate() + " - " + n.getNote());
+            }
             JOptionPane.showMessageDialog(this, TeacherPanel.ScrollPanel(notification), "Notification", JOptionPane.INFORMATION_MESSAGE);
         });
     }

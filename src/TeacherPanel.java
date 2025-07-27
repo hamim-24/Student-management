@@ -178,6 +178,9 @@ public class TeacherPanel extends JFrame {
                         Question question1 = new Question(questionSet.getSingleQuestions(), examCode, year, department, name);
                         questionMap.put(examCode, question1);
 
+                        Notification notification = new Notification("New Exam published. code: " + examCode + " Department: " + department
+                        + " Year: " + year + " By " + account.getFirstName() + " " + account.getLastName());
+                        Main.getNotifications().add(notification);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Question is not found", "Error", JOptionPane.ERROR_MESSAGE);
@@ -248,6 +251,10 @@ public class TeacherPanel extends JFrame {
 
                         questionStatusButton.setText(utils.PUBLISHED_STATUS);
                         JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                        Notification notification = new Notification("Result published. code: " + publishExamCode + " Department: " + department
+                                + " Year: " + year + " By " + account.getFirstName() + " " + account.getLastName());
+                        Main.getNotifications().add(notification);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Question is not published", "Error", JOptionPane.ERROR_MESSAGE);
