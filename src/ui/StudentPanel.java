@@ -117,27 +117,31 @@ public class StudentPanel extends JFrame {
             } else {
                 Boolean examRunning = utils.EXAM_CODE.get(examCode);
                 if (examRunning != null) {
-                    Question question = Main.getQuestionMap().get(examCode);
-                    if (question != null) {
-                        String examYear = question.getYear().trim();
-                        String examDepartment = question.getDepartment().trim();
-                        if (account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear)) {
-                            Boolean examDone = account.getEXAM_DONE().get(examCode);
-                            if (examDone == null || !examDone) {
-                                account.setEXAM_DONE(examCode, true);
-                                dispose();
-                                new StudentExamFrame(id, examCode);
+                        Question question = Main.getQuestionMap().get(examCode);
+                        if (question != null) {
+                            String examYear = question.getYear().trim();
+                            String examDepartment = question.getDepartment().trim();
+                            if (account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear)) {
+                                if (examRunning) {
+                                Boolean examDone = account.getEXAM_DONE().get(examCode);
+                                if (examDone == null || !examDone) {
+                                    account.setEXAM_DONE(examCode, true);
+                                    dispose();
+                                    new StudentExamFrame(id, examCode);
+                                } else {
+                                    JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
+                                }
                             } else {
-                                JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this, "Exam is finished..", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
                             JOptionPane.showMessageDialog(this, "Exam is not for you!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(this, "Exam not found", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Question is not found..", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Exam is not found", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Exam is not found..", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -162,8 +166,10 @@ public class StudentPanel extends JFrame {
                             result.append(resultInfo.get(examCode));
 
                             JOptionPane.showMessageDialog(this, utils.ScrollPanel(result), "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Result not found", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                    } else if (examRunning) {
+                    } else {
                         JOptionPane.showMessageDialog(this, "Result didn't published", "Result Details", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else {

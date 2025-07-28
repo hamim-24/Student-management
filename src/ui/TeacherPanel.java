@@ -283,7 +283,7 @@ public class TeacherPanel extends JFrame {
                         } else {
                             result.append("Status: Result Published\n");
                         }
-                        result.append("=".repeat(50)).append("\n\n");
+                        result.append("=".repeat(50)).append("\n");
                     } else {
                         result.append("Exam Code: ").append(examCode).append("\n (Question not found)\n\n");
                     }

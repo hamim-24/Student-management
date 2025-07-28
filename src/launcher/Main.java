@@ -116,7 +116,7 @@ public class Main {
         accounts.put(t19.getID(), t19);
         accounts.put(t20.getID(), t20);
 
-        List<SingleQuestion> singleQuestionList1 = new ArrayList<SingleQuestion>();
+        List<SingleQuestion> singleQuestionList1 = new ArrayList<>();
         singleQuestionList1.add(new SingleQuestion("1+1=?", new String[]{"1", "2", "3", "4"}, "2"));
         singleQuestionList1.add(new SingleQuestion("1-1=?", new String[]{"0", "2", "3", "4"}, "0"));
         singleQuestionList1.add(new SingleQuestion("1+2=?", new String[]{"1", "2", "3", "4"}, "3"));
