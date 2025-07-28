@@ -49,6 +49,7 @@ public class MCQQuestionCreator extends JFrame {
 
         pack();
         setMinimumSize(new Dimension(900, 600));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
     }
