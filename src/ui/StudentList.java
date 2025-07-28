@@ -1,8 +1,13 @@
+package ui;
+
+import launcher.Main;
+import model.*;
+import util.*;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -27,20 +32,21 @@ public class StudentList extends JFrame {
     private int filteredStudentCount = 0;
     private JLabel filteredCountLabel;
 
-    Map<String, Account> accounts = new HashMap<>();
+    Map<String, Account> accounts;
 
     public StudentList() {
-
         this.accounts = Main.getAccounts();
-
         initializeComponents();
         setupLayout();
         setupEventListeners();
         loadStudentsFromAccounts();
+        setupFrame();
+    }
 
+    private void setupFrame() {
         setTitle("Student List");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 700); // Adjusted width for better fit
+        setSize(1200, 700);
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -444,7 +450,7 @@ public class StudentList extends JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 try {
                     // Get the student ID from the displayed table (column index 2)
-                    String studentId = null;
+                    String studentId;
                     try {
                         studentId = tableModel.getValueAt(selectedRow, 2).toString();
                     } catch (Exception ex) {
@@ -454,7 +460,7 @@ public class StudentList extends JFrame {
                     }
 
                     // Update the actual account in the accounts map
-                    Account account = null;
+                    Account account;
                     try {
                         account = accounts.get(studentId);
                     } catch (Exception ex) {
@@ -469,7 +475,7 @@ public class StudentList extends JFrame {
                         String[] nameParts = nameField.getText().trim().split(" ", 2);
                         String firstName = nameParts[0];
                         String lastName = nameParts.length > 1 ? nameParts[1] : "";
-                        double gpa = 0.0;
+                        double gpa;
                         try {
                             gpa = Double.parseDouble(gpaField.getText().trim());
                         } catch (Exception ex) {

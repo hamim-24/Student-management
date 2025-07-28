@@ -1,7 +1,12 @@
-import java.util.ArrayList;
+package launcher;
+
+import model.*;
+import ui.*;
+
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class Main {
     private static final Map<String, Account> accounts = new HashMap<>();
@@ -122,7 +127,6 @@ public class Main {
 
         questionMap.put(q1.getQuestionCode(), q1);
 
-        //resultMap.put(result.getResultCode(), result);
         //new TeacherPanel(null);
         new LoginForm();
         //new MCQQuestionCreator(null);

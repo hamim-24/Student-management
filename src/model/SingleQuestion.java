@@ -1,8 +1,10 @@
+package model;
+
 public class SingleQuestion {
 
-    private String question;
-    private String[] options;
-    String answer; // not correct option correct answer
+    private final String question;
+    private final String[] options;
+    private final String answer; // not correct option correct answer
 
     public SingleQuestion(String question, String[] options, String answer) {
 

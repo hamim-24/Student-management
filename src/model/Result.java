@@ -1,21 +1,24 @@
+package model;
+
+import launcher.Main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Result {
 
-    private String questionCode;
-    private String questionName;
-    private int totalQuestions;
-    private String department;
-    private String year;
-    private List<String> names;
-    private List<String> IDs;
-    private List<Integer> rolls;
-    private List<Double> marks;
-    private List<Double> cgpas;
-    private List<Integer> correct;
-    private List<Integer> incorrect;
+    private final String questionCode;
+    private final String questionName;
+    private final int totalQuestions;
+    private final String department;
+    private final String year;
+    private final List<String> names;
+    private final List<String> IDs;
+    private final List<Integer> rolls;
+    private final List<Double> marks;
+    private final List<Double> cgpas;
+    private final List<Integer> correct;
+    private final List<Integer> incorrect;
 
     Map<String, Account> accounts;
     Question question;
@@ -39,7 +42,6 @@ public class Result {
         incorrect = new ArrayList<>();
         correct = new ArrayList<>();
 
-        accounts = Main.getAccounts();
         for (Account account : accounts.values()) {
             if (account instanceof StudentAccount) {
                 StudentAccount studentAccount = (StudentAccount) account;

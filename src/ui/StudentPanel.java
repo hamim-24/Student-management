@@ -1,3 +1,9 @@
+package ui;
+
+import launcher.Main;
+import model.*;
+import util.utils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -155,7 +161,7 @@ public class StudentPanel extends JFrame {
                             StringBuilder result = new StringBuilder();
                             result.append(resultInfo.get(examCode));
 
-                            JOptionPane.showMessageDialog(this, TeacherPanel.ScrollPanel(result), "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(this, utils.ScrollPanel(result), "Result Details", JOptionPane.INFORMATION_MESSAGE);
                         }
                     } else if (examRunning) {
                         JOptionPane.showMessageDialog(this, "Result didn't published", "Result Details", JOptionPane.INFORMATION_MESSAGE);
@@ -231,7 +237,7 @@ public class StudentPanel extends JFrame {
                     qs.append("  " + i + ". " + SQ.toString() + "\n");
                     i++;
                 }
-                JOptionPane.showMessageDialog(frame, TeacherPanel.ScrollPanel(qs), "Exam Details", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, utils.ScrollPanel(qs), "Exam Details", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }

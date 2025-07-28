@@ -1,11 +1,13 @@
+package model;
+
 import java.util.List;
 
 public class Question {
 
-    private String examName;
-    private String questionCode;
-    private String year;
-    private String department;
+    private final String examName;
+    private final String questionCode;
+    private final String year;
+    private final String department;
 
     List<SingleQuestion> singleQuestions;
 
