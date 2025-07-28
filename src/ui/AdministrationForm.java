@@ -6,6 +6,7 @@ import model.*;
 import util.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class AdministrationForm extends JFrame {
 
@@ -110,6 +111,13 @@ public class AdministrationForm extends JFrame {
         announcementButton.addActionListener(e -> handleAnnouncement());
 
         gbc.gridy++;
+        JButton promotionButton = new JButton("Promotion");
+        utils.styleButton(promotionButton);
+        promotionButton.setToolTipText("Set Promotion");
+        mainPanel.add(promotionButton, gbc);
+        promotionButton.addActionListener(e -> handlePromotion());
+
+        gbc.gridy++;
         JButton backButton = new JButton("Back to Main Menu");
         utils.styleButton(backButton);
         backButton.setToolTipText("Return to main menu");
@@ -118,6 +126,59 @@ public class AdministrationForm extends JFrame {
             this.dispose();
             new LoginForm();
         });
+    }
+
+    private void handlePromotion() {
+        String department = (String) JOptionPane.showInputDialog(
+                this,
+                "Select Department:",
+                "Department",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                utils.DEPARTMENTS,
+                utils.DEPARTMENTS[0]
+        );
+        if (department == null || department.equals("Select")) return;
+        String year = (String) JOptionPane.showInputDialog(
+                this,
+                "Select Year:",
+                "Year",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                utils.YEARS,
+                utils.YEARS[0]
+        );
+        if (year == null || year.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int res = JOptionPane.showConfirmDialog(this, "Are you sure to promoted student?\nDepartment: " + department + "\nYear: " + year, "Confirm", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+            Map<String, Account> accounts = Main.getAccounts();
+            for (Account s : accounts.values()) {
+                if (s instanceof StudentAccount studentAccount) {
+                    if (studentAccount.getYear().equals(year) && studentAccount.getDepartment().equals(department)) {
+                        if (studentAccount.getCg() >= 2) {
+                            for (int i = 1; i < 5; i++) {
+                                if (studentAccount.getYear().equals(year)) {
+                                    studentAccount.setResultInfo(utils.promotion, "Congratulation for your brilliant success now you are " + utils.YEARS[i + 1] + " student");
+                                    studentAccount.setYear(utils.YEARS[i + 1]);
+                                }
+                            }
+                        } else {
+                            studentAccount.setResultInfo(utils.promotion, "Sorry, You didn't promoted");
+                        }
+                    }
+                }
+            }
+            Notification notification = new Notification("Students have been promoted Department: " + department + " year: " + year + " Search: '" + utils.promotion + "' for result");
+            Main.getNotifications().add(notification);
+
+            JOptionPane.showMessageDialog(this, "Promotion Complete", "Promotion Complete", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Student have not promoted", "Promotion Complete", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void handleSearchAccount(JTextField searchField) {
