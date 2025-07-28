@@ -25,6 +25,7 @@ public class LoginForm extends JFrame {
     private final String PASSWORD_PLACE_HOLDER = "Password";
 
     public LoginForm() {
+
         this.accounts = Main.getAccounts();
         adminAccounts.put(admin.getID(), admin);
         createComponents();
@@ -35,6 +36,7 @@ public class LoginForm extends JFrame {
     }
 
     private void setupFrame() {
+
         setTitle("Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
