@@ -235,7 +235,8 @@ public class StudentExamFrame extends JFrame {
         account.setCorrect(correct);
         account.setIncorrect(incorrect);
         account.setMark((double) correct / totalQuestions * 100);
-
+        Result re = new Result(resultCode, account.getDepartment(), account.getYear());
+        Main.getResultMap().put(resultCode, re);
         dispose();
     }
 } 

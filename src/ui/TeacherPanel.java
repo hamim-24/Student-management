@@ -236,6 +236,7 @@ public class TeacherPanel extends JFrame {
                         utils.PUBLISHED_STATUS = "No Exam is running";
                     }
                     Map<String, Account> studentAccounts = Main.getAccounts();
+                    Result result = null;
                     for (Account acc : studentAccounts.values()) {
                         if (acc instanceof StudentAccount) {
                             StudentAccount studentAccount = (StudentAccount) acc;
@@ -247,10 +248,10 @@ public class TeacherPanel extends JFrame {
                                 studentAccount.setMark(0);
                                 studentAccount.setIncorrect(0);
                                 studentAccount.setEXAM_DONE(publishExamCode, false);
+                                result = new Result(publishExamCode, department, year);
                             }
                         }
                     }
-                    Result result = new Result(publishExamCode, department, year);
                     Main.getResultMap().put(publishExamCode, result);
                     questionStatusButton.setText(utils.PUBLISHED_STATUS);
                     JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
