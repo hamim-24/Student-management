@@ -1,3 +1,5 @@
+package model;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -5,8 +7,7 @@ public class StudentAccount extends Account {
 
     private String year;
     private int roll;
-    private double cg = 0.0;
-    private final String status;
+    private double cg;
     private Map<String, Boolean> EXAM_DONE;
     private Map<String, String> resultInfo;
     private double mark = 0.0;
@@ -21,7 +22,6 @@ public class StudentAccount extends Account {
         this.year = year;
         this.roll = roll;
         this.cg = cg;
-        this.status = status;
     }
 
     public String getYear() {

@@ -1,10 +1,12 @@
+package model;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Notification {
 
-    private String note;
-    private SimpleDateFormat date;
+    private final String note;
+    private final SimpleDateFormat date;
 
     public Notification(String note) {
         this.note = note;

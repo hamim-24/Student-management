@@ -1,3 +1,9 @@
+package ui;
+
+import launcher.Main;
+import model.*;
+import util.utils;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -217,7 +223,7 @@ public class ResultList extends JFrame {
                 try {
                     correct = result.getCorrect().get(i);
                     incorrect = result.getIncorrect().get(i);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
 
                 if (!idFilter.isEmpty() && !studentId.toLowerCase().contains(idFilter)) continue;

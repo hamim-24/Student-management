@@ -1,3 +1,9 @@
+package ui;
+
+import launcher.Main;
+import model.*;
+import util.utils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -7,7 +13,7 @@ import java.util.Map;
 
 public class LoginForm extends JFrame {
 
-    Map<String, Account> accounts = new HashMap<>();
+    Map<String, Account> accounts;
     Account admin = new Account("11111", "111111", "hamimlohani@gmail.com", "Hamim", "Lohani", "Male", "24-06-2005", "", "");
     Map<String, Account> adminAccounts = new HashMap<>();
 
@@ -19,23 +25,22 @@ public class LoginForm extends JFrame {
     private final String PASSWORD_PLACE_HOLDER = "Password";
 
     public LoginForm() {
-
         this.accounts = Main.getAccounts();
         adminAccounts.put(admin.getID(), admin);
-
         createComponents();
         layoutComponents();
         setPlaceHolders();
         addEvenListeners();
+        setupFrame();
+    }
 
+    private void setupFrame() {
         setTitle("Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setResizable(false);
         setLocationRelativeTo(null);
-
         pack();
-
         setVisible(true);
         loginButton.requestFocusInWindow();
     }
@@ -152,7 +157,7 @@ public class LoginForm extends JFrame {
             @Override
             public void focusLost(FocusEvent e) {
 
-                if (String.valueOf(passwordField.getPassword()).length() == 0) {
+                if (String.valueOf(passwordField.getPassword()).isEmpty()) {
                     passwordField.setText(PASSWORD_PLACE_HOLDER);
                     passwordField.setForeground(Color.GRAY);
                     passwordField.setEchoChar((char) 0);
@@ -220,9 +225,9 @@ public class LoginForm extends JFrame {
 
             StringBuilder notification = new StringBuilder();
             for (Notification n : Main.getNotifications()) {
-                notification.append("\n#" + n.getDate() + " - " + n.getNote());
+                notification.append("\n#").append(n.getDate()).append(" - ").append(n.getNote());
             }
-            JOptionPane.showMessageDialog(this, TeacherPanel.ScrollPanel(notification), "Notification", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, utils.ScrollPanel(notification), "Notification", JOptionPane.INFORMATION_MESSAGE);
         });
     }
 

@@ -1,3 +1,5 @@
+package util;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -28,6 +30,18 @@ public class utils {
     public static final String[] YEARS = {
             "Select", "1st Year", "2nd Year", "3rd Year", "4th Year"
     };
+
+
+    public static JScrollPane ScrollPanel(StringBuilder result) {
+        JTextArea textArea = new JTextArea(result.toString());
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        textArea.setBackground(new Color(245, 247, 250));
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(400, 250));
+        return scrollPane;
+    }
+
 
     public static void styleButton(JButton button) {
 

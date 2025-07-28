@@ -1,9 +1,11 @@
+package model;
+
 import java.util.Date;
 
 public class Account {
 
     private final String ID;
-    private String password;
+    private final String password;
     private final String email;
     private final String firstName;
     private final String lastName;
@@ -54,10 +56,6 @@ public class Account {
         return dob;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
     public String getDepartment() {
         return department;
     }
@@ -76,6 +74,6 @@ public class Account {
                         Status: %s
                         Department : %s
                         Date: %s""",
-                ID, firstName, lastName, email, dob, gender, status, department, date.toString());
+                ID, firstName, lastName, email, dob, gender, status, department, date);
     }
 }

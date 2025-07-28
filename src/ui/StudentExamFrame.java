@@ -1,3 +1,9 @@
+package ui;
+
+import launcher.Main;
+import model.*;
+import util.utils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +16,6 @@ public class StudentExamFrame extends JFrame {
     private final Timer timer;
     private int timeLeft; // in seconds
     private final List<SingleQuestion> singleQuestions;
-    private final ButtonGroup[] answerGroups;
     private final JRadioButton[][] optionButtons;
     private final int totalQuestions;
     private boolean submitted = false;
@@ -26,7 +31,8 @@ public class StudentExamFrame extends JFrame {
         this.account = (StudentAccount) Main.getAccounts().get(id);
 
 
-        Question q = null;
+        Question q;
+        ButtonGroup[] answerGroups;
         try {
             q = Main.getQuestionMap().get(examCode);
             if (q == null) {
@@ -39,7 +45,7 @@ public class StudentExamFrame extends JFrame {
             this.question = null;
             this.singleQuestions = null;
             this.totalQuestions = 0;
-            this.answerGroups = null;
+            answerGroups = null;
             this.optionButtons = null;
             this.timer = null;
             this.timerLabel = null;
@@ -48,7 +54,7 @@ public class StudentExamFrame extends JFrame {
         this.question = q;
         this.singleQuestions = question.getSingleQuestions();
         this.totalQuestions = singleQuestions.size();
-        this.answerGroups = new ButtonGroup[totalQuestions];
+        answerGroups = new ButtonGroup[totalQuestions];
         this.optionButtons = new JRadioButton[totalQuestions][4];
         this.timeLeft = totalQuestions * 30; 
 

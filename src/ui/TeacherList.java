@@ -1,3 +1,9 @@
+package ui;
+
+import launcher.Main;
+import model.*;
+import util.utils;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

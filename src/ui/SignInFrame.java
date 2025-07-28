@@ -1,3 +1,9 @@
+package ui;
+
+import launcher.Main;
+import model.*;
+import util.*;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -31,14 +37,11 @@ public class SignInFrame extends JFrame {
     private int line1, line2;
 
     public SignInFrame() {
-        // Get reference to the main accounts map
         this.accounts = Main.getAccounts();
-
         initializeFrame();
         createComponents();
         layoutComponents();
         addEventListeners();
-
         setVisible(true);
         getRootPane().setDefaultButton(createButton);
     }

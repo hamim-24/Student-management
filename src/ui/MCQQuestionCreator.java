@@ -1,3 +1,9 @@
+package ui;
+
+import model.*;
+import util.utils;
+import launcher.Main;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -92,9 +98,7 @@ public class MCQQuestionCreator extends JFrame {
         JButton saveButton = new JButton("Save Question");
         utils.styleButton(saveButton);
         saveButton.setToolTipText("Save the exam and all MCQs");
-        saveButton.addActionListener(e -> {
-            saveQuestion();
-        });
+        saveButton.addActionListener(e -> saveQuestion());
 
         JButton clearButton = new JButton("Clear All");
         utils.styleButton(clearButton);
@@ -154,7 +158,7 @@ public class MCQQuestionCreator extends JFrame {
             return;
         }
 
-        questionList = new ArrayList();
+        questionList = new ArrayList<>();
         for (int i = 0; i < mcqComponents.size(); i++) {
             MCQComponent mcq = mcqComponents.get(i);
             String question = mcq.getQuestion().trim();
@@ -202,7 +206,6 @@ public class MCQQuestionCreator extends JFrame {
 
         private JTextArea questionArea;
         private JTextField[] optionFields;
-        private ButtonGroup answerGroup;
         private JRadioButton[] answerButtons;
 
         public MCQComponent(int number) {
@@ -252,7 +255,7 @@ public class MCQQuestionCreator extends JFrame {
 
             optionFields = new JTextField[4];
             answerButtons = new JRadioButton[4];
-            answerGroup = new ButtonGroup();
+            ButtonGroup answerGroup = new ButtonGroup();
 
             for (int i = 0; i < 4; i++) {
                 gbc.gridx = 1;
