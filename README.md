@@ -106,7 +106,7 @@ Student-management/
   - Role-based access control and permissions
 
 ## Authors
-- [Your Name Here]
+- MD INZAMAMUL LOHANI
 
 ---
 *This project is for educational purposes and demonstrates a full-featured Java Swing application for academic management. Contributions and suggestions are welcome!* 
