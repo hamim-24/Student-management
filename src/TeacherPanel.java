@@ -165,7 +165,7 @@ public class TeacherPanel extends JFrame {
                         return;
                     }
                     if (Main.getQuestionMap().get(examCode) != null) {
-                        JOptionPane.showMessageDialog(this, "Exam exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Exam exists! Change Code...", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
