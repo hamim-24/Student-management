@@ -84,5 +84,9 @@ public class StudentAccount extends Account {
     public String toString() {
         return super.toString() + "\nYear: " + year + "\nRoll: " + roll + "\nGPA: " + cg;
     }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 }
 

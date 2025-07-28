@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public class utils {
 
+    public static final String promotion = "PROMOTION";
     public static Map<String, Boolean> EXAM_CODE = new HashMap<>();
     public static Map<String, Long> EXAM_TIMESTAMPS = new HashMap<>();
     public static String PUBLISHED_STATUS = "No Exam is running";
@@ -28,7 +29,7 @@ public class utils {
     );
 
     public static final String[] YEARS = {
-            "Select", "1st Year", "2nd Year", "3rd Year", "4th Year"
+            "Select", "1st Year", "2nd Year", "3rd Year", "4th Year", "Graduated"
     };
 
 

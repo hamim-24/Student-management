@@ -152,31 +152,56 @@ public class StudentPanel extends JFrame {
         showInfo.addActionListener(e -> JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE));
 
         resultButton.addActionListener(e -> {
-
-            String examCode = examSearchField.getText().trim();
-            if (examCode.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                Boolean examRunning = utils.EXAM_CODE.get(examCode);
-                if (examRunning != null) {
-                    if (!examRunning) {
-                        Map<String, String> resultInfo = account.getResultInfo();
-                        if (resultInfo != null && !resultInfo.isEmpty()) {
-                            StringBuilder result = new StringBuilder();
-                            result.append(resultInfo.get(examCode));
-
-                            JOptionPane.showMessageDialog(this, utils.ScrollPanel(result), "Result Details", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Result not found", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Result didn't published", "Result Details", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "No results available for this exam", "Result Details", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                String examCode = examSearchField.getText().trim();
+                if (examCode.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+                
+                boolean isPromotionExam = examCode.equals(utils.promotion) && account.getResultInfo().containsKey(examCode);
+                
+                Boolean examRunning = utils.EXAM_CODE.get(examCode);
+
+                if (examRunning == null && !isPromotionExam) {
+                    JOptionPane.showMessageDialog(this, "Your promotion is not found", "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+                
+                if (!isPromotionExam && examRunning != null && examRunning) {
+                    JOptionPane.showMessageDialog(this, "Result not published yet - exam is still running", "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+                
+                Map<String, String> resultInfo = account.getResultInfo();
+                if (resultInfo == null) {
+                    JOptionPane.showMessageDialog(this, "Error: Unable to retrieve result information", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                String result = resultInfo.get(examCode);
+                
+                if (result != null && !result.trim().isEmpty()) {
+                    StringBuilder resultBuilder = new StringBuilder();
+                    resultBuilder.append("# ").append(result).append("\n\n");
+                    JOptionPane.showMessageDialog(this, utils.ScrollPanel(resultBuilder), "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Result not found for this exam", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                
+            } catch (NullPointerException npe) {
+                JOptionPane.showMessageDialog(this, "Your promotion is not found", "System Error", JOptionPane.ERROR_MESSAGE);
+                System.err.println("NullPointerException in resultButton: " + npe.getMessage());
+            } catch (IllegalArgumentException iae) {
+                JOptionPane.showMessageDialog(this, "Error: Invalid exam code format", "Input Error", JOptionPane.ERROR_MESSAGE);
+                System.err.println("IllegalArgumentException in resultButton: " + iae.getMessage());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "An unexpected error occurred while retrieving results. Please try again.", "System Error", JOptionPane.ERROR_MESSAGE);
+                System.err.println("Exception in resultButton: " + ex.getMessage());
+                ex.printStackTrace();
             }
         });
+
         backButton.addActionListener(e -> {
 
             this.dispose();

@@ -31,7 +31,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        StudentAccount s1 = new StudentAccount("S001", "pass1", "s1@mail.com", "John", "Doe", "Male", "2000-01-01", "1st Year", 1, "CSE", "Student", 3.5);
+        StudentAccount s1 = new StudentAccount("S001", "pass1", "s1@mail.com", "John", "Doe", "Male", "2000-01-01", "1st Year", 1, "CSE", "Student", 1.5);
         StudentAccount s2 = new StudentAccount("S002", "pass2", "s2@mail.com", "Jane", "Smith", "Female", "2000-02-02", "1st Year", 2, "CSE", "Student", 3.7);
         StudentAccount s3 = new StudentAccount("S003", "pass3", "s3@mail.com", "Mike", "Johnson", "Male", "2000-03-03", "2nd Year", 3, "EEE", "Student", 2.9);
         StudentAccount s4 = new StudentAccount("S004", "pass4", "s4@mail.com", "Emily", "Davis", "Female", "2000-04-04", "2nd Year", 4, "CSE", "Student", 3.2);
