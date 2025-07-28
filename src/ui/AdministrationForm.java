@@ -12,21 +12,26 @@ public class AdministrationForm extends JFrame {
     private JPanel mainPanel;
 
     public AdministrationForm() {
+
         setTitle("Administration Panel");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
         add(createHeader(), BorderLayout.NORTH);
+
         setupMainPanel();
         add(mainPanel, BorderLayout.CENTER);
+
         getRootPane().setDefaultButton(getSearchButton());
         pack();
+
         setMinimumSize(new Dimension(500, 600));
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private JLabel createHeader() {
+
         JLabel headerLabel = new JLabel("Administration Dashboard", SwingConstants.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 24, 0));
@@ -35,6 +40,7 @@ public class AdministrationForm extends JFrame {
     }
 
     private void setupMainPanel() {
+
         mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(new Color(255, 255, 255));
         mainPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -43,6 +49,7 @@ public class AdministrationForm extends JFrame {
         ));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(12, 12, 12, 12);
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -55,6 +62,7 @@ public class AdministrationForm extends JFrame {
             this.dispose();
             new StudentList();
         });
+
         gbc.gridy++;
         JButton teacherButton = new JButton("Teacher List");
         utils.styleButton(teacherButton);
@@ -64,6 +72,7 @@ public class AdministrationForm extends JFrame {
             this.dispose();
             new TeacherList();
         });
+
         gbc.gridy++;
         JButton resultButton = new JButton("Result List");
         utils.styleButton(resultButton);
@@ -73,6 +82,7 @@ public class AdministrationForm extends JFrame {
             dispose();
             new ResultList();
         });
+
         gbc.gridy++;
         gbc.gridwidth = 1;
         JLabel searchLabel = new JLabel("Account ID:");
@@ -82,6 +92,7 @@ public class AdministrationForm extends JFrame {
         JTextField searchField = new JTextField(15);
         searchField.setFont(new Font("Arial", Font.PLAIN, 15));
         mainPanel.add(searchField, gbc);
+
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
@@ -90,12 +101,14 @@ public class AdministrationForm extends JFrame {
         searchButton.setToolTipText("Show Search Account");
         mainPanel.add(searchButton, gbc);
         searchButton.addActionListener(e -> handleSearchAccount(searchField));
+
         gbc.gridy++;
         JButton announcementButton = new JButton("Announcement");
         utils.styleButton(announcementButton);
         announcementButton.setToolTipText("Set Announcement");
         mainPanel.add(announcementButton, gbc);
         announcementButton.addActionListener(e -> handleAnnouncement());
+
         gbc.gridy++;
         JButton backButton = new JButton("Back to Main Menu");
         utils.styleButton(backButton);
@@ -108,6 +121,7 @@ public class AdministrationForm extends JFrame {
     }
 
     private void handleSearchAccount(JTextField searchField) {
+
         String searchID = searchField.getText().trim();
         Account account = Main.getAccounts().get(searchID);
         if (account == null) {
@@ -120,6 +134,7 @@ public class AdministrationForm extends JFrame {
     }
 
     private void handleAnnouncement() {
+
         String note = JOptionPane.showInputDialog(this, "Add Announcements: ", "Announcements", JOptionPane.QUESTION_MESSAGE).trim();
         if (note.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Announcements!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -134,6 +149,7 @@ public class AdministrationForm extends JFrame {
     }
 
     private JButton getSearchButton() {
+
         for (Component comp : mainPanel.getComponents()) {
             if (comp instanceof JButton && ((JButton) comp).getText().equals("Search Account")) {
                 return (JButton) comp;
