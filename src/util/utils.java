@@ -2,6 +2,7 @@ package util;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -42,7 +43,16 @@ public class utils {
         scrollPane.setPreferredSize(new Dimension(400, 250));
         return scrollPane;
     }
+    public static String[] session() {
+        String[] sessions = new String[10];
+        int currentYear = LocalDate.now().getYear();
 
+        for (int i = 0; i < 10; i++) {
+            sessions[i] = String.format("%d-%d", currentYear - i - 1, currentYear - i);
+        }
+
+        return sessions;
+    }
 
     public static void styleButton(JButton button) {
 

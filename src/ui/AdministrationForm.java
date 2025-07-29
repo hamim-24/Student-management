@@ -139,6 +139,22 @@ public class AdministrationForm extends JFrame {
                 utils.DEPARTMENTS[0]
         );
         if (department == null || department.equals("Select")) return;
+
+        String[] sessions = utils.session();
+        String session = (String) JOptionPane.showInputDialog(
+                this,
+                "Select session:",
+                "Session",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                sessions,
+                sessions[0]
+        );
+        if (session == null || session.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please select a session", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         String year = (String) JOptionPane.showInputDialog(
                 this,
                 "Select Year:",
@@ -153,59 +169,98 @@ public class AdministrationForm extends JFrame {
             return;
         }
 
-        int res = JOptionPane.showConfirmDialog(this, "Are you sure to promoted student?\nDepartment: " + department + "\nYear: " + year, "Confirm", JOptionPane.YES_NO_OPTION);
+        int res = JOptionPane.showConfirmDialog(this, "Are you sure to promote students?\nDepartment: " + department + "\nYear: " + year, "Confirm", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
             Map<String, Account> accounts = Main.getAccounts();
+            int promotedCount = 0;
+            int notPromotedCount = 0;
+            
             for (Account s : accounts.values()) {
                 if (s instanceof StudentAccount studentAccount) {
-                    if (studentAccount.getYear().equals(year) && studentAccount.getDepartment().equals(department)) {
-                        if (studentAccount.getCg() >= 2) {
-                            for (int i = 1; i < 5; i++) {
-                                if (studentAccount.getYear().equals(year)) {
-                                    studentAccount.setResultInfo(utils.promotion, "Congratulation for your brilliant success now you are " + utils.YEARS[i + 1] + " student");
-                                    studentAccount.setYear(utils.YEARS[i + 1]);
-                                }
+                    if (studentAccount.getYear().equals(year) && studentAccount.getDepartment().equals(department) && studentAccount.getSession().equals(session)) {
+                        if (studentAccount.getCg() >= 2.0) {
+                            // Find current year index and promote to next year
+                            String nextYear = getNextYear(studentAccount.getYear());
+                            if (nextYear != null) {
+                                studentAccount.setYear(nextYear);
+                                studentAccount.setResultInfo(utils.promotion, "Congratulations for your brilliant success! You are now a " + nextYear + " student.");
+                                promotedCount++;
                             }
                         } else {
-                            studentAccount.setResultInfo(utils.promotion, "Sorry, You didn't promoted");
+                            studentAccount.setResultInfo(utils.promotion, "Sorry, you were not promoted due to low CGPA (minimum 2.0 required).");
+                            notPromotedCount++;
                         }
                     }
                 }
             }
-            Notification notification = new Notification("Students have been promoted Department: " + department + " year: " + year + " Search: '" + utils.promotion + "' for result");
+            
+            Notification notification = new Notification("Promotion completed for Department: " + department + ", Year: " + year + 
+                ". Promoted: " + promotedCount + ", Not promoted: " + notPromotedCount + 
+                ". Search: '" + utils.promotion + "' for detailed results.");
             Main.getNotifications().add(notification);
 
-            JOptionPane.showMessageDialog(this, "Promotion Complete", "Promotion Complete", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                "Promotion Complete!\n\nPromoted: " + promotedCount + " students\nNot promoted: " + notPromotedCount + " students", 
+                "Promotion Complete", 
+                JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "Student have not promoted", "Promotion Complete", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Promotion cancelled by user", "Promotion Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+    
+    private String getNextYear(String currentYear) {
+        for (int i = 1; i < utils.YEARS.length - 1; i++) {
+            if (utils.YEARS[i].equals(currentYear)) {
+                return utils.YEARS[i + 1];
+            }
+        }
+        return null; // Already graduated or invalid year
     }
 
     private void handleSearchAccount(JTextField searchField) {
-
         String searchID = searchField.getText().trim();
+        
+        if (searchID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter an Account ID!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         Account account = Main.getAccounts().get(searchID);
         if (account == null) {
-            JOptionPane.showMessageDialog(this, "No Account Found!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Account Found with ID: " + searchID, "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             StringBuilder qs = new StringBuilder();
+            qs.append("Account Details:\n");
+            qs.append("================\n");
             qs.append(account);
             JOptionPane.showMessageDialog(this, utils.ScrollPanel(qs), "Account Details", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
     private void handleAnnouncement() {
-
-        String note = JOptionPane.showInputDialog(this, "Add Announcements: ", "Announcements", JOptionPane.QUESTION_MESSAGE).trim();
+        String note = JOptionPane.showInputDialog(this, "Add Announcement:", "Announcements", JOptionPane.QUESTION_MESSAGE);
+        
+        if (note == null) {
+            // User cancelled the dialog
+            return;
+        }
+        
+        note = note.trim();
         if (note.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Announcements!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int res = JOptionPane.showConfirmDialog(this, "Are you Sure to add this:\n'" + note + "'", "Announcement", JOptionPane.YES_NO_OPTION);
-            if (res == JOptionPane.YES_OPTION) {
-                Notification notification = new Notification(note);
-                Main.getNotifications().add(notification);
-                JOptionPane.showMessageDialog(this, "Announcement Added!", "Announcement", JOptionPane.INFORMATION_MESSAGE);
-            }
+            JOptionPane.showMessageDialog(this, "Please enter an announcement!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (note.length() > 500) {
+            JOptionPane.showMessageDialog(this, "Announcement is too long! Maximum 500 characters allowed.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int res = JOptionPane.showConfirmDialog(this, "Are you sure you want to add this announcement?\n\n'" + note + "'", "Confirm Announcement", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+            Notification notification = new Notification(note);
+            Main.getNotifications().add(notification);
+            JOptionPane.showMessageDialog(this, "Announcement added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
