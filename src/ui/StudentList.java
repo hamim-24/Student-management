@@ -16,7 +16,7 @@ public class StudentList extends JFrame {
     private JTable studentTable;
     private DefaultTableModel tableModel;
     private DefaultTableModel allStudentsModel;
-    private JTextField nameField, emailField, dobField, gpaField;
+    private JTextField nameField, emailField, gpaField;
     private JComboBox<String> yearComboBox;
     private JComboBox<String> departmentComboBox, updateDepartmentCombo;
     private JComboBox<String> yearFilterComboBox;
@@ -54,7 +54,7 @@ public class StudentList extends JFrame {
     private void initializeComponents() {
 
         // Create table with column names
-        String[] columnNames = {"Roll", "Name", "ID", "Email", "DOB", "Department", "GPA", "Year"};
+        String[] columnNames = {"Roll", "Name", "ID", "Email", "Session", "Department", "GPA", "Year"};
 
         // Create models for all students and filtered view
         allStudentsModel = new DefaultTableModel(columnNames, 0) {
@@ -148,8 +148,6 @@ public class StudentList extends JFrame {
         nameField.setToolTipText("Enter full name (First Last)");
         emailField = new JTextField(20);
         emailField.setToolTipText("Enter email address");
-        dobField = new JTextField(20);
-        dobField.setToolTipText("Format: YYYY-MM-DD");
         gpaField = new JTextField(20);
         gpaField.setToolTipText("GPA (0.0 - 4.0)");
 
@@ -358,13 +356,6 @@ public class StudentList extends JFrame {
         emailField.setPreferredSize(new Dimension(180, 25));
         inputPanel.add(emailField, gbc);
 
-        // DOB field
-        gbc.gridx = 0; gbc.gridy = 3;
-        inputPanel.add(new JLabel("Date of Birth:"), gbc);
-        gbc.gridx = 1;
-        dobField.setPreferredSize(new Dimension(180, 25));
-        inputPanel.add(dobField, gbc);
-
         // Academic Information Section
         JLabel academicLabel = new JLabel("Academic Information");
         academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
@@ -490,12 +481,13 @@ public class StudentList extends JFrame {
                                 firstName,
                                 lastName,
                                 student.getGender(),
-                                dobField.getText().trim(), // DOB
+                                student.getDob(), // DOB
                                 yearComboBox.getSelectedItem().toString(),
                                 student.getRoll(),
                                 updateDepartmentCombo.getSelectedItem().toString(), // Department
                                 student.getStatus(),
-                                gpa
+                                gpa,
+                                student.getSession()
                         );
                         // Update the accounts map
                         accounts.put(studentId, updatedStudent);
@@ -552,7 +544,6 @@ public class StudentList extends JFrame {
     private void clearFields() {
         nameField.setText("");
         emailField.setText("");
-        dobField.setText("");
         updateDepartmentCombo.setSelectedIndex(0);
         gpaField.setText("");
         yearComboBox.setSelectedIndex(0);
@@ -564,7 +555,6 @@ public class StudentList extends JFrame {
         if (selectedRow != -1) {
             nameField.setText(tableModel.getValueAt(selectedRow, 1).toString());
             emailField.setText(tableModel.getValueAt(selectedRow, 3).toString());
-            dobField.setText(tableModel.getValueAt(selectedRow, 4).toString()); // DOB
             updateDepartmentCombo.setSelectedItem(tableModel.getValueAt(selectedRow, 5).toString()); // Department
             gpaField.setText(tableModel.getValueAt(selectedRow, 6).toString()); // GPA
             yearComboBox.setSelectedItem(tableModel.getValueAt(selectedRow, 7).toString()); // year
@@ -574,7 +564,6 @@ public class StudentList extends JFrame {
     private boolean validateFields() {
         if (nameField.getText().trim().isEmpty() ||
                 emailField.getText().trim().isEmpty() ||
-                dobField.getText().trim().isEmpty() ||
                 updateDepartmentCombo.getSelectedItem().equals("Select") ||
                 gpaField.getText().trim().isEmpty()) {
 
@@ -676,7 +665,7 @@ public class StudentList extends JFrame {
                 row.add(student.getFirstName() + " " + student.getLastName());
                 row.add(student.getID());
                 row.add(student.getEmail());
-                row.add(student.getDob());
+                row.add(student.getSession());
                 row.add(student.getDepartment()); // Department column
                 row.add(student.getCg());
                 row.add(student.getYear());

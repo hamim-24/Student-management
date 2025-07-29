@@ -8,13 +8,14 @@ public class StudentAccount extends Account {
     private String year;
     private int roll;
     private double cg;
+    private String session;
     private Map<String, Boolean> EXAM_DONE;
     private Map<String, String> resultInfo;
     private double mark = 0.0;
     private int correct = 0;
     private int incorrect = 0;
 
-    public StudentAccount(String id, String password, String email, String firstName, String lastName, String gender, String dob, String year, int roll, String department, String status, double cg) {
+    public StudentAccount(String id, String password, String email, String firstName, String lastName, String gender, String dob, String year, int roll, String department, String status, double cg, String session) {
 
         super(id, password, email, firstName, lastName, gender, dob, department, status);
         EXAM_DONE = new HashMap<>();
@@ -22,8 +23,15 @@ public class StudentAccount extends Account {
         this.year = year;
         this.roll = roll;
         this.cg = cg;
+        this.session = session;
     }
 
+    public String getSession() {
+        return session;
+    }
+    public void setSession(String session) {
+        this.session = session;
+    }
     public String getYear() {
         return year;
     }

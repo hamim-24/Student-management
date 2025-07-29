@@ -19,13 +19,13 @@ public class SignInFrame extends JFrame {
 
     private Account account;
     private JLabel PasswordStatusLabel, mainTitleLabel, titleLabel, accountLabel, firstNameLabel, lastNameLabel, idLabel, idStatusLabel,
-            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel, yearLabel, rollLabel, departmentLabel;
+            emailLabel, dobLabel, genderLabel, passwordLabel, confirmPasswordLabel, photoLabel, filePathLabel, statusLabel, yearLabel, rollLabel, departmentLabel, sessionLabel;
     private JTextField firstNameTextField, lastNameTextField, emailTextField, idTextField, rollTextField;
     private JPasswordField passwordTextField, confirmPasswordTextField;
     private JButton createButton, resetButton, choosePhotoButton, loginButton;
     private JRadioButton maleRadioButton, femaleRadioButton;
     private ButtonGroup genderGroup;
-    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo, acYearCombo, departmentCombo;
+    private JComboBox<String> dayCombo, monthCombo, yearCombo, statusCombo, acYearCombo, departmentCombo, sessionCombo;
     String filePath;
 
     JPanel mainPanel;
@@ -56,6 +56,10 @@ public class SignInFrame extends JFrame {
     }
 
     private void createComponents() {
+
+        sessionLabel = new JLabel("Session:");
+        sessionCombo = new JComboBox<>(utils.session());
+
         // Status labels with proper initialization
         PasswordStatusLabel = new JLabel(" "); // Space to maintain height
         PasswordStatusLabel.setFont(new Font(Font.MONOSPACED, Font.BOLD, 8));
@@ -171,6 +175,7 @@ public class SignInFrame extends JFrame {
         addFormField(mainPanel, firstNameLabel, firstNameTextField, gbc, nextLine());
         addFormField(mainPanel, lastNameLabel, lastNameTextField, gbc, nextLine());
         addFormField(mainPanel, emailLabel, emailTextField, gbc, nextLine());
+        addFormField(mainPanel, sessionLabel, sessionCombo, gbc, nextLine());
         addFormField(mainPanel, departmentLabel, departmentCombo, gbc, nextLine());
         addFormField(mainPanel, statusLabel, statusCombo, gbc, nextLine());
         line1 = nextLine(); // for year
@@ -493,7 +498,7 @@ public class SignInFrame extends JFrame {
             if (getStatus().equals("Teacher")) {
                 account = new TeacherAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getDepartment(), getStatus());
             } else if (getStatus().equals("Student")) {
-                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getYear(), getRoll(), getDepartment(), getStatus(), 0.0);
+                account = new StudentAccount(getId(), getPassword(), getEmail(), getFirstName(), getLastName(), getGender(), getDob(), getYear(), getRoll(), getDepartment(), getStatus(), 0.0, getSession());
             }
 
             // Add to the main accounts map instead of local map
@@ -662,6 +667,9 @@ public class SignInFrame extends JFrame {
         }
     }
 
+    private String getSession() {
+        return sessionCombo.getSelectedItem().toString().trim();
+    }
     public int nextLine() {
         return ++lineNumber;
     }
