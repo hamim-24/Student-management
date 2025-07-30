@@ -138,21 +138,8 @@ public class AdministrationForm extends JFrame {
                 utils.DEPARTMENTS,
                 utils.DEPARTMENTS[0]
         );
-        if (department == null || department.equals("Select")) return;
-
-        String[] sessions = utils.session();
-        String session = (String) JOptionPane.showInputDialog(
-                this,
-                "Select session:",
-                "Session",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                sessions,
-                sessions[0]
-        );
-        if (session == null || session.equals("Select")) {
-            JOptionPane.showMessageDialog(this, "Please select a session", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+        if (department == null || department.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Department Selected !",  "Warning", JOptionPane.WARNING_MESSAGE);
         }
 
         String year = (String) JOptionPane.showInputDialog(
@@ -165,9 +152,25 @@ public class AdministrationForm extends JFrame {
                 utils.YEARS[0]
         );
         if (year == null || year.equals("Select")) {
-            JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please Select Year", "Warning", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        String[] sessions = utils.session();
+        String session = (String) JOptionPane.showInputDialog(
+                this,
+                "Select session:",
+                "Session",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                sessions,
+                sessions[0]
+        );
+        if (session == null || session.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please select a session", "Warning", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
 
         int res = JOptionPane.showConfirmDialog(this, "Are you sure to promote students?\nDepartment: " + department + "\nYear: " + year, "Confirm", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
@@ -194,7 +197,8 @@ public class AdministrationForm extends JFrame {
                 }
             }
             
-            Notification notification = new Notification("Promotion completed for Department: " + department + ", Year: " + year + 
+            Notification notification = new Notification("Promotion completed for Department: " + department + ", Year: " + year +
+                    "Session: " + session +
                 ". Promoted: " + promotedCount + ", Not promoted: " + notPromotedCount + 
                 ". Search: '" + utils.promotion + "' for detailed results.");
             Main.getNotifications().add(notification);

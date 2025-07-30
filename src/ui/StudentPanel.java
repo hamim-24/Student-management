@@ -121,7 +121,8 @@ public class StudentPanel extends JFrame {
                         if (question != null) {
                             String examYear = question.getYear().trim();
                             String examDepartment = question.getDepartment().trim();
-                            if (account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear)) {
+                            String examSession = question.getSession().trim();
+                            if (account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear) && account.getSession().equals(examSession)) {
                                 if (examRunning) {
                                 Boolean examDone = account.getEXAM_DONE().get(examCode);
                                 if (examDone == null || !examDone) {

@@ -166,6 +166,19 @@ public class TeacherPanel extends JFrame {
                     JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                String session = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Select Year:",
+                        "Year",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        utils.session(),
+                        utils.session()[0]
+                );
+                if (session == null || session.equals("Select")) {
+                    JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 String name = JOptionPane.showInputDialog(this, "Enter exam name: ", "Exam name", JOptionPane.QUESTION_MESSAGE).trim();
                 if (name.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "Please enter a valid exam name", "Error", JOptionPane.ERROR_MESSAGE);
@@ -180,15 +193,15 @@ public class TeacherPanel extends JFrame {
                     JOptionPane.showMessageDialog(this, "Exam exists! Change Code...", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                int res = JOptionPane.showConfirmDialog(this, "Are you sure to publish question?" + "\nName: " + name + "\nNew Code: " + examCode + "\nDepartment: " + department + "\nYear: " + year, "Publish Results", JOptionPane.YES_NO_OPTION);
+                int res = JOptionPane.showConfirmDialog(this, "Are you sure to publish question?" + "\nName: " + name + "\nNew Code: " + examCode + "\nDepartment: " + department + "\nYear: " + year + "Session: " + session, "Publish Results", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
                     utils.EXAM_CODE.put(examCode, true);
                     utils.PUBLISHED_STATUS = "Exam is running";
                     questionStatusButton.setText(utils.PUBLISHED_STATUS);
-                    Question question1 = new Question(questionSet.getSingleQuestions(), examCode, year, department, name);
+                    Question question1 = new Question(questionSet.getSingleQuestions(), examCode, year, department, name, session);
                     questionMap.put(examCode, question1);
                     Notification notification = new Notification("New Exam published. code: " + examCode + " Department: " + department
-                            + " Year: " + year + " By " + account.getFirstName() + " " + account.getLastName());
+                            + " Year: " + year + " Session: " + session + " By " + account.getFirstName() + " " + account.getLastName());
                     Main.getNotifications().add(notification);
                 }
             } else {
@@ -279,6 +292,7 @@ public class TeacherPanel extends JFrame {
                         result.append("Exam Name: ").append(question.getExamName()).append("\n");
                         result.append("Department: ").append(question.getDepartment()).append("\n");
                         result.append("Year: ").append(question.getYear()).append("\n");
+                        result.append("Session: ").append(question.getSession()).append("\n");
                         if (isRunning) {
                             result.append("Status: Running\n");
                         } else {
