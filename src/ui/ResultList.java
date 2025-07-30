@@ -24,8 +24,15 @@ public class ResultList extends JFrame {
     Map<String, Result> resultMap;
 
     public ResultList() {
-
         this.resultMap = Main.getResultMap();
+        
+        // Check if resultMap is null or empty
+        if (resultMap == null) {
+            JOptionPane.showMessageDialog(null, "Result data not available", "Error", JOptionPane.ERROR_MESSAGE);
+            new AdministrationForm();
+            return;
+        }
+        
         setTitle("Exam Results");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 700);
@@ -80,17 +87,21 @@ public class ResultList extends JFrame {
         resultCodeComboBox = new JComboBox<>();
         resultCodeComboBox.setFont(new Font("Arial", Font.PLAIN, 15));
         resultCodeComboBox.addItem("All");
-        resultCodeComboBox.removeAllItems();
-        resultCodeComboBox.addItem("All");
-        java.util.Set<String> uniqueResultCodes = new java.util.HashSet<>();
-        for (Result result : Main.getResultMap().values()) {
-            if (result.getQuestionCode() != null && !result.getQuestionCode().isEmpty()) {
-                uniqueResultCodes.add(result.getQuestionCode());
+        
+        try {
+            java.util.Set<String> uniqueResultCodes = new java.util.HashSet<>();
+            for (Result result : resultMap.values()) {
+                if (result != null && result.getQuestionCode() != null && !result.getQuestionCode().isEmpty()) {
+                    uniqueResultCodes.add(result.getQuestionCode());
+                }
             }
+            for (String code : uniqueResultCodes) {
+                resultCodeComboBox.addItem(code);
+            }
+        } catch (Exception ex) {
+            System.err.println("Error loading result codes: " + ex.getMessage());
         }
-        for (String code : uniqueResultCodes) {
-            resultCodeComboBox.addItem(code);
-        }
+        
         filterPanel.add(resultCodeComboBox, gbc);
         gbc.gridx++;
         filterPanel.add(new JLabel("ID:"), gbc);
@@ -169,100 +180,134 @@ public class ResultList extends JFrame {
     }
 
     private void clearAllFilters() {
-        resultCodeComboBox.setSelectedIndex(0);
-        idFilterField.setText("");
-        cgpaFilterField.setText("");
-        filterResults();
+        try {
+            resultCodeComboBox.setSelectedIndex(0);
+            idFilterField.setText("");
+            cgpaFilterField.setText("");
+            filterResults();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error clearing filters: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void filterResults() {
-        String selectedResultCode = (String) resultCodeComboBox.getSelectedItem();
-        String idFilter = idFilterField.getText().trim().toLowerCase();
-        String cgpaFilter = cgpaFilterField.getText().trim();
-        double minCgpa = 0.0;
         try {
-            if (!cgpaFilter.isEmpty()) minCgpa = Double.parseDouble(cgpaFilter);
-        } catch (NumberFormatException e) {
-            minCgpa = 0.0;
-        }
+            String selectedResultCode = (String) resultCodeComboBox.getSelectedItem();
+            String idFilter = idFilterField.getText().trim().toLowerCase();
+            String cgpaFilter = cgpaFilterField.getText().trim();
+            double minCgpa = 0.0;
+            try {
+                if (!cgpaFilter.isEmpty()) minCgpa = Double.parseDouble(cgpaFilter);
+            } catch (NumberFormatException e) {
+                minCgpa = 0.0;
+            }
 
-        tableModel.setRowCount(0);
-        int total = 0, filtered = 0;
+            tableModel.setRowCount(0);
+            int total = 0, filtered = 0;
 
-        // Show department, year, totalMcq only if a specific result code is selected
-        if (!selectedResultCode.equals("All")) {
+            // Show department, year, totalMcq only if a specific result code is selected
+            if (!selectedResultCode.equals("All")) {
+                for (Result result : resultMap.values()) {
+                    if (result == null) continue;
+                    if (selectedResultCode.equals(result.getQuestionCode())) {
+                        departmentLabel.setText("Department: " + (result.getDepartment() != null ? result.getDepartment() : "") +
+                                ",  Code: " + (result.getQuestionCode() != null ? result.getQuestionCode() : ""));
+                        yearLabel.setText("Year: " + (result.getYear() != null ? result.getYear() : "") +
+                                ",  Total MCQ: " + result.getTotalQuestions() +
+                                ",  Exam: " + (result.getQuestionName() != null ? result.getQuestionName() : "") +
+                                ",  Session: " + (result.getSession() != null ? result.getSession() : "") +
+                                ",  Course ID: " + (result.getCourseId() != null ? result.getCourseId() : ""));
+                        break;
+                    }
+                }
+            } else {
+                departmentLabel.setText("");
+                yearLabel.setText("");
+            }
+
             for (Result result : resultMap.values()) {
-                if (selectedResultCode.equals(result.getQuestionCode())) {
-                    departmentLabel.setText("Department: " + (result.getDepartment() != null ? result.getDepartment() : "") +
-                            ",   Question Code: " + (result.getQuestionCode() != null ? result.getQuestionCode() : ""));
-                    yearLabel.setText(" Year: " + (result.getYear() != null ? result.getYear() : "") +
-                            ",   Total MCQ: " + result.getTotalQuestions() +
-                            ",   Exam: " + (result.getQuestionName() != null ? result.getQuestionName() : ""));
-                    break;
+                if (result == null) continue;
+                String code = result.getQuestionCode();
+                if (code == null) continue;
+                
+                total += result.getCgpas().size();
+                if (!selectedResultCode.equals("All") && !code.equals(selectedResultCode)) {
+                    continue;
                 }
-            }
-        } else {
-            departmentLabel.setText("");
-            yearLabel.setText("");
-        }
+                
+                // For each student in this result
+                for (int i = 0; i < result.getIDs().size(); i++) {
+                    try {
+                        String studentId = result.getIDs().get(i);
+                        String name = result.getNames().get(i);
+                        int roll = result.getRolls().get(i);
+                        double mark = result.getMarks().get(i);
+                        double cgpa = result.getCgpas().get(i);
+                        int correct = 0, incorrect = 0;
+                        
+                        try {
+                            correct = result.getCorrect().get(i);
+                            incorrect = result.getIncorrect().get(i);
+                        } catch (Exception ignored) {
+                            // Use default values if correct/incorrect data is missing
+                        }
 
-        for (Result result : resultMap.values()) {
-            String code = result.getQuestionCode();
-            total += result.getCgpas().size();
-            if (!selectedResultCode.equals("All") && (code == null || !code.equals(selectedResultCode))) {
-                continue;
-            }
-            // For each student in this result
-            for (int i = 0; i < result.getIDs().size(); i++) {
-                String studentId = result.getIDs().get(i);
-                String name = result.getNames().get(i);
-                int roll = result.getRolls().get(i);
-                double mark = result.getMarks().get(i);
-                double cgpa = result.getCgpas().get(i);
-                int correct = 0, incorrect = 0;
-                try {
-                    correct = result.getCorrect().get(i);
-                    incorrect = result.getIncorrect().get(i);
-                } catch (Exception ignored) {
-                }
+                        if (!idFilter.isEmpty() && !studentId.toLowerCase().contains(idFilter)) continue;
+                        if (!cgpaFilter.isEmpty() && cgpa < minCgpa) continue;
 
-                if (!idFilter.isEmpty() && !studentId.toLowerCase().contains(idFilter)) continue;
-                if (!cgpaFilter.isEmpty() && cgpa < minCgpa) continue;
-
-                Vector<Object> row = new Vector<>();
-                row.add(roll);
-                row.add(name);
-                row.add(studentId);
-                row.add(mark);
-                row.add(correct);
-                row.add(incorrect);
-                row.add(cgpa);
-                tableModel.addRow(row);
-                filtered++;
-            }
-        }
-        filteredCountLabel.setText("Results: " + filtered + " / " + total + " (filtered/total)");
-        // Set row background color for GPA < 2.0
-        resultTable.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                try {
-                    double cgpa = Double.parseDouble(table.getValueAt(row, 6).toString());
-                    if (cgpa < 2.0) {
-                        c.setBackground(new Color(255, 204, 204)); // Softer red
-                    } else if (!isSelected) {
-                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
-                    }
-                } catch (Exception e) {
-                    if (!isSelected) {
-                        c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                        Vector<Object> row = new Vector<>();
+                        row.add(roll);
+                        row.add(name);
+                        row.add(studentId);
+                        row.add(mark);
+                        row.add(correct);
+                        row.add(incorrect);
+                        row.add(cgpa);
+                        tableModel.addRow(row);
+                        filtered++;
+                    } catch (IndexOutOfBoundsException e) {
+                        // Skip this student if data is incomplete
+                        continue;
                     }
                 }
-                return c;
             }
-        });
-        resultTable.repaint();
+            
+            filteredCountLabel.setText("Results: " + filtered + " / " + total + " (filtered/total)");
+            
+            // Show message if no results found
+            if (filtered == 0) {
+                JOptionPane.showMessageDialog(this, "No results found matching the current filters.", "No Results", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            // Set row background color for GPA < 2.0
+            resultTable.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    try {
+                        if (column == 6 && value != null) {
+                            double cgpa = Double.parseDouble(value.toString());
+                            if (cgpa < 2.0) {
+                                c.setBackground(new Color(255, 204, 204)); // Softer red
+                            } else if (!isSelected) {
+                                c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                            }
+                        } else if (!isSelected) {
+                            c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                        }
+                    } catch (Exception e) {
+                        if (!isSelected) {
+                            c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                        }
+                    }
+                    return c;
+                }
+            });
+            resultTable.repaint();
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error filtering results: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Exception in filterResults: " + ex.getMessage());
+        }
     }
 }

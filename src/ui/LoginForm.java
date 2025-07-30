@@ -210,7 +210,7 @@ public class LoginForm extends JFrame {
                     dispose();
 
                     if (account.getStatus().equals("Student")) {
-                        new StudentPanel(id);
+                        new StudentPanel((StudentAccount) account);
                     } else if (account.getStatus().equals("Teacher")) {
                         new TeacherPanel(account);
                     }

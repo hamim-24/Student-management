@@ -9,10 +9,11 @@ public class Question {
     private final String questionCode;
     private final String year;
     private final String department;
+    private final String courseId;
 
     List<SingleQuestion> singleQuestions;
 
-    public Question(List<SingleQuestion> singleQuestions, String questionCode, String year, String department, String examName, String session) {
+    public Question(List<SingleQuestion> singleQuestions, String questionCode, String year, String department, String examName, String session, String courseId) {
 
         this.questionCode = questionCode;
         this.singleQuestions = singleQuestions;
@@ -20,6 +21,11 @@ public class Question {
         this.department = department;
         this.examName = examName;
         this.session = session;
+        this.courseId = courseId;
+    }
+
+    public String getCourseId() {
+        return courseId;
     }
 
     public String getSession() {
