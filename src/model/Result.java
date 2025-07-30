@@ -19,12 +19,16 @@ public class Result {
     private final List<Double> cgpas;
     private final List<Integer> correct;
     private final List<Integer> incorrect;
+    private final String session;
+    private final String courseId;
 
     Map<String, Account> accounts;
     Question question;
 
-    public Result(String questionCode, String department, String year) {
+    public Result(String questionCode, String department, String year, String session, String courseId) {
 
+        this.session = session;
+        this.courseId = courseId;
         this.department = department;
         this.year = year;
         this.questionCode = questionCode;
@@ -45,7 +49,14 @@ public class Result {
         for (Account account : accounts.values()) {
             if (account instanceof StudentAccount) {
                 StudentAccount studentAccount = (StudentAccount) account;
-                if (studentAccount.getDepartment().equals(question.getDepartment()) && studentAccount.getYear().equals(question.getYear())) {
+                Boolean courseIs = false;
+                for (Course c : studentAccount.getCourses()) {
+                    if (c.getCourseId().equals(courseId)) {
+                        courseIs = true;
+                        break;
+                    }
+                }
+                if (courseIs && studentAccount.getDepartment().equals(question.getDepartment()) && studentAccount.getYear().equals(question.getYear()) && studentAccount.getSession().equals(session)) {
                     names.add(studentAccount.getFirstName() + " " + studentAccount.getLastName());
                     IDs.add(studentAccount.getID());
                     rolls.add(studentAccount.getRoll());
@@ -56,6 +67,13 @@ public class Result {
                 }
             }
         }
+    }
+    public String getSession() {
+        return session;
+    }
+
+    public String getCourseId() {
+        return courseId;
     }
 
     public List<String> getIDs() {

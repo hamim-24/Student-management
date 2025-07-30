@@ -13,6 +13,7 @@ public class Main {
     private static final Map<String, Question> questionMap = new HashMap<>();
     private static final Map<String, Result> resultMap = new HashMap<>();
     private static final List<Notification> notifications = new ArrayList<>();
+    private static final Map<String, Course> courseMap = new HashMap<>();
 
     public static List<Notification> getNotifications() {
         return notifications;
@@ -28,6 +29,10 @@ public class Main {
 
     public static Map<String, Account> getAccounts() {
         return accounts;
+    }
+
+    public static Map<String, Course> getCourseMap() {
+        return courseMap;
     }
 
     public static void main(String[] args) {
@@ -123,9 +128,17 @@ public class Main {
         singleQuestionList1.add(new SingleQuestion("1*1=?", new String[]{"1", "2", "3", "4"}, "1"));
         singleQuestionList1.add(new SingleQuestion("1+3=?", new String[]{"1", "2", "3", "4"}, "4"));
         singleQuestionList1.add(new SingleQuestion("4-1=?", new String[]{"1", "2", "3", "4"}, "3"));
-        Question q1 = new Question(singleQuestionList1, "100", null, null, null, null);
+        Question q1 = new Question(singleQuestionList1, "100", null, null, null, null, null);
 
         questionMap.put(q1.getQuestionCode(), q1);
+
+        // Add sample courses
+        Course c1 = new Course("CSE101", "Introduction to Programming", 3, 5);
+        Course c2 = new Course("CSE102", "Data Structures", 4,5);
+        Course c3 = new Course("EEE201", "Circuit Analysis", 3,5);
+        courseMap.put(c1.getCourseId(), c1);
+        courseMap.put(c2.getCourseId(), c2);
+        courseMap.put(c3.getCourseId(), c3);
 
         //new TeacherPanel(null);
         new LoginForm();

@@ -11,52 +11,69 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class StudentExamFrame extends JFrame {
-    private final Question question;
-    private final JLabel timerLabel;
-    private final Timer timer;
+    private Question question;
+    private JLabel timerLabel;
+    private Timer timer;
     private int timeLeft; // in seconds
-    private final List<SingleQuestion> singleQuestions;
-    private final JRadioButton[][] optionButtons;
-    private final int totalQuestions;
+    private List<SingleQuestion> singleQuestions;
+    private JRadioButton[][] optionButtons;
+    private int totalQuestions;
     private boolean submitted = false;
 
     StudentAccount account;
     String id;
     String resultCode;
 
-    public StudentExamFrame(String id, String examCode) {
+    public StudentExamFrame(StudentAccount account, String examCode) {
+        // Validate parameters first
+        if (account == null) {
+            JOptionPane.showMessageDialog(null, "Invalid account information", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-        this.id = id;
+        if (examCode == null || examCode.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Invalid exam code", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        this.account = account;
         this.resultCode = examCode;
-        this.account = (StudentAccount) Main.getAccounts().get(id);
-
 
         Question q;
         ButtonGroup[] answerGroups;
+        List<SingleQuestion> questions;
+        int questionsCount;
+        JRadioButton[][] buttons;
+        JLabel timerLabelLocal;
+        Timer timerLocal;
+
         try {
             q = Main.getQuestionMap().get(examCode);
             if (q == null) {
                 throw new Exception("No exam found for the given code!");
             }
+
+            questions = q.getSingleQuestions();
+            questionsCount = questions.size();
+            buttons = new JRadioButton[questionsCount][4];
+            answerGroups = new ButtonGroup[questionsCount];
+            timerLabelLocal = new JLabel();
+            timerLocal = new Timer(1000, null); // Will be configured later
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
-            // Assign dummy values to final fields to satisfy the compiler
-            this.question = null;
-            this.singleQuestions = null;
-            this.totalQuestions = 0;
-            answerGroups = null;
-            this.optionButtons = null;
-            this.timer = null;
-            this.timerLabel = null;
             return;
         }
+
+        // Initialize final fields with validated values
         this.question = q;
-        this.singleQuestions = question.getSingleQuestions();
-        this.totalQuestions = singleQuestions.size();
-        answerGroups = new ButtonGroup[totalQuestions];
-        this.optionButtons = new JRadioButton[totalQuestions][4];
-        this.timeLeft = totalQuestions * 30; 
+        this.singleQuestions = questions;
+        this.totalQuestions = questionsCount;
+        this.optionButtons = buttons;
+        this.timerLabel = timerLabelLocal;
+        this.timer = timerLocal;
+        this.timeLeft = questionsCount * 30;
 
         setTitle("Exam: " + question.getExamName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -69,7 +86,6 @@ public class StudentExamFrame extends JFrame {
         JLabel nameLabel = new JLabel(question.getExamName() + ",    Code: " + question.getQuestionCode());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 22));
         headerPanel.add(nameLabel, BorderLayout.WEST);
-        timerLabel = new JLabel();
         timerLabel.setFont(new Font("Arial", Font.BOLD, 22));
         timerLabel.setForeground(new Color(231, 76, 60));
         headerPanel.add(timerLabel, BorderLayout.EAST);
@@ -91,7 +107,8 @@ public class StudentExamFrame extends JFrame {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(6, 6, 6, 6);
             gbc.anchor = GridBagConstraints.WEST;
-            gbc.gridx = 0; gbc.gridy = 0;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
             JLabel qText = new JLabel("<html><b>" + sq.getQuestion() + "</b></html>");
             qText.setFont(new Font("Arial", Font.PLAIN, 16));
             qPanel.add(qText, gbc);
@@ -124,7 +141,7 @@ public class StudentExamFrame extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
 
         // Timer logic
-        timer = new Timer(1000, new ActionListener() {
+        timer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 timeLeft--;
@@ -147,7 +164,7 @@ public class StudentExamFrame extends JFrame {
                 submitted = true;
                 timer.stop();
                 submitExam();
-                new StudentPanel(id);
+                new StudentPanel(account);
             }
         });
 
@@ -163,7 +180,7 @@ public class StudentExamFrame extends JFrame {
             return 3.75;
         } else if (mark >= 70) {
             return 3.50;
-        }  else if (mark >= 65) {
+        } else if (mark >= 65) {
             return 3.25;
         } else if (mark >= 60) {
             return 3.0;
@@ -235,7 +252,7 @@ public class StudentExamFrame extends JFrame {
         account.setCorrect(correct);
         account.setIncorrect(incorrect);
         account.setMark((double) correct / totalQuestions * 100);
-        Result re = new Result(resultCode, account.getDepartment(), account.getYear());
+        Result re = new Result(resultCode, account.getDepartment(), account.getYear(), account.getSession(), question.getCourseId());
         Main.getResultMap().put(resultCode, re);
         dispose();
     }

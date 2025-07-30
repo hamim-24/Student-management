@@ -1,6 +1,8 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StudentAccount extends Account {
@@ -11,6 +13,7 @@ public class StudentAccount extends Account {
     private String session;
     private Map<String, Boolean> EXAM_DONE;
     private Map<String, String> resultInfo;
+    private List<Course> courses;
     private double mark = 0.0;
     private int correct = 0;
     private int incorrect = 0;
@@ -20,18 +23,21 @@ public class StudentAccount extends Account {
         super(id, password, email, firstName, lastName, gender, dob, department, status);
         EXAM_DONE = new HashMap<>();
         resultInfo = new HashMap<>();
+        courses = new ArrayList<>();
         this.year = year;
         this.roll = roll;
         this.cg = cg;
         this.session = session;
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
     public String getSession() {
         return session;
     }
-    public void setSession(String session) {
-        this.session = session;
-    }
+
     public String getYear() {
         return year;
     }
@@ -90,7 +96,7 @@ public class StudentAccount extends Account {
 
     @Override
     public String toString() {
-        return super.toString() + "\nYear: " + year + "\nRoll: " + roll + "\nGPA: " + cg;
+        return super.toString() + "\nYear: " + year + "\nRoll: " + roll + "\nGPA: " + cg + "\nSession: " + session + "Courses" + courses;
     }
 
     public void setYear(String year) {

@@ -85,6 +85,16 @@ public class AdministrationForm extends JFrame {
         });
 
         gbc.gridy++;
+        JButton courseButton = new JButton("Course List");
+        utils.styleButton(courseButton);
+        courseButton.setToolTipText("Show Course List");
+        mainPanel.add(courseButton, gbc);
+        courseButton.addActionListener(e -> {
+            this.dispose();
+            new CourseList();
+        });
+
+        gbc.gridy++;
         gbc.gridwidth = 1;
         JLabel searchLabel = new JLabel("Account ID:");
         searchLabel.setFont(new Font("Arial", Font.PLAIN, 15));
