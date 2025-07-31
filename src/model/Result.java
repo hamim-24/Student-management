@@ -33,9 +33,14 @@ public class Result {
         this.year = year;
         this.questionCode = questionCode;
         this.question = Main.getQuestionMap().get(questionCode);
-        question = Main.getQuestionMap().get(questionCode);
-        this.questionName = question.getExamName();
-        this.totalQuestions = question.getSingleQuestions().size();
+        
+        // Validate question exists
+        if (this.question == null) {
+            throw new IllegalArgumentException("Question with code '" + questionCode + "' not found in question map");
+        }
+        
+        this.questionName = this.question.getExamName();
+        this.totalQuestions = this.question.getSingleQuestions().size();
         accounts = Main.getAccounts();
 
         names = new ArrayList<>();

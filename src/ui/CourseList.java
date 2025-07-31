@@ -18,11 +18,14 @@ public class CourseList extends JFrame {
     private JTextField courseIdField, courseNameField, creditsField, maxStudentsField;
     private JButton addButton, updateButton, deleteButton, clearButton, backButton;
     private int selectedRow = -1;
+    JLabel totalCourseLabel;
 
     Map<String, Course> courseMap;
+    private int totalCourse;
 
     public CourseList() {
         this.courseMap = Main.getCourseMap();
+        totalCourse = courseMap.size();
         initializeComponents();
         setupLayout();
         setupEventListeners();
@@ -168,7 +171,7 @@ public class CourseList extends JFrame {
         // Course ID field
         gbc.gridwidth = 1;
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy++;
         inputPanel.add(new JLabel("Course ID:"), gbc);
         gbc.gridx = 1;
         courseIdField.setPreferredSize(new Dimension(220, 25));
@@ -176,27 +179,17 @@ public class CourseList extends JFrame {
 
         // Course Name field
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy++;
         inputPanel.add(new JLabel("Course Name:"), gbc);
         gbc.gridx = 1;
         courseNameField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(courseNameField, gbc);
 
-        // Academic Information Section
-        JLabel academicLabel = new JLabel("Academic Information");
-        academicLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
-        academicLabel.setForeground(new Color(70, 130, 220));
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(15, 8, 8, 8);
-        inputPanel.add(academicLabel, gbc);
-
         // Credits field
         gbc.gridwidth = 1;
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy++;
         inputPanel.add(new JLabel("Credits:"), gbc);
         gbc.gridx = 1;
         creditsField.setPreferredSize(new Dimension(220, 25));
@@ -204,15 +197,25 @@ public class CourseList extends JFrame {
 
         // Max Students field
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy++;
         inputPanel.add(new JLabel("Max Students:"), gbc);
         gbc.gridx = 1;
         maxStudentsField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(maxStudentsField, gbc);
 
+        // Academic Information Section
+        totalCourseLabel = new JLabel("Total Courses: " + totalCourse);
+        totalCourseLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+        totalCourseLabel.setForeground(new Color(70, 130, 220));
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(15, 8, 8, 8);
+        inputPanel.add(totalCourseLabel, gbc);
+
         // Add some spacing at the bottom
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.weighty = 1.0;
         inputPanel.add(new JLabel(), gbc);
@@ -259,6 +262,8 @@ public class CourseList extends JFrame {
                 courseMap.put(courseId, newCourse);
                 loadCoursesFromMap();
                 clearFields();
+                totalCourse++;
+                totalCourseLabel.setText("Total Courses: " + totalCourse);
                 JOptionPane.showMessageDialog(this, "Course added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (NumberFormatException nfe) {
@@ -343,6 +348,8 @@ public class CourseList extends JFrame {
                 courseMap.remove(courseId);
                 loadCoursesFromMap();
                 clearFields();
+                totalCourse--;
+                totalCourseLabel.setText("Total Courses: " + totalCourse);
                 JOptionPane.showMessageDialog(this, "Course deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception ex) {
