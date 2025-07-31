@@ -26,7 +26,7 @@ public class AdministrationForm extends JFrame {
         getRootPane().setDefaultButton(getSearchButton());
         pack();
 
-        setMinimumSize(new Dimension(500, 600));
+        setMinimumSize(new Dimension(500, 750));
         setLocationRelativeTo(null);
         setVisible(true);
     }

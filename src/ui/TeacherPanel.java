@@ -51,7 +51,9 @@ public class TeacherPanel extends JFrame {
         mainPanel.setBackground(new Color(255, 255, 255));
         mainPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(24, 32, 24, 32),
-                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Exam Management", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                        "Exam Management", 0, 0,
+                        new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(12, 12, 12, 12);

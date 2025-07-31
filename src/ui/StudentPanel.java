@@ -43,8 +43,9 @@ public class StudentPanel extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
+        add(createHeader(), BorderLayout.NORTH);
         pack();
-        setMinimumSize(new Dimension(500, 600));
+        setMinimumSize(new Dimension(500, 700));
         setLocationRelativeTo(null);
     }
 
@@ -53,12 +54,12 @@ public class StudentPanel extends JFrame {
         createMainPanel();
     }
 
-    private void createHeader() {
+private JLabel createHeader() {
         JLabel headerLabel = new JLabel("Student Dashboard", SwingConstants.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 24, 0));
         headerLabel.setForeground(new Color(44, 62, 80));
-        add(headerLabel, BorderLayout.NORTH);
+        return headerLabel;
     }
 
     private void createMainPanel() {
@@ -66,7 +67,9 @@ public class StudentPanel extends JFrame {
         mainPanel.setBackground(new Color(255, 255, 255));
         mainPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(24, 32, 24, 32),
-                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Exam Management", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                        "Exam Management", 0, 0,
+                        new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
 
         GridBagConstraints gbc = new GridBagConstraints();

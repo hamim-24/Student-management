@@ -25,14 +25,7 @@ public class ResultList extends JFrame {
 
     public ResultList() {
         this.resultMap = Main.getResultMap();
-        
-        // Check if resultMap is null or empty
-        if (resultMap == null || resultMap.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Result data not available", "Error", JOptionPane.ERROR_MESSAGE);
-            new AdministrationForm();
-            return;
-        }
-        
+
         setTitle("Exam Results");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 700);

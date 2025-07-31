@@ -36,6 +36,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        String[] departments = {"CSE", "EEE", "BBA", "Civil"};
+        String[] years = {"1st Year", "2nd Year", "3rd Year", "4th Year"};
         for (int i = 1; i <= 100; i++) {
             String studentId = String.format("S%03d", i);
             String firstName = "Student" + i;
@@ -43,12 +45,11 @@ public class Main {
             String email = "student" + i + "@university.edu";
             String gender = (i % 2 == 0) ? "Male" : "Female";
             String dob = String.format("2000-%02d-%02d", (i % 12) + 1, (i % 28) + 1);
-            String year = getYearByIndex(i);
+            String year = years[(int)(Math.random() * years.length)];
             int roll = i;
-            String department = getDepartmentByIndex(i);
-            double cgpa = 2.0 + (Math.random() * 2.0); // CGPA between 2.0 and 4.0
+            String department = departments[(int)(Math.random() * departments.length)];
+            double cgpa = 2.0 + (Math.random() * 2.0);
             String session = "2023-2024";
-            
             StudentAccount student = new StudentAccount(studentId, "pass" + i, email, firstName, lastName, 
                                                      gender, dob, year, roll, department, "Student", cgpa, session);
             accounts.put(studentId, student);
@@ -99,7 +100,8 @@ public class Main {
 
         questionMap.put(q1.getQuestionCode(), q1);
 
-        new LoginForm();
+        new StudentPanel((StudentAccount) getAccounts().get("S001"));
+        //new LoginForm();
     }
     
     // Helper methods to distribute students and teachers across departments and years
