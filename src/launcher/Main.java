@@ -1,5 +1,6 @@
 package launcher;
 
+import com.sun.source.tree.UsesTree;
 import model.*;
 import ui.*;
 
@@ -10,17 +11,18 @@ import java.util.ArrayList;
 
 public class Main {
     private static final Map<String, Account> accounts = new HashMap<>();
+    // Store student info for later use
     private static final Map<String, Question> questionMap = new HashMap<>();
-    private static final Map<String, Result> resultMap = new HashMap<>();
     private static final List<Notification> notifications = new ArrayList<>();
     private static final Map<String, Course> courseMap = new HashMap<>();
+    private static final List<Result> resultsList = new ArrayList<>();
+
+    public static List<Result> getResultList() {
+        return resultsList;
+    }
 
     public static List<Notification> getNotifications() {
         return notifications;
-    }
-
-    public static Map<String, Result> getResultMap() {
-        return resultMap;
     }
 
     public static Map<String, Question> getQuestionMap() {
@@ -48,7 +50,7 @@ public class Main {
             String year = years[(int)(Math.random() * years.length)];
             int roll = i;
             String department = departments[(int)(Math.random() * departments.length)];
-            double cgpa = 2.0 + (Math.random() * 2.0);
+            double cgpa = 1.0 + (Math.random() * 2.0);
             String session = "2023-2024";
             StudentAccount student = new StudentAccount(studentId, "pass" + i, email, firstName, lastName, 
                                                      gender, dob, year, roll, department, "Student", cgpa, session);
@@ -99,6 +101,24 @@ public class Main {
         Question q1 = new Question(singleQuestionList1, "100", null, null, null, null, null);
 
         questionMap.put(q1.getQuestionCode(), q1);
+
+        // Add 100 random Result objects using the Result class constructor
+        for (int i = 0; i < 100; i++) {
+            // Pick a random student
+            String studentId = String.format("S%03d", 1 + (int)(Math.random() * 10000));
+            Account acc = accounts.get(studentId);
+            if (!(acc instanceof StudentAccount)) continue;
+            StudentAccount student = (StudentAccount) acc;
+            // Pick a random question code from questionMap
+            List<String> qCodes = new ArrayList<>(questionMap.keySet());
+            if (qCodes.isEmpty()) break;
+            String questionCode = qCodes.get((int)(Math.random() * qCodes.size()));
+            int correct = (int)(Math.random() * 10); // 0-9 correct
+            int incorrect = (int)(Math.random() * 10); // 0-9 incorrect
+            double mark = correct * 2.5; // Example: 2.5 marks per correct answer
+            Result result = new Result(student, mark, correct, incorrect, questionCode);
+            resultsList.add(result);
+        }
 
         //new StudentPanel((StudentAccount) getAccounts().get("S001"));
         new LoginForm();

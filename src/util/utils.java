@@ -44,11 +44,12 @@ public class utils {
         return scrollPane;
     }
     public static String[] session() {
-        String[] sessions = new String[10];
+        String[] sessions = new String[11];
+        sessions[0] = "Select";
         int currentYear = LocalDate.now().getYear();
 
-        for (int i = 0; i < 10; i++) {
-            sessions[i] = String.format("%d-%d", currentYear - i - 1, currentYear - i);
+        for (int i = 1; i < 11; i++) {
+            sessions[i] = String.format("%d-%d", currentYear - i, currentYear - i + 1);
         }
 
         return sessions;
