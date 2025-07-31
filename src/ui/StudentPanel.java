@@ -31,19 +31,37 @@ public class StudentPanel extends JFrame {
         this.questionMap = Main.getQuestionMap();
         this.account = account;
 
+        initializeFrame();
+        createComponents();
+        addEventListeners();
+        setupDocumentListener();
+        setVisible(true);
+    }
+
+    private void initializeFrame() {
         setTitle("Student Panel");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
+        pack();
+        setMinimumSize(new Dimension(500, 600));
+        setLocationRelativeTo(null);
+    }
 
-        // Header
+    private void createComponents() {
+        createHeader();
+        createMainPanel();
+    }
+
+    private void createHeader() {
         JLabel headerLabel = new JLabel("Student Dashboard", SwingConstants.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 24, 0));
         headerLabel.setForeground(new Color(44, 62, 80));
         add(headerLabel, BorderLayout.NORTH);
+    }
 
-        // Main panel with GridBagLayout
+    private void createMainPanel() {
         mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(new Color(255, 255, 255));
         mainPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -58,12 +76,22 @@ public class StudentPanel extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        createStatusButton(gbc);
+        createSearchArea(gbc);
+        createActionButtons(gbc);
+
+        add(mainPanel, BorderLayout.CENTER);
+    }
+
+    private void createStatusButton(GridBagConstraints gbc) {
         questionStatusButton = new JButton(utils.PUBLISHED_STATUS);
         questionStatusButton.setFont(new Font("Arial", Font.PLAIN, 14));
         questionStatusButton.setForeground(new Color(231, 76, 60));
         questionStatusButton.setPreferredSize(new Dimension(250, 20));
         mainPanel.add(questionStatusButton, gbc);
+    }
 
+    private void createSearchArea(GridBagConstraints gbc) {
         // Search area
         gbc.gridy++;
         gbc.gridwidth = 1;
@@ -75,7 +103,9 @@ public class StudentPanel extends JFrame {
         examSearchField = new JTextField(15);
         examSearchField.setFont(new Font("Arial", Font.PLAIN, 15));
         mainPanel.add(examSearchField, gbc);
+    }
 
+    private void createActionButtons(GridBagConstraints gbc) {
         // Exam Button
         gbc.gridy++;
         gbc.gridx = 0;
@@ -113,182 +143,80 @@ public class StudentPanel extends JFrame {
         courseButton.setToolTipText("Manage your courses");
         mainPanel.add(courseButton, gbc);
 
-        // Action for course management
-        courseButton.addActionListener(e -> {
-            try {
-                dispose();
-                new StudentCourseFrame(account);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error opening course management: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
         // Back Button
         gbc.gridy++;
         JButton backButton = new JButton("Back");
         utils.styleButton(backButton);
         backButton.setToolTipText("Return to main menu");
         mainPanel.add(backButton, gbc);
+    }
 
-        add(mainPanel, BorderLayout.CENTER);
+    private void addEventListeners() {
+        addExamButtonListener();
+        addSearchExamButtonListener();
+        addShowInfoButtonListener();
+        addResultButtonListener();
+        addCourseButtonListener();
+        addBackButtonListener();
+        addQuestionStatusButtonListener();
+    }
 
-        // Button actions
-        examButton.addActionListener(e -> {
-            try {
-                String examCode = examSearchField.getText().trim();
-                if (examCode.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                Boolean examRunning = utils.EXAM_CODE.get(examCode);
-                if (examRunning == null) {
-                    JOptionPane.showMessageDialog(this, "Exam is not found..", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                Question question = Main.getQuestionMap().get(examCode);
-                if (question == null) {
-                    JOptionPane.showMessageDialog(this, "Question is not found..", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                String examYear = question.getYear() != null ? question.getYear().trim() : "";
-                String examDepartment = question.getDepartment() != null ? question.getDepartment().trim() : "";
-                String examSession = question.getSession() != null ? question.getSession().trim() : "";
-                String examCourse = question.getCourseId() != null ? question.getCourseId().trim() : "";
-                
-                if (examYear.isEmpty() || examDepartment.isEmpty() || examSession.isEmpty() || examCourse.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Invalid exam configuration", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                if (!(account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear) && account.getSession().equals(examSession))) {
-                    JOptionPane.showMessageDialog(this, "Exam is not for you!", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+    private void addExamButtonListener() {
+        JButton examButton = findButtonByText("EXAM");
+        if (examButton != null) {
+            examButton.addActionListener(e -> handleExamAction());
+        }
+    }
 
-                if (!examRunning) {
-                    JOptionPane.showMessageDialog(this, "Exam is finished..", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                // Check if student is enrolled in the course
-                boolean courseIs = false;
-                if (account.getCourses() != null) {
-                    for (Course c : account.getCourses()) {
-                        if (c != null && c.getCourseId() != null && c.getCourseId().equals(examCourse)) {
-                            courseIs = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if (!courseIs) {
-                    JOptionPane.showMessageDialog(this, "You don't have this course..", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+    private void addSearchExamButtonListener() {
+        JButton searchExamButton = findButtonByText("Search/View Exam");
+        if (searchExamButton != null) {
+            searchExamButton.addActionListener(e -> handleSearchExamAction());
+        }
+    }
 
-                Map<String, Boolean> examDoneMap = account.getEXAM_DONE();
-                if (examDoneMap == null) {
-                    examDoneMap = new HashMap<>();
-                    // Initialize the map in the account
-                    for (String key : examDoneMap.keySet()) {
-                        account.setEXAM_DONE(key, examDoneMap.get(key));
-                    }
-                }
-                
-                Boolean examDone = examDoneMap.get(examCode);
-                if (examDone == null || !examDone) {
-                    account.setEXAM_DONE(examCode, true);
-                    dispose();
-                    new StudentExamFrame(account, examCode);
-                } else {
-                    JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error processing exam: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Exception in exam button: " + ex.getMessage());
-                ex.printStackTrace();
+    private void addShowInfoButtonListener() {
+        JButton showInfo = findButtonByText("Show Information");
+        if (showInfo != null) {
+            showInfo.addActionListener(e -> handleShowInfoAction());
+        }
+    }
+
+    private void addResultButtonListener() {
+        JButton resultButton = findButtonByText("Results");
+        if (resultButton != null) {
+            resultButton.addActionListener(e -> handleResultAction());
+        }
+    }
+
+    private void addCourseButtonListener() {
+        JButton courseButton = findButtonByText("Course Management");
+        if (courseButton != null) {
+            courseButton.addActionListener(e -> handleCourseAction());
+        }
+    }
+
+    private void addBackButtonListener() {
+        JButton backButton = findButtonByText("Back");
+        if (backButton != null) {
+            backButton.addActionListener(e -> handleBackAction());
+        }
+    }
+
+    private void addQuestionStatusButtonListener() {
+        questionStatusButton.addActionListener(e -> handleQuestionStatusAction());
+    }
+
+    private JButton findButtonByText(String text) {
+        for (Component comp : mainPanel.getComponents()) {
+            if (comp instanceof JButton && ((JButton) comp).getText().contains(text)) {
+                return (JButton) comp;
             }
-        });
-        
-        searchExamButton.addActionListener(e -> {
-            try {
-                searchExam(examSearchField, false, this);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error searching exam: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        
-        showInfo.addActionListener(e -> {
-            try {
-                JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error displaying information: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        }
+        return null;
+    }
 
-        resultButton.addActionListener(e -> {
-            try {
-                String examCode = examSearchField.getText().trim();
-                if (examCode.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
-                Map<String, String> resultInfo = account.getResultInfo();
-                if (resultInfo == null) {
-                    resultInfo = new HashMap<>();
-                    // The resultInfo map is already initialized in the constructor
-                }
-                
-                boolean isPromotionExam = examCode.equals(utils.promotion) && resultInfo.containsKey(examCode);
-                
-                Boolean examRunning = utils.EXAM_CODE.get(examCode);
-
-                if (examRunning == null && !isPromotionExam) {
-                    JOptionPane.showMessageDialog(this, "Your promotion is not found", "Result Details", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-                
-                if (!isPromotionExam && examRunning != null && examRunning) {
-                    JOptionPane.showMessageDialog(this, "Result not published yet - exam is still running", "Result Details", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-                
-                String result = resultInfo.get(examCode);
-                
-                if (result != null && !result.trim().isEmpty()) {
-                    StringBuilder resultBuilder = new StringBuilder();
-                    resultBuilder.append("# ").append(result).append("\n\n");
-                    JOptionPane.showMessageDialog(this, utils.ScrollPanel(resultBuilder), "Result Details", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Result not found for this exam", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                
-            } catch (NullPointerException npe) {
-                JOptionPane.showMessageDialog(this, "Your promotion is not found", "System Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("NullPointerException in resultButton: " + npe.getMessage());
-            } catch (IllegalArgumentException iae) {
-                JOptionPane.showMessageDialog(this, "Error: Invalid exam code format", "Input Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("IllegalArgumentException in resultButton: " + iae.getMessage());
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "An unexpected error occurred while retrieving results. Please try again.", "System Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Exception in resultButton: " + ex.getMessage());
-                ex.printStackTrace();
-            }
-        });
-
-        backButton.addActionListener(e -> {
-            try {
-                dispose();
-                new LoginForm();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error returning to login: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
+    private void setupDocumentListener() {
         examSearchField.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 updateButtons();
@@ -305,11 +233,7 @@ public class StudentPanel extends JFrame {
             private void updateButtons() {
                 try {
                     String code = examSearchField.getText().trim();
-                    searchExamButton.setText("Search/View '" + code + "' Exam");
-                    examButton.setText("EXAM " + code);
-                    resultButton.setText("Results " + code);
-
-                    // Add these lines to force UI refresh
+                    updateButtonTexts(code);
                     mainPanel.revalidate();
                     mainPanel.repaint();
                 } catch (Exception ex) {
@@ -317,23 +241,237 @@ public class StudentPanel extends JFrame {
                 }
             }
         });
+    }
 
-        questionStatusButton.addActionListener(e -> {
-            try {
-                TeacherPanel.questionStatus(this);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error checking question status: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    private void updateButtonTexts(String code) {
+        JButton searchExamButton = findButtonByText("Search/View");
+        JButton examButton = findButtonByText("EXAM");
+        JButton resultButton = findButtonByText("Results");
+
+        if (searchExamButton != null) {
+            searchExamButton.setText("Search/View '" + code + "' Exam");
+        }
+        if (examButton != null) {
+            examButton.setText("EXAM " + code);
+        }
+        if (resultButton != null) {
+            resultButton.setText("Results " + code);
+        }
+    }
+
+    private void handleExamAction() {
+        try {
+            String examCode = examSearchField.getText().trim();
+            if (examCode.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        });
+            
+            if (!validateExamCode(examCode)) {
+                return;
+            }
+            
+            if (!validateExamAccess(examCode)) {
+                return;
+            }
+            
+            if (!validateCourseEnrollment(examCode)) {
+                return;
+            }
+            
+            if (!validateExamStatus(examCode)) {
+                return;
+            }
+            
+            startExam(examCode);
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error processing exam: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Exception in exam button: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
 
-        pack();
-        setMinimumSize(new Dimension(500, 600));
-        setLocationRelativeTo(null);
-        setVisible(true);
+    private boolean validateExamCode(String examCode) {
+        Boolean examRunning = utils.EXAM_CODE.get(examCode);
+        if (examRunning == null) {
+            JOptionPane.showMessageDialog(this, "Exam is not found..", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        Question question = Main.getQuestionMap().get(examCode);
+        if (question == null) {
+            JOptionPane.showMessageDialog(this, "Question is not found..", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return true;
+    }
+
+    private boolean validateExamAccess(String examCode) {
+        Question question = Main.getQuestionMap().get(examCode);
+        String examYear = question.getYear() != null ? question.getYear().trim() : "";
+        String examDepartment = question.getDepartment() != null ? question.getDepartment().trim() : "";
+        String examSession = question.getSession() != null ? question.getSession().trim() : "";
+        String examCourse = question.getCourseId() != null ? question.getCourseId().trim() : "";
+        
+        if (examYear.isEmpty() || examDepartment.isEmpty() || examSession.isEmpty() || examCourse.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Invalid exam configuration", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        if (!(account.getDepartment().equals(examDepartment) && account.getYear().equals(examYear) && account.getSession().equals(examSession))) {
+            JOptionPane.showMessageDialog(this, "Exam is not for you!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return true;
+    }
+
+    private boolean validateCourseEnrollment(String examCode) {
+        Question question = Main.getQuestionMap().get(examCode);
+        String examCourse = question.getCourseId() != null ? question.getCourseId().trim() : "";
+        
+        boolean courseIs = false;
+        if (account.getCourses() != null) {
+            for (Course c : account.getCourses()) {
+                if (c != null && c.getCourseId() != null && c.getCourseId().equals(examCourse)) {
+                    courseIs = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!courseIs) {
+            JOptionPane.showMessageDialog(this, "You don't have this course..", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return true;
+    }
+
+    private boolean validateExamStatus(String examCode) {
+        Boolean examRunning = utils.EXAM_CODE.get(examCode);
+        if (!examRunning) {
+            JOptionPane.showMessageDialog(this, "Exam is finished..", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        Map<String, Boolean> examDoneMap = account.getEXAM_DONE();
+        if (examDoneMap == null) {
+            examDoneMap = new HashMap<>();
+            for (String key : examDoneMap.keySet()) {
+                account.setEXAM_DONE(key, examDoneMap.get(key));
+            }
+        }
+        
+        Boolean examDone = examDoneMap.get(examCode);
+        if (examDone == null || !examDone) {
+            account.setEXAM_DONE(examCode, true);
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(StudentPanel.this, "Your exam is done", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    private void startExam(String examCode) {
+        dispose();
+        new StudentExamFrame(account, examCode);
+    }
+
+    private void handleSearchExamAction() {
+        try {
+            searchExam(examSearchField, false, this);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error searching exam: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleShowInfoAction() {
+        try {
+            JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error displaying information: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleResultAction() {
+        try {
+            String examCode = examSearchField.getText().trim();
+            if (examCode.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            Map<String, String> resultInfo = account.getResultInfo();
+            if (resultInfo == null) {
+                resultInfo = new HashMap<>();
+            }
+            
+            boolean isPromotionExam = examCode.equals(utils.promotion) && resultInfo.containsKey(examCode);
+            Boolean examRunning = utils.EXAM_CODE.get(examCode);
+
+            if (examRunning == null && !isPromotionExam) {
+                JOptionPane.showMessageDialog(this, "Your promotion is not found", "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            if (!isPromotionExam && examRunning != null && examRunning) {
+                JOptionPane.showMessageDialog(this, "Result not published yet - exam is still running", "Result Details", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            String result = resultInfo.get(examCode);
+            
+            if (result != null && !result.trim().isEmpty()) {
+                StringBuilder resultBuilder = new StringBuilder();
+                resultBuilder.append("# ").append(result).append("\n\n");
+                JOptionPane.showMessageDialog(this, utils.ScrollPanel(resultBuilder), "Result Details", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Result not found for this exam", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (NullPointerException npe) {
+            JOptionPane.showMessageDialog(this, "Your promotion is not found", "System Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("NullPointerException in resultButton: " + npe.getMessage());
+        } catch (IllegalArgumentException iae) {
+            JOptionPane.showMessageDialog(this, "Error: Invalid exam code format", "Input Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("IllegalArgumentException in resultButton: " + iae.getMessage());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "An unexpected error occurred while retrieving results. Please try again.", "System Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Exception in resultButton: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private void handleCourseAction() {
+        try {
+            dispose();
+            new StudentCourseFrame(account);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error opening course management: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleBackAction() {
+        try {
+            dispose();
+            new LoginForm();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error returning to login: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void handleQuestionStatusAction() {
+        try {
+            TeacherPanel.questionStatus(this);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error checking question status: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void searchExam(JTextField examSearchField, boolean isTeacher, JFrame frame) {
-
         String searchExam = examSearchField.getText().trim();
         if (searchExam.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
@@ -358,5 +496,4 @@ public class StudentPanel extends JFrame {
             }
         }
     }
-
 } 

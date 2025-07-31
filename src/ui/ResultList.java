@@ -39,6 +39,15 @@ public class ResultList extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(0, 0));
 
+        setupMainFrame();
+
+        // Initial load
+        filterResults();
+        setVisible(true);
+    }
+
+    private void setupMainFrame() {
+
         // Title label
         JLabel titleLabel = new JLabel("Exam Results", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
@@ -87,7 +96,7 @@ public class ResultList extends JFrame {
         resultCodeComboBox = new JComboBox<>();
         resultCodeComboBox.setFont(new Font("Arial", Font.PLAIN, 15));
         resultCodeComboBox.addItem("All");
-        
+
         try {
             java.util.Set<String> uniqueResultCodes = new java.util.HashSet<>();
             for (Result result : resultMap.values()) {
@@ -102,7 +111,7 @@ public class ResultList extends JFrame {
             System.err.println("Error loading result codes: " + ex.getMessage());
             JOptionPane.showMessageDialog(this, "Error loading result codes: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         filterPanel.add(resultCodeComboBox, gbc);
         gbc.gridx++;
         filterPanel.add(new JLabel("ID:"), gbc);
@@ -175,9 +184,6 @@ public class ResultList extends JFrame {
             new AdministrationForm();
         });
 
-        // Initial load
-        filterResults();
-        setVisible(true);
     }
 
     private void clearAllFilters() {

@@ -49,21 +49,39 @@ public class StudentCourseFrame extends JFrame {
             this.enrolledCourses.addAll(account.getCourses());
         }
         
+        initializeFrame();
+        createComponents();
+        setupLayout();
+        addEventListeners();
+        refreshCourseLists();
+        setVisible(true);
+    }
+
+    private void initializeFrame() {
         setTitle("Course Management - " + account.getFirstName() + " " + account.getLastName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 700);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(0, 0));
         getContentPane().setBackground(new Color(245, 247, 250));
+    }
 
-        // Title label
+    private void createComponents() {
+        createTitleLabel();
+        createInfoPanel();
+        createMainPanels();
+        createButtonPanel();
+    }
+
+    private void createTitleLabel() {
         JLabel titleLabel = new JLabel("Course Management", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 12, 0));
         titleLabel.setForeground(new Color(44, 62, 80));
         add(titleLabel, BorderLayout.NORTH);
+    }
 
-        // Student info panel
+    private void createInfoPanel() {
         JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 24, 6));
         infoPanel.setBackground(new Color(255, 255, 255));
         infoPanel.setPreferredSize(new Dimension(900, 50));
@@ -83,35 +101,41 @@ public class StudentCourseFrame extends JFrame {
         
         infoPanel.add(studentInfoLabel);
         infoPanel.add(totalCreditsLabel);
+        
+        add(infoPanel, BorderLayout.CENTER);
+    }
 
-        // Main content panel
+    private void createMainPanels() {
         JPanel mainPanel = new JPanel(new GridLayout(1, 2, 20, 0));
         mainPanel.setBackground(new Color(245, 247, 250));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
         
+        createListModels();
+        styleLists();
+        createAllCoursesPanel(mainPanel);
+        createEnrolledCoursesPanel(mainPanel);
+        
+        add(mainPanel, BorderLayout.CENTER);
+    }
+
+    private void createListModels() {
         allCoursesModel = new DefaultListModel<>();
         enrolledCoursesModel = new DefaultListModel<>();
         
-        // Style the lists
         allCoursesList = new JList<>(allCoursesModel);
         enrolledCoursesList = new JList<>(enrolledCoursesModel);
-        
-        // Apply consistent styling to lists
+    }
+
+    private void styleLists() {
         allCoursesList.setFont(new Font("Arial", Font.PLAIN, 14));
         enrolledCoursesList.setFont(new Font("Arial", Font.PLAIN, 14));
         allCoursesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         enrolledCoursesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         allCoursesList.setBackground(new Color(255, 255, 255));
         enrolledCoursesList.setBackground(new Color(255, 255, 255));
-        
-        try {
-            refreshCourseLists();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error loading courses: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.err.println("Exception in refreshCourseLists: " + ex.getMessage());
-        }
+    }
 
-        // All Courses Panel
+    private void createAllCoursesPanel(JPanel mainPanel) {
         JPanel allCoursesPanel = new JPanel(new BorderLayout(10, 10));
         allCoursesPanel.setBackground(new Color(255, 255, 255));
         allCoursesPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -129,8 +153,11 @@ public class StudentCourseFrame extends JFrame {
         utils.styleButton(enrollButton);
         enrollButton.setPreferredSize(new Dimension(150, 40));
         allCoursesPanel.add(enrollButton, BorderLayout.SOUTH);
+        
+        mainPanel.add(allCoursesPanel);
+    }
 
-        // Enrolled Courses Panel
+    private void createEnrolledCoursesPanel(JPanel mainPanel) {
         JPanel enrolledPanel = new JPanel(new BorderLayout(10, 10));
         enrolledPanel.setBackground(new Color(255, 255, 255));
         enrolledPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -148,11 +175,11 @@ public class StudentCourseFrame extends JFrame {
         utils.styleButton(dropButton);
         dropButton.setPreferredSize(new Dimension(150, 40));
         enrolledPanel.add(dropButton, BorderLayout.SOUTH);
-
-        mainPanel.add(allCoursesPanel);
+        
         mainPanel.add(enrolledPanel);
+    }
 
-        // Button panel
+    private void createButtonPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(new Color(245, 247, 250));
         
@@ -161,137 +188,153 @@ public class StudentCourseFrame extends JFrame {
         doneButton.setPreferredSize(new Dimension(180, 45));
         
         buttonPanel.add(doneButton);
-
-        // Add components to frame
-        add(infoPanel, BorderLayout.CENTER);
-        add(mainPanel, BorderLayout.CENTER);
+        
         add(buttonPanel, BorderLayout.SOUTH);
+        
+        // Add button action
+        doneButton.addActionListener(e -> handleSaveAndReturn());
+    }
 
-        // Button actions
-        doneButton.addActionListener(e -> {
-            try {
-                dispose();
-                if (account.getCourses() != null) {
-                    account.getCourses().clear();
-                    account.getCourses().addAll(enrolledCourses);
-                }
-                new StudentPanel(account);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error saving course changes: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Exception in done button action: " + ex.getMessage());
-            }
-        });
+    private void setupLayout() {
+        // Layout is handled in createComponents method
+    }
 
-        // Enroll button action
+    private void addEventListeners() {
+        addEnrollButtonListener();
+        addDropButtonListener();
+    }
+
+    private void addEnrollButtonListener() {
         enrollButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    String selected = allCoursesList.getSelectedValue();
-                    if (selected == null || selected.trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "Please select a course to enroll.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    String[] parts = selected.split(" - ");
-                    if (parts.length < 1) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "Invalid course format.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    String courseId = parts[0];
-                    Course course = courseMap.get(courseId);
-                    
-                    if (course == null) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "Course not found in system.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if (course.getEnrolledStudentIds().contains(account.getID())) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "You are already enrolled in this course.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                        return;
-                    }
-                    
-                    // Check if course is full
-                    if (course.getCurrentStudents() >= course.getMaxStudents()) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "Course is full. Cannot enroll.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    course.enrollStudent(account.getID());
-                    enrolledCourses.add(course);
-                    refreshCourseLists();
-                    JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                        "Successfully enrolled in " + course.getCourseName(), "Success", JOptionPane.INFORMATION_MESSAGE);
-                        
-                } catch (IllegalStateException ise) {
-                    JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                        "Cannot enroll: " + ise.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                        "Error enrolling in course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    System.err.println("Exception in enroll action: " + ex.getMessage());
-                }
+                handleEnrollAction();
             }
         });
+    }
 
-        // Drop button action
+    private void addDropButtonListener() {
         dropButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    String selected = enrolledCoursesList.getSelectedValue();
-                    if (selected == null || selected.trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "Please select a course to drop.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    String[] parts = selected.split(" - ");
-                    if (parts.length < 1) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "Invalid course format.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    String courseId = parts[0];
-                    Course course = courseMap.get(courseId);
-                    
-                    if (course == null) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "Course not found in system.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if (!course.getEnrolledStudentIds().contains(account.getID())) {
-                        JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                            "You are not enrolled in this course.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    course.removeStudent(account.getID());
-                    enrolledCourses.removeIf(c -> c.getCourseId().equals(courseId));
-                    refreshCourseLists();
-                    JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                        "Successfully dropped " + course.getCourseName(), "Success", JOptionPane.INFORMATION_MESSAGE);
-                        
-                } catch (IllegalStateException ise) {
-                    JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                        "Cannot drop course: " + ise.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(StudentCourseFrame.this, 
-                        "Error dropping course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    System.err.println("Exception in drop action: " + ex.getMessage());
-                }
+                handleDropAction();
             }
         });
+    }
 
-        setVisible(true);
+    private void handleEnrollAction() {
+        try {
+            String selected = allCoursesList.getSelectedValue();
+            if (selected == null || selected.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Please select a course to enroll.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String[] parts = selected.split(" - ");
+            if (parts.length < 1) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Invalid course format.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String courseId = parts[0];
+            Course course = courseMap.get(courseId);
+            
+            if (course == null) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Course not found in system.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (course.getEnrolledStudentIds().contains(account.getID())) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "You are already enrolled in this course.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            // Check if course is full
+            if (course.getCurrentStudents() >= course.getMaxStudents()) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Course is full. Cannot enroll.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            course.enrollStudent(account.getID());
+            enrolledCourses.add(course);
+            refreshCourseLists();
+            JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                "Successfully enrolled in " + course.getCourseName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+        } catch (IllegalStateException ise) {
+            JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                "Cannot enroll: " + ise.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                "Error enrolling in course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Exception in enroll action: " + ex.getMessage());
+        }
+    }
+
+    private void handleDropAction() {
+        try {
+            String selected = enrolledCoursesList.getSelectedValue();
+            if (selected == null || selected.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Please select a course to drop.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String[] parts = selected.split(" - ");
+            if (parts.length < 1) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Invalid course format.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String courseId = parts[0];
+            Course course = courseMap.get(courseId);
+            
+            if (course == null) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Course not found in system.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (!course.getEnrolledStudentIds().contains(account.getID())) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "You are not enrolled in this course.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            course.removeStudent(account.getID());
+            enrolledCourses.removeIf(c -> c.getCourseId().equals(courseId));
+            refreshCourseLists();
+            JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                "Successfully dropped " + course.getCourseName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+        } catch (IllegalStateException ise) {
+            JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                "Cannot drop course: " + ise.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                "Error dropping course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Exception in drop action: " + ex.getMessage());
+        }
+    }
+
+    private void handleSaveAndReturn() {
+        try {
+            dispose();
+            if (account.getCourses() != null) {
+                account.getCourses().clear();
+                account.getCourses().addAll(enrolledCourses);
+            }
+            new StudentPanel(account);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error saving course changes: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Exception in done button action: " + ex.getMessage());
+        }
     }
 
     private void refreshCourseLists() {
