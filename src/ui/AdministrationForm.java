@@ -228,7 +228,7 @@ public class AdministrationForm extends JFrame {
                 return utils.YEARS[i + 1];
             }
         }
-        return null; // Already graduated or invalid year
+        return null;
     }
 
     private void handleSearchAccount(JTextField searchField) {
