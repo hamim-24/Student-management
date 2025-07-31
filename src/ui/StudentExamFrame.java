@@ -68,7 +68,7 @@ public class StudentExamFrame extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             dispose();
-            return;
+            new StudentPanel(account);
         }
     }
 
@@ -213,8 +213,6 @@ public class StudentExamFrame extends JFrame {
         
         buildResultString(result);
         calculateResults(result, correct, incorrect);
-        updateStudentAccount(correct, incorrect);
-        createResultRecord();
         dispose();
     }
 
@@ -262,25 +260,12 @@ public class StudentExamFrame extends JFrame {
                 incorrect++;
             }
         }
-        
+        double mark = (double) correct / (double) totalQuestions * 100;
         result.append("Total Score: ").append(correct).append(" / ").append(totalQuestions);
-        account.setResultInfo(resultCode, result.toString());
         account.setCg(calculateCGPA(correct, totalQuestions));
-        account.setCorrect(correct);
-        account.setIncorrect(incorrect);
-        account.setMark((double) correct / totalQuestions * 100);
-    }
+        Result re = new Result(account, mark, correct, incorrect, resultCode);
+        Main.getResultList().add(re);
 
-    private void updateStudentAccount(int correct, int incorrect) {
-        account.setCg(calculateCGPA(correct, totalQuestions));
-        account.setCorrect(correct);
-        account.setIncorrect(incorrect);
-        account.setMark((double) correct / totalQuestions * 100);
-    }
-
-    private void createResultRecord() {
-        Result re = new Result(resultCode, account.getDepartment(), account.getYear(), account.getSession(), question.getCourseId());
-        Main.getResultMap().put(resultCode, re);
     }
 
     private double calculateCGPA(int correctAnswer, int totalAnswers) {

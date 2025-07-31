@@ -80,7 +80,7 @@ public class AdministrationForm extends JFrame {
         resultButton.setToolTipText("Show Result List");
         mainPanel.add(resultButton, gbc);
         resultButton.addActionListener(e -> {
-            dispose();
+            this.dispose();
             new ResultList();
         });
 
@@ -196,11 +196,11 @@ public class AdministrationForm extends JFrame {
                             String nextYear = getNextYear(studentAccount.getYear());
                             if (nextYear != null) {
                                 studentAccount.setYear(nextYear);
-                                studentAccount.setResultInfo(utils.promotion, "Congratulations for your brilliant success! You are now a " + nextYear + " student.");
+                                studentAccount.setPromotion("Congratulations for your brilliant success! You are now a " + nextYear + " student.");
                                 promotedCount++;
                             }
                         } else {
-                            studentAccount.setResultInfo(utils.promotion, "Sorry, you were not promoted due to low CGPA (minimum 2.0 required).");
+                            studentAccount.setPromotion("Sorry, you were not promoted due to low CGPA (minimum 2.0 required).");
                             notPromotedCount++;
                         }
                     }

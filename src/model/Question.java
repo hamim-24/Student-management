@@ -10,6 +10,7 @@ public class Question {
     private final String year;
     private final String department;
     private final String courseId;
+    private final int totalQuestions;
 
     List<SingleQuestion> singleQuestions;
 
@@ -22,6 +23,11 @@ public class Question {
         this.examName = examName;
         this.session = session;
         this.courseId = courseId;
+        this.totalQuestions = singleQuestions.size();
+    }
+
+    public int getTotalQuestions() {
+        return totalQuestions;
     }
 
     public String getCourseId() {

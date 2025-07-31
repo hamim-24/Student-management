@@ -406,13 +406,8 @@ private JLabel createHeader() {
                 JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            Map<String, String> resultInfo = account.getResultInfo();
-            if (resultInfo == null) {
-                resultInfo = new HashMap<>();
-            }
-            
-            boolean isPromotionExam = examCode.equals(utils.promotion) && resultInfo.containsKey(examCode);
+
+            boolean isPromotionExam = examCode.equals(utils.promotion);
             Boolean examRunning = utils.EXAM_CODE.get(examCode);
 
             if (examRunning == null && !isPromotionExam) {
@@ -425,7 +420,7 @@ private JLabel createHeader() {
                 return;
             }
             
-            String result = resultInfo.get(examCode);
+            String result = account.getPromotion();
             
             if (result != null && !result.trim().isEmpty()) {
                 StringBuilder resultBuilder = new StringBuilder();

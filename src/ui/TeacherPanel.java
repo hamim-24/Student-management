@@ -264,7 +264,7 @@ public class TeacherPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
         }
         Boolean value = utils.EXAM_CODE.get(publishExamCode);
-        if (value == null) {
+        if (value == null || !value) {
             JOptionPane.showMessageDialog(this, "Question is not published", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -304,17 +304,14 @@ public class TeacherPanel extends JFrame {
 
                 Boolean examDone = studentAccount.getEXAM_DONE().get(publishExamCode);
                 if ((examDone == null || examDone == false) && courseIs && studentAccount.getDepartment().equals(department) && studentAccount.getYear().equals(year) && studentAccount.getSession().equals(session)) {
-                    studentAccount.setResultInfo(publishExamCode, "You didn't participate in the exam");
-                    studentAccount.setCg(0.0);
-                    studentAccount.setCorrect(0);
-                    studentAccount.setMark(0);
-                    studentAccount.setIncorrect(0);
+
                     studentAccount.setEXAM_DONE(publishExamCode, false);
-                    result = new Result(publishExamCode, department, year, session, course);
+                    result = new Result((StudentAccount) acc, 0, 0,0, publishExamCode);
+                    Main.getResultList().add(result);
                 }
             }
         }
-        Main.getResultMap().put(publishExamCode, result);
+
         questionStatusButton.setText(utils.PUBLISHED_STATUS);
         JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
         Notification notification = new Notification("Result published. code: " + publishExamCode + " Department: " + department

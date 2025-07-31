@@ -12,22 +12,29 @@ public class StudentAccount extends Account {
     private double cg;
     private String session;
     private Map<String, Boolean> EXAM_DONE;
-    private Map<String, String> resultInfo;
+    private Map<String, Result> results;
     private List<Course> courses;
-    private double mark = 0.0;
-    private int correct = 0;
-    private int incorrect = 0;
+    private String promotion;
 
     public StudentAccount(String id, String password, String email, String firstName, String lastName, String gender, String dob, String year, int roll, String department, String status, double cg, String session) {
 
         super(id, password, email, firstName, lastName, gender, dob, department, status);
         EXAM_DONE = new HashMap<>();
-        resultInfo = new HashMap<>();
+        results = new HashMap<>();
         courses = new ArrayList<>();
         this.year = year;
         this.roll = roll;
         this.cg = cg;
         this.session = session;
+        this.promotion = null;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
+    }
+
+    public String getPromotion() {
+        return promotion;
     }
 
     public List<Course> getCourses() {
@@ -62,37 +69,10 @@ public class StudentAccount extends Account {
         return this.EXAM_DONE;
     }
 
-    public Map<String, String> getResultInfo() {
-        return resultInfo;
+    public void setResults(String code, Result resultObject) {
+        this.results.put(code, resultObject);
     }
 
-    public void setResultInfo(String code, String resultInfo) {
-        this.resultInfo.put(code, resultInfo);
-    }
-
-    public double getMark() {
-        return mark;
-    }
-
-    public void setMark(double mark) {
-        this.mark = mark;
-    }
-
-    public int getCorrect() {
-        return correct;
-    }
-
-    public void setCorrect(int correct) {
-        this.correct = correct;
-    }
-
-    public int getIncorrect() {
-        return incorrect;
-    }
-
-    public void setIncorrect(int incorrect) {
-        this.incorrect = incorrect;
-    }
 
     @Override
     public String toString() {
