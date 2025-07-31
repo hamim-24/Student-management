@@ -27,7 +27,7 @@ public class ResultList extends JFrame {
         this.resultMap = Main.getResultMap();
         
         // Check if resultMap is null or empty
-        if (resultMap == null) {
+        if (resultMap == null || resultMap.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Result data not available", "Error", JOptionPane.ERROR_MESSAGE);
             new AdministrationForm();
             return;
@@ -100,6 +100,7 @@ public class ResultList extends JFrame {
             }
         } catch (Exception ex) {
             System.err.println("Error loading result codes: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error loading result codes: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         
         filterPanel.add(resultCodeComboBox, gbc);
@@ -181,24 +182,44 @@ public class ResultList extends JFrame {
 
     private void clearAllFilters() {
         try {
-            resultCodeComboBox.setSelectedIndex(0);
+            if (resultCodeComboBox.getItemCount() > 0) {
+                resultCodeComboBox.setSelectedIndex(0);
+            }
             idFilterField.setText("");
             cgpaFilterField.setText("");
             filterResults();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error clearing filters: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Exception in clearAllFilters: " + ex.getMessage());
         }
     }
 
     private void filterResults() {
         try {
+            if (resultMap == null || resultMap.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No result data available", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             String selectedResultCode = (String) resultCodeComboBox.getSelectedItem();
+            if (selectedResultCode == null) {
+                selectedResultCode = "All";
+            }
+            
             String idFilter = idFilterField.getText().trim().toLowerCase();
             String cgpaFilter = cgpaFilterField.getText().trim();
             double minCgpa = 0.0;
+            
             try {
-                if (!cgpaFilter.isEmpty()) minCgpa = Double.parseDouble(cgpaFilter);
+                if (!cgpaFilter.isEmpty()) {
+                    minCgpa = Double.parseDouble(cgpaFilter);
+                    if (minCgpa < 0.0 || minCgpa > 4.0) {
+                        JOptionPane.showMessageDialog(this, "CGPA must be between 0.0 and 4.0", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+                        minCgpa = 0.0;
+                    }
+                }
             } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid CGPA format. Please enter a valid number.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
                 minCgpa = 0.0;
             }
 
@@ -230,26 +251,49 @@ public class ResultList extends JFrame {
                 String code = result.getQuestionCode();
                 if (code == null) continue;
                 
-                total += result.getCgpas().size();
+                // Validate that all lists have the same size
+                int listSize = result.getCgpas().size();
+                if (result.getIDs().size() != listSize || 
+                    result.getNames().size() != listSize || 
+                    result.getRolls().size() != listSize || 
+                    result.getMarks().size() != listSize) {
+                    System.err.println("Data inconsistency detected for result code: " + code);
+                    continue;
+                }
+                
+                total += listSize;
                 if (!selectedResultCode.equals("All") && !code.equals(selectedResultCode)) {
                     continue;
                 }
                 
                 // For each student in this result
-                for (int i = 0; i < result.getIDs().size(); i++) {
+                for (int i = 0; i < listSize; i++) {
                     try {
                         String studentId = result.getIDs().get(i);
                         String name = result.getNames().get(i);
-                        int roll = result.getRolls().get(i);
-                        double mark = result.getMarks().get(i);
-                        double cgpa = result.getCgpas().get(i);
+                        Integer roll = result.getRolls().get(i);
+                        Double mark = result.getMarks().get(i);
+                        Double cgpa = result.getCgpas().get(i);
+                        
+                        // Validate data
+                        if (studentId == null || name == null || roll == null || mark == null || cgpa == null) {
+                            System.err.println("Null data found for student at index " + i + " in result code: " + code);
+                            continue;
+                        }
+                        
                         int correct = 0, incorrect = 0;
                         
                         try {
-                            correct = result.getCorrect().get(i);
-                            incorrect = result.getIncorrect().get(i);
+                            if (i < result.getCorrect().size() && i < result.getIncorrect().size()) {
+                                Integer correctVal = result.getCorrect().get(i);
+                                Integer incorrectVal = result.getIncorrect().get(i);
+                                correct = correctVal != null ? correctVal : 0;
+                                incorrect = incorrectVal != null ? incorrectVal : 0;
+                            }
                         } catch (Exception ignored) {
                             // Use default values if correct/incorrect data is missing
+                            correct = 0;
+                            incorrect = 0;
                         }
 
                         if (!idFilter.isEmpty() && !studentId.toLowerCase().contains(idFilter)) continue;
@@ -266,7 +310,10 @@ public class ResultList extends JFrame {
                         tableModel.addRow(row);
                         filtered++;
                     } catch (IndexOutOfBoundsException e) {
-                        // Skip this student if data is incomplete
+                        System.err.println("Index out of bounds for student at index " + i + " in result code: " + code);
+                        continue;
+                    } catch (Exception e) {
+                        System.err.println("Error processing student at index " + i + " in result code: " + code + ": " + e.getMessage());
                         continue;
                     }
                 }
@@ -295,6 +342,10 @@ public class ResultList extends JFrame {
                         } else if (!isSelected) {
                             c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
                         }
+                    } catch (NumberFormatException e) {
+                        if (!isSelected) {
+                            c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
+                        }
                     } catch (Exception e) {
                         if (!isSelected) {
                             c.setBackground(row % 2 == 0 ? new Color(245, 245, 245) : Color.WHITE);
@@ -305,6 +356,12 @@ public class ResultList extends JFrame {
             });
             resultTable.repaint();
             
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(this, "Null pointer error while filtering results: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("NullPointerException in filterResults: " + ex.getMessage());
+        } catch (IndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(this, "Index out of bounds error while filtering results: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("IndexOutOfBoundsException in filterResults: " + ex.getMessage());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error filtering results: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             System.err.println("Exception in filterResults: " + ex.getMessage());
