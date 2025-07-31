@@ -38,7 +38,7 @@ public class Main {
     public static void main(String[] args) {
         String[] departments = {"CSE", "EEE", "BBA", "Civil"};
         String[] years = {"1st Year", "2nd Year", "3rd Year", "4th Year"};
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 10000; i++) {
             String studentId = String.format("S%03d", i);
             String firstName = "Student" + i;
             String lastName = "Last" + i;
@@ -100,8 +100,8 @@ public class Main {
 
         questionMap.put(q1.getQuestionCode(), q1);
 
-        new StudentPanel((StudentAccount) getAccounts().get("S001"));
-        //new LoginForm();
+        //new StudentPanel((StudentAccount) getAccounts().get("S001"));
+        new LoginForm();
     }
     
     // Helper methods to distribute students and teachers across departments and years

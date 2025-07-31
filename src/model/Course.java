@@ -121,4 +121,7 @@ public class Course {
         return String.format("Course{id='%s', name='%s', credits=%d, currentStudents=%d, maxStudents=%d}", 
                            courseId, courseName, credits, currentStudents, maxStudents);
     }
+    public String showCourses() {
+        return String.format("[id='%s', name='%s', Credit: %d]", courseId, courseName, credits);
+    }
 } 

@@ -96,9 +96,16 @@ public class StudentAccount extends Account {
 
     @Override
     public String toString() {
-        return super.toString() + "\nYear: " + year + "\nRoll: " + roll + "\nGPA: " + cg + "\nSession: " + session + "\nCourses:\n" + courses;
+        return super.toString() + "\nYear: " + year + "\nRoll: " + roll + "\nGPA: " + cg + "\nSession: " + session + "\nCourses:\n" + showCourses();
     }
 
+    public String showCourses() {
+        StringBuilder courses = new StringBuilder();
+        for (Course course : getCourses()) {
+            courses.append(" - ").append(course.showCourses()).append("\n");
+        }
+        return courses.toString();
+    }
     public void setYear(String year) {
         this.year = year;
     }
