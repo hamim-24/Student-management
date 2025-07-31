@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class Main {
     private static final Map<String, Account> accounts = new HashMap<>();
-    // Store student info for later use
     private static final Map<String, Question> questionMap = new HashMap<>();
     private static final List<Notification> notifications = new ArrayList<>();
     private static final Map<String, Course> courseMap = new HashMap<>();
@@ -102,29 +101,24 @@ public class Main {
 
         questionMap.put(q1.getQuestionCode(), q1);
 
-        // Add 100 random Result objects using the Result class constructor
         for (int i = 0; i < 100; i++) {
-            // Pick a random student
             String studentId = String.format("S%03d", 1 + (int)(Math.random() * 10000));
             Account acc = accounts.get(studentId);
             if (!(acc instanceof StudentAccount)) continue;
             StudentAccount student = (StudentAccount) acc;
-            // Pick a random question code from questionMap
             List<String> qCodes = new ArrayList<>(questionMap.keySet());
             if (qCodes.isEmpty()) break;
             String questionCode = qCodes.get((int)(Math.random() * qCodes.size()));
-            int correct = (int)(Math.random() * 10); // 0-9 correct
-            int incorrect = (int)(Math.random() * 10); // 0-9 incorrect
-            double mark = correct * 2.5; // Example: 2.5 marks per correct answer
-            Result result = new Result(student, mark, correct, incorrect, questionCode);
+            int correct = (int)(Math.random() * 10);
+            int incorrect = (int)(Math.random() * 10);
+            double mark = correct * 2.5;
+            Result result = new Result(student, mark, correct, incorrect, questionCode, null);
             resultsList.add(result);
         }
 
-        //new StudentPanel((StudentAccount) getAccounts().get("S001"));
         new LoginForm();
     }
     
-    // Helper methods to distribute students and teachers across departments and years
     private static String getDepartmentByIndex(int index) {
         String[] departments = {"CSE", "EEE", "BBA", "Civil"};
         return departments[index % departments.length];

@@ -262,10 +262,30 @@ public class StudentExamFrame extends JFrame {
         }
         double mark = (double) correct / (double) totalQuestions * 100;
         result.append("Total Score: ").append(correct).append(" / ").append(totalQuestions);
-        account.setCg(calculateCGPA(correct, totalQuestions));
-        Result re = new Result(account, mark, correct, incorrect, resultCode);
+
+        double averageCG = getAverageCG(correct, incorrect);
+        account.setCg(averageCG);
+        Result re = new Result(account, mark, correct, incorrect, resultCode, result.toString());
         Main.getResultList().add(re);
 
+    }
+
+    private double getAverageCG(int correct, int incorrect) {
+        double cg = account.getCg();
+        double currentCG = calculateCGPA(correct, incorrect);
+        double totalCG = (currentCG + cg) / 2;
+        int totalExam = 1;
+
+        for (Result r : Main.getResultList()) {
+            String id = r.getId();
+            String department = r.getDepartment();
+            String session = r.getSession();
+            if (id.equals(account.getID()) && session.equals(account.getSession()) && department.equals(account.getDepartment())) {
+                totalCG += r.getCg();
+                totalExam++;
+            }
+        }
+        return (totalExam > 0) ? totalCG / totalExam : currentCG;
     }
 
     private double calculateCGPA(int correctAnswer, int totalAnswers) {

@@ -410,26 +410,38 @@ private JLabel createHeader() {
             boolean isPromotionExam = examCode.equals(utils.promotion);
             Boolean examRunning = utils.EXAM_CODE.get(examCode);
 
-            if (examRunning == null && !isPromotionExam) {
-                JOptionPane.showMessageDialog(this, "Your promotion is not found", "Result Details", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            
-            if (!isPromotionExam && examRunning != null && examRunning) {
+            StringBuilder result = new StringBuilder();
+            if (isPromotionExam) {
+                 result.append(account.getPromotion());
+            } else if (examRunning != null && examRunning) {
                 JOptionPane.showMessageDialog(this, "Result not published yet - exam is still running", "Result Details", JOptionPane.INFORMATION_MESSAGE);
                 return;
-            }
-            
-            String result = account.getPromotion();
-            
-            if (result != null && !result.trim().isEmpty()) {
-                StringBuilder resultBuilder = new StringBuilder();
-                resultBuilder.append("# ").append(result).append("\n\n");
-                JOptionPane.showMessageDialog(this, utils.ScrollPanel(resultBuilder), "Result Details", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Result not found for this exam", "Error", JOptionPane.ERROR_MESSAGE);
+                boolean resoultFount = false;
+                for (Result r : Main.getResultList()) {
+                    String code = r.getExamCode();
+                    String year = r.getYear();
+                    String department = r.getDepartment();
+                    String session = r.getSession();
+                    if (code.equals(examCode) && year.equals(account.getYear()) && session.equals(account.getSession()) && department.equals(account.getDepartment())) {
+                        result.append(r.getResultInfo());
+                        result.append("\nCourse ID: ").append(questionMap.get(examCode).getCourseId()).append("\n");
+                        result.append("Mark: ").append(r.getMark()).append("\n");
+                        result.append("Correct: ").append(r.getCorrect()).append("\n");
+                        result.append("Incorrect: ").append(r.getIncorrect()).append("\n");
+                        result.append("CG: ").append(r.getCg());
+                        resoultFount = true;
+                        break;
+                    }
+                }
+                if (!resoultFount) {
+                    JOptionPane.showMessageDialog(this, "Result is not found", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
-            
+
+            JOptionPane.showMessageDialog(this, utils.ScrollPanel(result), "Result Details", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (NullPointerException npe) {
             JOptionPane.showMessageDialog(this, "Your promotion is not found", "System Error", JOptionPane.ERROR_MESSAGE);
             System.err.println("NullPointerException in resultButton: " + npe.getMessage());

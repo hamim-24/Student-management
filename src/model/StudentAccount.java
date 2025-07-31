@@ -1,5 +1,7 @@
 package model;
 
+import launcher.Main;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +26,20 @@ public class StudentAccount extends Account {
         courses = new ArrayList<>();
         this.year = year;
         this.roll = roll;
-        this.cg = cg;
         this.session = session;
-        this.promotion = null;
+        this.promotion = "";
+        int totalExam = 1;
+        double totalCG = cg;
+        for (Result r : Main.getResultList()) {
+            String idTemp = r.getId();
+            String departmentTemp = r.getDepartment();
+            String sessionTemp = r.getSession();
+            if (idTemp.equals(this.getID()) && sessionTemp.equals(this.getSession()) && departmentTemp.equals(this.getDepartment())) {
+                totalCG += r.getCg();
+                totalExam++;
+            }
+        }
+        this.cg = totalCG / totalExam;
     }
 
     public void setPromotion(String promotion) {
