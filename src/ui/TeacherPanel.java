@@ -224,7 +224,7 @@ public class TeacherPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (Main.getQuestionMap().get(examCode) != null) {
+        if (Main.getQuestionMap().get(examCode) != null || examCode.equals(utils.promotion)) {
             JOptionPane.showMessageDialog(this, "Exam exists! Change Code...", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -306,7 +306,7 @@ public class TeacherPanel extends JFrame {
                 if ((examDone == null || examDone == false) && courseIs && studentAccount.getDepartment().equals(department) && studentAccount.getYear().equals(year) && studentAccount.getSession().equals(session)) {
 
                     studentAccount.setEXAM_DONE(publishExamCode, false);
-                    result = new Result((StudentAccount) acc, 0, 0,0, publishExamCode);
+                    result = new Result((StudentAccount) acc, 0, 0,0, publishExamCode, "You didn't participate");
                     Main.getResultList().add(result);
                 }
             }

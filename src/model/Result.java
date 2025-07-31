@@ -11,18 +11,24 @@ public class Result {
     private final int correct;
     private final int incorrect;
     private final String questionCode;
+    private final String resultInfo;
 
     StudentAccount studentAccount;
     Question question;
 
-    public Result(StudentAccount account, double mark, int correct, int incorrect, String questionCode) {
+    public Result(StudentAccount account, double mark, int correct, int incorrect, String questionCode, String resultInfo) {
 
         this.studentAccount = account;
         this.mark = mark;
         this.correct = correct;
         this.incorrect = incorrect;
         this.questionCode = questionCode;
+        this.resultInfo = resultInfo;
         this.question = Main.getQuestionMap().get(questionCode);
+    }
+
+    public String getResultInfo() {
+        return resultInfo;
     }
 
     public String getYear() {
