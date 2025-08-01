@@ -58,7 +58,7 @@ public class SignInFrame extends JFrame {
     private void createComponents() {
 
         sessionLabel = new JLabel("Session:");
-        sessionCombo = new JComboBox<>(utils.session());
+        sessionCombo = new JComboBox<>(Utils.session());
 
         // Status labels with proper initialization
         PasswordStatusLabel = new JLabel(" "); // Space to maintain height
@@ -94,7 +94,7 @@ public class SignInFrame extends JFrame {
         genderGroup.add(femaleRadioButton);
 
         // File path label
-        filePathLabel = new JLabel(utils.DEFAULT_FILE_PATH);
+        filePathLabel = new JLabel(Utils.DEFAULT_FILE_PATH);
         filePathLabel.setForeground(Color.GRAY);
         filePathLabel.setPreferredSize(new Dimension(200, 30));
 
@@ -122,14 +122,14 @@ public class SignInFrame extends JFrame {
         for (int i = 0; i < 31; i++) {
             dayCombo.addItem(String.format("%02d", i + 1));
         }
-        monthCombo = new JComboBox<>(utils.MONTHS);
+        monthCombo = new JComboBox<>(Utils.MONTHS);
         yearCombo = new JComboBox<>();
         for (int i = 0; i < 50; i++) {
             yearCombo.addItem(String.valueOf(LocalDate.now().getYear() - i));
         }
         statusCombo = new JComboBox<>(new String[]{"Select", "Teacher", "Student"});
-        acYearCombo = new JComboBox<>(utils.YEARS);
-        departmentCombo = new JComboBox<>(utils.DEPARTMENTS);
+        acYearCombo = new JComboBox<>(Utils.YEARS);
+        departmentCombo = new JComboBox<>(Utils.DEPARTMENTS);
 
         // Title labels
         titleLabel = new JLabel("PERSONAL INFORMATION:");
@@ -428,7 +428,7 @@ public class SignInFrame extends JFrame {
         if (getEmail().isEmpty()) {
             errorMessage.append("- Email is required\n");
             isValid = false;
-        } else if (!utils.EMAIL_PATTERN.matcher(getEmail()).matches()) {
+        } else if (!Utils.EMAIL_PATTERN.matcher(getEmail()).matches()) {
             errorMessage.append("- Email format is invalid\n");
             emailTextField.setBackground(new Color(255, 230, 230));
             isValid = false;
@@ -528,7 +528,7 @@ public class SignInFrame extends JFrame {
 
             if (source == emailTextField) {
                 String email = emailTextField.getText().trim();
-                if (!email.isEmpty() && !utils.EMAIL_PATTERN.matcher(email).matches()) {
+                if (!email.isEmpty() && !Utils.EMAIL_PATTERN.matcher(email).matches()) {
                     emailTextField.setBackground(new Color(255, 230, 230));
                 } else {
                     emailTextField.setBackground(Color.WHITE);
@@ -597,7 +597,7 @@ public class SignInFrame extends JFrame {
         yearCombo.setSelectedIndex(0);
         statusCombo.setSelectedIndex(0);
         departmentCombo.setSelectedIndex(0);
-        filePathLabel.setText(utils.DEFAULT_FILE_PATH);
+        filePathLabel.setText(Utils.DEFAULT_FILE_PATH);
         filePathLabel.setForeground(Color.GRAY);
         filePath = null;
 

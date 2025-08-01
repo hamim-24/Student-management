@@ -2,13 +2,11 @@ package ui;
 
 import launcher.Main;
 import model.Result;
-import model.StudentAccount;
-import util.utils;
+import util.Utils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.List;
 import java.util.Vector;
 
 public class ResultList extends JFrame {
@@ -82,14 +80,14 @@ public class ResultList extends JFrame {
 
         filteredCountLabel = new JLabel("Results: 0 / 0 (filtered/total)");
 
-        yearComboBox = new JComboBox<>(utils.YEARS);
+        yearComboBox = new JComboBox<>(Utils.YEARS);
         yearComboBox.setToolTipText("Filter by year");
 
-        departmentComboBox = new JComboBox<>(utils.DEPARTMENTS);
+        departmentComboBox = new JComboBox<>(Utils.DEPARTMENTS);
         departmentComboBox.setToolTipText("Filter by department");
 
         // Use the updated session() which includes 'Select' as the first option
-        sessionComboBox = new JComboBox<>(utils.session());
+        sessionComboBox = new JComboBox<>(Utils.session());
         sessionComboBox.setToolTipText("Filter by session");
 
         // Collect all unique exam codes from results
@@ -103,10 +101,10 @@ public class ResultList extends JFrame {
         examCodeComboBox.setToolTipText("Filter by exam code");
 
         clearFiltersButton = new JButton("Reset Filters");
-        utils.styleButton(clearFiltersButton);
+        Utils.styleButton(clearFiltersButton);
 
         backButton = new JButton("Back");
-        utils.styleButton(backButton);
+        Utils.styleButton(backButton);
         backButton.setToolTipText("Return to Administration Dashboard");
     }
 

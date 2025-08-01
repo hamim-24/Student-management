@@ -2,7 +2,7 @@ package ui;
 
 import launcher.Main;
 import model.*;
-import util.utils;
+import util.Utils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -112,7 +112,7 @@ public class TeacherList extends JFrame {
         dobField.setToolTipText("Format: YYYY-MM-DD");
 
         // Create department combo boxes
-        String[] departmentFilters = utils.DEPARTMENTS;
+        String[] departmentFilters = Utils.DEPARTMENTS;
         departmentComboBox = new JComboBox<>(departmentFilters);
         departmentComboBox.setToolTipText("Select department");
         updateDepartmentCombo = new JComboBox<>(departmentFilters);
@@ -133,7 +133,7 @@ public class TeacherList extends JFrame {
         });
 
         clearFiltersButton = new JButton("Reset Filters");
-        utils.styleButton(clearFiltersButton);
+        Utils.styleButton(clearFiltersButton);
         clearFiltersButton.setToolTipText("Clear all filters");
 
         // Create buttons
@@ -146,10 +146,10 @@ public class TeacherList extends JFrame {
         backButton = new JButton("Back");
         backButton.setToolTipText("Return to Administration Dashboard");
 
-        utils.styleButton(backButton);
-        utils.styleButton(clearButton);
-        utils.styleButton(updateButton);
-        utils.styleButton(deleteButton);
+        Utils.styleButton(backButton);
+        Utils.styleButton(clearButton);
+        Utils.styleButton(updateButton);
+        Utils.styleButton(deleteButton);
     }
 
     private void setupLayout() {

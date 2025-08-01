@@ -2,7 +2,7 @@ package ui;
 
 import launcher.Main;
 import model.*;
-import util.utils;
+import util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -154,7 +154,7 @@ public class StudentExamFrame extends JFrame {
 
     private void createButtonPanel() {
         JButton submitButton = new JButton("Submit");
-        utils.styleButton(submitButton);
+        Utils.styleButton(submitButton);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(submitButton);

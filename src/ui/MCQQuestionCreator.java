@@ -1,7 +1,7 @@
 package ui;
 
 import model.*;
-import util.utils;
+import util.Utils;
 import launcher.Main;
 
 import javax.swing.*;
@@ -91,17 +91,17 @@ public class MCQQuestionCreator extends JFrame {
         buttonPanel.setBackground(new Color(245, 247, 250));
 
         JButton addMCQButton = new JButton("Add MCQ");
-        utils.styleButton(addMCQButton);
+        Utils.styleButton(addMCQButton);
         addMCQButton.setToolTipText("Add a new MCQ question");
         addMCQButton.addActionListener(e -> addMCQ());
 
         JButton saveButton = new JButton("Save Question");
-        utils.styleButton(saveButton);
+        Utils.styleButton(saveButton);
         saveButton.setToolTipText("Save the exam and all MCQs");
         saveButton.addActionListener(e -> saveQuestion());
 
         JButton clearButton = new JButton("Clear All");
-        utils.styleButton(clearButton);
+        Utils.styleButton(clearButton);
         clearButton.setToolTipText("Clear all fields and MCQs");
 
         clearButton.addActionListener(e -> {
@@ -117,7 +117,7 @@ public class MCQQuestionCreator extends JFrame {
         });
 
         JButton exitButton = new JButton("Back");
-        utils.styleButton(exitButton);
+        Utils.styleButton(exitButton);
         exitButton.setToolTipText("Exit the Question Creator");
         exitButton.addActionListener(e -> {
             dispose();
@@ -281,7 +281,7 @@ public class MCQQuestionCreator extends JFrame {
             gbc.gridheight = 4;
             gbc.anchor = GridBagConstraints.NORTHEAST;
             JButton removeButton = new JButton("Remove");
-            utils.styleButton(removeButton);
+            Utils.styleButton(removeButton);
             removeButton.setBackground(new Color(231, 76, 60));
             removeButton.setToolTipText("Remove this MCQ");
             removeButton.addActionListener(e -> removeMCQ());

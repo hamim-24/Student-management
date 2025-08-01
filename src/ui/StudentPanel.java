@@ -2,7 +2,7 @@ package ui;
 
 import launcher.Main;
 import model.*;
-import util.utils;
+import util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +87,7 @@ private JLabel createHeader() {
     }
 
     private void createStatusButton(GridBagConstraints gbc) {
-        questionStatusButton = new JButton(utils.PUBLISHED_STATUS);
+        questionStatusButton = new JButton(Utils.PUBLISHED_STATUS);
         questionStatusButton.setFont(new Font("Arial", Font.PLAIN, 14));
         questionStatusButton.setForeground(new Color(231, 76, 60));
         questionStatusButton.setPreferredSize(new Dimension(250, 20));
@@ -114,42 +114,42 @@ private JLabel createHeader() {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         JButton examButton = new JButton("EXAM");
-        utils.styleButton(examButton);
+        Utils.styleButton(examButton);
         examButton.setToolTipText("EXAM");
         mainPanel.add(examButton, gbc);
 
         // Search/View Exam Button
         gbc.gridy++;
         JButton searchExamButton = new JButton("Search/View Exam");
-        utils.styleButton(searchExamButton);
+        Utils.styleButton(searchExamButton);
         searchExamButton.setToolTipText("Search for an existing exam by code");
         mainPanel.add(searchExamButton, gbc);
 
         // Show Information Button
         gbc.gridy++;
         JButton showInfo = new JButton("Show Information");
-        utils.styleButton(showInfo);
+        Utils.styleButton(showInfo);
         showInfo.setToolTipText("Show my Information");
         mainPanel.add(showInfo, gbc);
 
         // Results Button
         gbc.gridy++;
         JButton resultButton = new JButton("Results");
-        utils.styleButton(resultButton);
+        Utils.styleButton(resultButton);
         resultButton.setToolTipText("show results");
         mainPanel.add(resultButton, gbc);
 
         // Course Management Button
         gbc.gridy++;
         JButton courseButton = new JButton("Course Management");
-        utils.styleButton(courseButton);
+        Utils.styleButton(courseButton);
         courseButton.setToolTipText("Manage your courses");
         mainPanel.add(courseButton, gbc);
 
         // Back Button
         gbc.gridy++;
         JButton backButton = new JButton("Back");
-        utils.styleButton(backButton);
+        Utils.styleButton(backButton);
         backButton.setToolTipText("Return to main menu");
         mainPanel.add(backButton, gbc);
     }
@@ -296,7 +296,7 @@ private JLabel createHeader() {
     }
 
     private boolean validateExamCode(String examCode) {
-        Boolean examRunning = utils.EXAM_CODE.get(examCode);
+        Boolean examRunning = Utils.EXAM_CODE.get(examCode);
         if (examRunning == null) {
             JOptionPane.showMessageDialog(this, "Exam is not found..", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -354,7 +354,7 @@ private JLabel createHeader() {
     }
 
     private boolean validateExamStatus(String examCode) {
-        Boolean examRunning = utils.EXAM_CODE.get(examCode);
+        Boolean examRunning = Utils.EXAM_CODE.get(examCode);
         if (!examRunning) {
             JOptionPane.showMessageDialog(this, "Exam is finished..", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -407,8 +407,8 @@ private JLabel createHeader() {
                 return;
             }
 
-            boolean isPromotionExam = examCode.equals(utils.promotion);
-            Boolean examRunning = utils.EXAM_CODE.get(examCode);
+            boolean isPromotionExam = examCode.equals(Utils.promotion);
+            Boolean examRunning = Utils.EXAM_CODE.get(examCode);
 
             StringBuilder result = new StringBuilder();
             if (isPromotionExam) {
@@ -440,7 +440,7 @@ private JLabel createHeader() {
                 }
             }
 
-            JOptionPane.showMessageDialog(this, utils.ScrollPanel(result), "Result Details", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, Utils.ScrollPanel(result), "Result Details", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (NullPointerException npe) {
             JOptionPane.showMessageDialog(this, "Your promotion is not found", "System Error", JOptionPane.ERROR_MESSAGE);
@@ -489,7 +489,7 @@ private JLabel createHeader() {
             Question questionSet = Main.getQuestionMap().get(searchExam);
             if (questionSet == null) {
                 JOptionPane.showMessageDialog(frame, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (!isTeacher && utils.EXAM_CODE.get(searchExam) != null && utils.EXAM_CODE.get(searchExam)) {
+            } else if (!isTeacher && Utils.EXAM_CODE.get(searchExam) != null && Utils.EXAM_CODE.get(searchExam)) {
                 JOptionPane.showMessageDialog(frame,
                         "The Exam is running",
                         "Error",
@@ -502,7 +502,7 @@ private JLabel createHeader() {
                     qs.append("  " + i + ". " + SQ.toString() + "\n");
                     i++;
                 }
-                JOptionPane.showMessageDialog(frame, utils.ScrollPanel(qs), "Exam Details", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, Utils.ScrollPanel(qs), "Exam Details", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }

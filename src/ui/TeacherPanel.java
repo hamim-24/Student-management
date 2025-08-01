@@ -1,7 +1,7 @@
 package ui;
 
 import model.*;
-import util.utils;
+import util.Utils;
 import launcher.Main;
 
 import java.util.ArrayList;
@@ -61,14 +61,14 @@ public class TeacherPanel extends JFrame {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        questionStatusButton = new JButton(utils.PUBLISHED_STATUS);
+        questionStatusButton = new JButton(Utils.PUBLISHED_STATUS);
         questionStatusButton.setFont(new Font("Arial", Font.PLAIN, 14));
         questionStatusButton.setForeground(new Color(231, 76, 60));
         questionStatusButton.setPreferredSize(new Dimension(250, 20));
         mainPanel.add(questionStatusButton, gbc);
         gbc.gridy++;
         JButton createExamButton = new JButton("Create New Exam");
-        utils.styleButton(createExamButton);
+        Utils.styleButton(createExamButton);
         createExamButton.setToolTipText("Create a new MCQ exam");
         mainPanel.add(createExamButton, gbc);
         gbc.gridy++;
@@ -84,22 +84,22 @@ public class TeacherPanel extends JFrame {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         JButton searchExamButton = new JButton("Search/View Exam");
-        utils.styleButton(searchExamButton);
+        Utils.styleButton(searchExamButton);
         searchExamButton.setToolTipText("Search for an existing exam by code");
         mainPanel.add(searchExamButton, gbc);
         gbc.gridy++;
         JButton publishExamButton = new JButton("Publish Exam");
-        utils.styleButton(publishExamButton);
+        Utils.styleButton(publishExamButton);
         publishExamButton.setToolTipText("Publish an exam for students");
         mainPanel.add(publishExamButton, gbc);
         gbc.gridy++;
         JButton publishResultButton = new JButton("Publish Results");
-        utils.styleButton(publishResultButton);
+        Utils.styleButton(publishResultButton);
         publishResultButton.setToolTipText("Publish results for an exam");
         mainPanel.add(publishResultButton, gbc);
         gbc.gridy++;
         JButton backButton = new JButton("Back to Main Menu");
-        utils.styleButton(backButton);
+        Utils.styleButton(backButton);
         backButton.setToolTipText("Return to main menu");
         mainPanel.add(backButton, gbc);
         setupButtonActions(createExamButton, searchExamButton, publishExamButton, publishResultButton, backButton);
@@ -165,8 +165,8 @@ public class TeacherPanel extends JFrame {
                 "Department",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                utils.DEPARTMENTS,
-                utils.DEPARTMENTS[0]
+                Utils.DEPARTMENTS,
+                Utils.DEPARTMENTS[0]
         );
         if (department == null || department.equals("Select")) return;
         String year = (String) JOptionPane.showInputDialog(
@@ -175,8 +175,8 @@ public class TeacherPanel extends JFrame {
                 "Year",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                utils.YEARS,
-                utils.YEARS[0]
+                Utils.YEARS,
+                Utils.YEARS[0]
         );
         if (year == null || year.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
@@ -188,8 +188,8 @@ public class TeacherPanel extends JFrame {
                 "Year",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                utils.session(),
-                utils.session()[0]
+                Utils.session(),
+                Utils.session()[0]
         );
         if (session == null || session.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please Select Year", "Error", JOptionPane.ERROR_MESSAGE);
@@ -224,7 +224,7 @@ public class TeacherPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (Main.getQuestionMap().get(examCode) != null || examCode.equals(utils.promotion)) {
+        if (Main.getQuestionMap().get(examCode) != null || examCode.equals(Utils.promotion)) {
             JOptionPane.showMessageDialog(this, "Exam exists! Change Code...", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -232,9 +232,9 @@ public class TeacherPanel extends JFrame {
                         + name + "\nNew Code: " + examCode + "\nDepartment: " + department + "\nYear: " + year + "\nSession: " + session + "\nCourse: " + course,
                 "Publish Results", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
-            utils.EXAM_CODE.put(examCode, true);
-            utils.PUBLISHED_STATUS = "Exam is running";
-            questionStatusButton.setText(utils.PUBLISHED_STATUS);
+            Utils.EXAM_CODE.put(examCode, true);
+            Utils.PUBLISHED_STATUS = "Exam is running";
+            questionStatusButton.setText(Utils.PUBLISHED_STATUS);
             Question question1 = new Question(questionSet.getSingleQuestions(), examCode, year, department, name, session, course);
             questionMap.put(examCode, question1);
             Notification notification = new Notification("New Exam published. code: " + examCode + " Department: " + department
@@ -263,7 +263,7 @@ public class TeacherPanel extends JFrame {
         if (questionSet == null) {
             JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        Boolean value = utils.EXAM_CODE.get(publishExamCode);
+        Boolean value = Utils.EXAM_CODE.get(publishExamCode);
         if (value == null || !value) {
             JOptionPane.showMessageDialog(this, "Question is not published", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -276,18 +276,18 @@ public class TeacherPanel extends JFrame {
         );
         if (res == JOptionPane.NO_OPTION) return;
 
-        utils.EXAM_CODE.put(publishExamCode, false);
+        Utils.EXAM_CODE.put(publishExamCode, false);
         boolean hasRunningExams = false;
-        for (Boolean isRunning : utils.EXAM_CODE.values()) {
+        for (Boolean isRunning : Utils.EXAM_CODE.values()) {
             if (isRunning != null && isRunning) {
                 hasRunningExams = true;
                 break;
             }
         }
         if (hasRunningExams) {
-            utils.PUBLISHED_STATUS = "Exam is running";
+            Utils.PUBLISHED_STATUS = "Exam is running";
         } else {
-            utils.PUBLISHED_STATUS = "No Exam is running";
+            Utils.PUBLISHED_STATUS = "No Exam is running";
         }
         Map<String, Account> studentAccounts = Main.getAccounts();
         Result result = null;
@@ -312,7 +312,7 @@ public class TeacherPanel extends JFrame {
             }
         }
 
-        questionStatusButton.setText(utils.PUBLISHED_STATUS);
+        questionStatusButton.setText(Utils.PUBLISHED_STATUS);
         JOptionPane.showMessageDialog(this, "Result Published", "Success", JOptionPane.INFORMATION_MESSAGE);
         Notification notification = new Notification("Result published. code: " + publishExamCode + " Department: " + department
                 + " Year: " + year + " By " + account.getFirstName() + " " + account.getLastName());
@@ -323,11 +323,11 @@ public class TeacherPanel extends JFrame {
 
     public static void questionStatus(JFrame frame) {
         StringBuilder result = new StringBuilder();
-        Boolean value = utils.EXAM_CODE.isEmpty();
+        Boolean value = Utils.EXAM_CODE.isEmpty();
         if (value == null || value) {
-            JOptionPane.showMessageDialog(frame, utils.PUBLISHED_STATUS, "Exam Status", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, Utils.PUBLISHED_STATUS, "Exam Status", JOptionPane.INFORMATION_MESSAGE);
         }
-            for (Map.Entry<String, Boolean> entry : utils.EXAM_CODE.entrySet()) {
+            for (Map.Entry<String, Boolean> entry : Utils.EXAM_CODE.entrySet()) {
                 String examCode = entry.getKey();
                 Boolean isRunning = entry.getValue();
                 if (isRunning != null) {
@@ -350,7 +350,7 @@ public class TeacherPanel extends JFrame {
                     }
                 }
             }
-            JOptionPane.showMessageDialog(frame, utils.ScrollPanel(result), "Exams", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, Utils.ScrollPanel(result), "Exams", JOptionPane.INFORMATION_MESSAGE);
 
     }
 

@@ -2,10 +2,9 @@ package ui;
 
 import launcher.Main;
 import model.Course;
-import util.utils;
+import util.Utils;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Map;
@@ -24,6 +23,7 @@ public class CourseList extends JFrame {
     private int totalCourse;
 
     public CourseList() {
+
         this.courseMap = Main.getCourseMap();
         totalCourse = courseMap.size();
         initializeComponents();
@@ -34,6 +34,7 @@ public class CourseList extends JFrame {
     }
 
     private void setupFrame() {
+
         setTitle("Course List");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 700);
@@ -43,7 +44,7 @@ public class CourseList extends JFrame {
 
     private void initializeComponents() {
         // Create table with column names
-        String[] columnNames = {"Course ID", "Course Name", "Credits", "Max Students", "Current Students"};
+        String[] columnNames = {"Course ID", "Course Name", "Credits", "Student Capacity", "Current Students"};
 
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -86,14 +87,15 @@ public class CourseList extends JFrame {
         backButton = new JButton("Back");
 
         // Style buttons
-        utils.styleButton(addButton);
-        utils.styleButton(updateButton);
-        utils.styleButton(deleteButton);
-        utils.styleButton(clearButton);
-        utils.styleButton(backButton);
+        Utils.styleButton(addButton);
+        Utils.styleButton(updateButton);
+        Utils.styleButton(deleteButton);
+        Utils.styleButton(clearButton);
+        Utils.styleButton(backButton);
     }
 
     private void setupLayout() {
+
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
 
@@ -132,6 +134,7 @@ public class CourseList extends JFrame {
     }
 
     private JPanel createButtonPanel() {
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(new Color(245, 247, 250));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
@@ -146,6 +149,7 @@ public class CourseList extends JFrame {
     }
 
     private JPanel createInputPanel() {
+
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(10, 10, 0, 20),
@@ -203,7 +207,7 @@ public class CourseList extends JFrame {
         maxStudentsField.setPreferredSize(new Dimension(220, 25));
         inputPanel.add(maxStudentsField, gbc);
 
-        // Academic Information Section
+        // total courses
         totalCourseLabel = new JLabel("Total Courses: " + totalCourse);
         totalCourseLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         totalCourseLabel.setForeground(new Color(70, 130, 220));
@@ -246,6 +250,7 @@ public class CourseList extends JFrame {
     }
 
     private void addCourse() {
+
         try {
             if (validateFields()) {
                 String courseId = courseIdField.getText().trim();
@@ -275,6 +280,7 @@ public class CourseList extends JFrame {
     }
 
     private void updateCourse() {
+
         try {
             if (selectedRow < 0) {
                 JOptionPane.showMessageDialog(this, "Please select a course to update", "Error", JOptionPane.ERROR_MESSAGE);
@@ -316,6 +322,7 @@ public class CourseList extends JFrame {
     }
 
     private void deleteCourse() {
+
         try {
             if (selectedRow < 0) {
                 JOptionPane.showMessageDialog(this, "Please select a course to delete", "Error", JOptionPane.ERROR_MESSAGE);
