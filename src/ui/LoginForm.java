@@ -25,11 +25,9 @@ public class LoginForm extends JFrame {
     private final String PASSWORD_PLACE_HOLDER = "Password";
 
     public LoginForm() {
+
         try {
             this.accounts = Main.getAccounts();
-            if (this.accounts == null) {
-                this.accounts = new HashMap<>();
-            }
             adminAccounts.put(admin.getID(), admin);
             createComponents();
             layoutComponents();
@@ -43,6 +41,7 @@ public class LoginForm extends JFrame {
     }
 
     private void setupFrame() {
+
         setTitle("Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -56,6 +55,7 @@ public class LoginForm extends JFrame {
     }
 
     private void createComponents() {
+
         idField = new JTextField(20);
         idField.setFont(new Font("Arial", Font.PLAIN, 16));
         passwordField = new JPasswordField(20);
@@ -82,16 +82,14 @@ public class LoginForm extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
 
         // add title label
-        JLabel titleLabel = new JLabel("Log In");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
+
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
         c.insets = new Insets(20, 0, 20, 0);
-        add(titleLabel, c);
+        add(Utils.setHeader(new JLabel("Log in")), c);
 
         // add id field
-        c.gridx = 0;
         c.gridy++;
         c.gridwidth = 2;
         c.insets = new Insets(5, 20, 5, 20);
@@ -99,7 +97,6 @@ public class LoginForm extends JFrame {
         add(idField, c);
 
         // add password field
-        c.gridx = 0;
         c.gridy++;
         c.gridwidth = 2;
         c.insets = new Insets(5, 20, 5, 20);
@@ -110,7 +107,6 @@ public class LoginForm extends JFrame {
         buttonPanel.add(loginButton);
         buttonPanel.add(studentLoginButton);
         buttonPanel.add(registerButton);
-        c.gridx = 0;
         c.gridy++;
         c.gridwidth = 2;
         c.insets = new Insets(5, 20, 5, 20);
@@ -122,9 +118,11 @@ public class LoginForm extends JFrame {
     }
 
     private void setPlaceHolders() {
+
         idField.setText(ID_PLACE_HOLDER);
         idField.setHorizontalAlignment(JTextField.CENTER);
         idField.setForeground(Color.GRAY);
+
         passwordField.setText(PASSWORD_PLACE_HOLDER);
         passwordField.setHorizontalAlignment(JTextField.CENTER);
         passwordField.setForeground(Color.GRAY);
@@ -154,7 +152,7 @@ public class LoginForm extends JFrame {
                 if (String.valueOf(passwordField.getPassword()).equals(PASSWORD_PLACE_HOLDER)) {
                     passwordField.setText("");
                     passwordField.setForeground(Color.BLACK);
-                    passwordField.setEchoChar('*');
+                    passwordField.setEchoChar('-');
                 }
             }
 
@@ -170,7 +168,9 @@ public class LoginForm extends JFrame {
     }
 
     private void addEvenListeners() {
+
         loginButton.addActionListener(e -> {
+
             try {
                 String id = idField.getText().trim();
                 String password = String.valueOf(passwordField.getPassword()).trim();
@@ -193,7 +193,7 @@ public class LoginForm extends JFrame {
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error during administration login: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Exception in administration login: " + ex.getMessage());
+                System.err.println("Exception in LoginForm (loginButton.addActionListener): " + ex.getMessage());
             }
         });
         getRootPane().setDefaultButton(loginButton);
@@ -227,10 +227,10 @@ public class LoginForm extends JFrame {
                 }
             } catch (ClassCastException cce) {
                 JOptionPane.showMessageDialog(this, "Invalid account type for student login", "Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("ClassCastException in student login: " + cce.getMessage());
+                System.err.println("ClassCastException in LoginForm (studentLoginButton.addActionListener): " + cce.getMessage());
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error during student/teacher login: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Exception in student/teacher login: " + ex.getMessage());
+                System.err.println("Exception in LoginForm (studentLoginButton.addActionListener): " + ex.getMessage());
             }
         });
 
@@ -240,7 +240,7 @@ public class LoginForm extends JFrame {
                 new SignInFrame();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error opening registration form: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Exception in register button: " + ex.getMessage());
+                System.err.println("Exception in LoginForm (registerButton.addActionListener): " + ex.getMessage());
             }
         });
 
@@ -255,7 +255,7 @@ public class LoginForm extends JFrame {
                 JOptionPane.showMessageDialog(this, Utils.ScrollPanel(notification), "Notification", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "No notification available" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Exception in notification button: " + ex.getMessage());
+                System.err.println("Exception in LoginForm (notificationButton.addActionListener): " + ex.getMessage());
             }
         });
     }

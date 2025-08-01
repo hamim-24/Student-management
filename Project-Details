@@ -1,0 +1,88 @@
+1. LoginForm
+    - log in for administration, students, teachers
+    - notification
+    - default button administration button
+    - place holder
+    - set the password text field visible when focus lost (show place holder)
+    - set that text field invisible when focus gain (replace with '-')
+    - if the admin account is null then default button the resister button
+    -
+
+2. AdministrationForm
+    - default button search button
+    - Student list
+    - teacher list
+    - result list
+    - course list
+    - search account(student, teacher)
+    - create announcement
+    - promotion : calculate the number of promoted and not promoted, set notification
+        if StudentAccount && year && session && department are matched,
+            if cg >= 2, then increase year (for 1,2,3,4 the year) && set result info
+            else set result info
+    - back button
+
+3. CourseList
+    - 5 column "Course ID", "Course Name", "Credits", "Student Capacity", "Current Students"}
+    - edit course
+    - add course
+    - delete course
+    - clear edit panel
+    - back
+
+4. MCQQuestionCreator
+    - question code (unique)
+    - add mcq
+    - save : worn if empty
+    - back
+
+5. ResultList
+    - 6 column "ID", "Roll", "Marks", "Incorrect", "Correct", "CG"
+    - filter result (year, department, session, exam code)
+
+6. SignInFrame
+    - collect all data
+    - if student add more two text field
+    - valid email formate
+    - unique ID
+    - minimum 6 character password
+    - match password
+    - create account (Student, Teacher)
+
+7. StudentCourseFrame
+    - Show all courese
+    - select course and enroll
+    - also drop out
+    - save courese
+
+8. StudentExamFrame
+    - exam
+    - create result
+    - add result
+    - calculate cg
+    - add average cg
+    - add correct and incorrect answers
+
+9. StudentList
+    - 8 column "Roll", "Name", "ID", "Email", "Session", "Department", "GPA", "Year"
+    - edit student information
+    - delete course
+    - clear edit panel
+    - filter (year, department, roll, id, min cg)
+
+10. StudentPanel
+    - exam status : show exam running, publish result
+    - exam : if year && department && session && courseId matched
+    - search question : if exam is running wont show
+    - show info
+    - result : if published
+    - add course
+    - back
+
+11. TeacherPanel
+    - exam status : show exam running, publish result
+    - create exam
+    - search exam : no restriction like student
+    - publish exam : for year, department, session, code, name
+    - publish result : if exam published
+    - back

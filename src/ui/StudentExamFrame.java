@@ -21,7 +21,6 @@ public class StudentExamFrame extends JFrame {
     private boolean submitted = false;
 
     StudentAccount account;
-    String id;
     String resultCode;
 
     public StudentExamFrame(StudentAccount account, String examCode) {
@@ -43,11 +42,11 @@ public class StudentExamFrame extends JFrame {
         initializeFrame();
         createComponents();
         setupTimer();
-        addEventListeners();
         setVisible(true);
     }
 
     private void initializeExamData(String examCode) {
+
         try {
             Question q = Main.getQuestionMap().get(examCode);
             if (q == null) {
@@ -73,6 +72,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void initializeFrame() {
+
         setTitle("Exam: " + question.getExamName());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -81,12 +81,14 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void createComponents() {
+
         createHeaderPanel();
         createQuestionsPanel();
         createButtonPanel();
     }
 
     private void createHeaderPanel() {
+
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(16, 24, 16, 24));
         
@@ -103,6 +105,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void createQuestionsPanel() {
+
         JPanel questionsPanel = new JPanel();
         questionsPanel.setLayout(new BoxLayout(questionsPanel, BoxLayout.Y_AXIS));
         questionsPanel.setBackground(Color.WHITE);
@@ -118,6 +121,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void createQuestionPanel(JPanel questionsPanel, int questionIndex) {
+
         SingleQuestion sq = singleQuestions.get(questionIndex);
         JPanel qPanel = new JPanel(new GridBagLayout());
         qPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -153,6 +157,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void createButtonPanel() {
+
         JButton submitButton = new JButton("Submit");
         Utils.styleButton(submitButton);
         JPanel buttonPanel = new JPanel();
@@ -165,6 +170,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void setupTimer() {
+
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -175,11 +181,8 @@ public class StudentExamFrame extends JFrame {
         timer.start();
     }
 
-    private void addEventListeners() {
-        // Timer and submit button listeners are set up in their respective methods
-    }
-
     private void handleTimerTick() {
+
         timeLeft--;
         updateTimerLabel();
         if (timeLeft <= 0) {
@@ -192,6 +195,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void handleSubmitAction() {
+
         if (!submitted) {
             submitted = true;
             timer.stop();
@@ -201,12 +205,14 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void updateTimerLabel() {
+
         int minutes = timeLeft / 60;
         int seconds = timeLeft % 60;
         timerLabel.setText(String.format("Time Left: %02d:%02d", minutes, seconds));
     }
 
     private void submitExam() {
+
         int correct = 0;
         int incorrect = 0;
         StringBuilder result = new StringBuilder();
@@ -217,6 +223,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void buildResultString(StringBuilder result) {
+
         result.append("Exam: ").append(question.getExamName()).append("\n");
         result.append("Code: ").append(question.getQuestionCode()).append("\n\n");
         
@@ -240,6 +247,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private String getSelectedAnswer(int questionIndex) {
+
         for (int j = 0; j < 4; j++) {
             if (optionButtons[questionIndex][j].isSelected()) {
                 return optionButtons[questionIndex][j].getText();
@@ -249,6 +257,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private void calculateResults(StringBuilder result, int correct, int incorrect) {
+
         for (int i = 0; i < totalQuestions; i++) {
             SingleQuestion sq = singleQuestions.get(i);
             String correctAnswer = sq.getAnswer();
@@ -271,6 +280,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private double getAverageCG(int correct, int incorrect) {
+
         double cg = account.getCg();
         double currentCG = calculateCGPA(correct, incorrect);
         double totalCG = (currentCG + cg) / 2;
@@ -289,6 +299,7 @@ public class StudentExamFrame extends JFrame {
     }
 
     private double calculateCGPA(int correctAnswer, int totalAnswers) {
+
         double mark = correctAnswer / (double) totalAnswers * 100;
         if (mark >= 80) {
             return 4.0;

@@ -39,6 +39,7 @@ public class StudentPanel extends JFrame {
     }
 
     private void initializeFrame() {
+
         setTitle("Student Panel");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -50,19 +51,20 @@ public class StudentPanel extends JFrame {
     }
 
     private void createComponents() {
+
         createHeader();
         createMainPanel();
     }
 
 private JLabel createHeader() {
+
         JLabel headerLabel = new JLabel("Student Dashboard", SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        headerLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 24, 0));
-        headerLabel.setForeground(new Color(44, 62, 80));
-        return headerLabel;
+
+        return Utils.setHeader(headerLabel);
     }
 
     private void createMainPanel() {
+
         mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(new Color(255, 255, 255));
         mainPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -87,6 +89,7 @@ private JLabel createHeader() {
     }
 
     private void createStatusButton(GridBagConstraints gbc) {
+
         questionStatusButton = new JButton(Utils.PUBLISHED_STATUS);
         questionStatusButton.setFont(new Font("Arial", Font.PLAIN, 14));
         questionStatusButton.setForeground(new Color(231, 76, 60));
@@ -155,6 +158,7 @@ private JLabel createHeader() {
     }
 
     private void addEventListeners() {
+
         addExamButtonListener();
         addSearchExamButtonListener();
         addShowInfoButtonListener();
@@ -165,6 +169,7 @@ private JLabel createHeader() {
     }
 
     private void addExamButtonListener() {
+
         JButton examButton = findButtonByText("EXAM");
         if (examButton != null) {
             examButton.addActionListener(e -> handleExamAction());
@@ -172,6 +177,7 @@ private JLabel createHeader() {
     }
 
     private void addSearchExamButtonListener() {
+
         JButton searchExamButton = findButtonByText("Search/View Exam");
         if (searchExamButton != null) {
             searchExamButton.addActionListener(e -> handleSearchExamAction());
@@ -179,6 +185,7 @@ private JLabel createHeader() {
     }
 
     private void addShowInfoButtonListener() {
+
         JButton showInfo = findButtonByText("Show Information");
         if (showInfo != null) {
             showInfo.addActionListener(e -> handleShowInfoAction());
@@ -186,6 +193,7 @@ private JLabel createHeader() {
     }
 
     private void addResultButtonListener() {
+
         JButton resultButton = findButtonByText("Results");
         if (resultButton != null) {
             resultButton.addActionListener(e -> handleResultAction());
@@ -193,6 +201,7 @@ private JLabel createHeader() {
     }
 
     private void addCourseButtonListener() {
+
         JButton courseButton = findButtonByText("Course Management");
         if (courseButton != null) {
             courseButton.addActionListener(e -> handleCourseAction());
@@ -200,6 +209,7 @@ private JLabel createHeader() {
     }
 
     private void addBackButtonListener() {
+
         JButton backButton = findButtonByText("Back");
         if (backButton != null) {
             backButton.addActionListener(e -> handleBackAction());
@@ -207,10 +217,12 @@ private JLabel createHeader() {
     }
 
     private void addQuestionStatusButtonListener() {
+
         questionStatusButton.addActionListener(e -> handleQuestionStatusAction());
     }
 
     private JButton findButtonByText(String text) {
+
         for (Component comp : mainPanel.getComponents()) {
             if (comp instanceof JButton && ((JButton) comp).getText().contains(text)) {
                 return (JButton) comp;
@@ -220,6 +232,7 @@ private JLabel createHeader() {
     }
 
     private void setupDocumentListener() {
+
         examSearchField.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 updateButtons();
@@ -247,22 +260,24 @@ private JLabel createHeader() {
     }
 
     private void updateButtonTexts(String code) {
+
         JButton searchExamButton = findButtonByText("Search/View");
         JButton examButton = findButtonByText("EXAM");
         JButton resultButton = findButtonByText("Results");
 
         if (searchExamButton != null) {
-            searchExamButton.setText("Search/View '" + code + "' Exam");
+            searchExamButton.setText("Search/View '" + code + "' question");
         }
         if (examButton != null) {
-            examButton.setText("EXAM " + code);
+            examButton.setText("EXAM '" + code + "'");
         }
         if (resultButton != null) {
-            resultButton.setText("Results " + code);
+            resultButton.setText("Results '" + code + "'");
         }
     }
 
     private void handleExamAction() {
+
         try {
             String examCode = examSearchField.getText().trim();
             if (examCode.isEmpty()) {
@@ -296,6 +311,7 @@ private JLabel createHeader() {
     }
 
     private boolean validateExamCode(String examCode) {
+
         Boolean examRunning = Utils.EXAM_CODE.get(examCode);
         if (examRunning == null) {
             JOptionPane.showMessageDialog(this, "Exam is not found..", "Error", JOptionPane.ERROR_MESSAGE);
@@ -312,6 +328,7 @@ private JLabel createHeader() {
     }
 
     private boolean validateExamAccess(String examCode) {
+
         Question question = Main.getQuestionMap().get(examCode);
         String examYear = question.getYear() != null ? question.getYear().trim() : "";
         String examDepartment = question.getDepartment() != null ? question.getDepartment().trim() : "";
@@ -332,6 +349,7 @@ private JLabel createHeader() {
     }
 
     private boolean validateCourseEnrollment(String examCode) {
+
         Question question = Main.getQuestionMap().get(examCode);
         String examCourse = question.getCourseId() != null ? question.getCourseId().trim() : "";
         
@@ -354,6 +372,7 @@ private JLabel createHeader() {
     }
 
     private boolean validateExamStatus(String examCode) {
+
         Boolean examRunning = Utils.EXAM_CODE.get(examCode);
         if (!examRunning) {
             JOptionPane.showMessageDialog(this, "Exam is finished..", "Error", JOptionPane.ERROR_MESSAGE);
@@ -379,11 +398,13 @@ private JLabel createHeader() {
     }
 
     private void startExam(String examCode) {
+
         dispose();
         new StudentExamFrame(account, examCode);
     }
 
     private void handleSearchExamAction() {
+
         try {
             searchExam(examSearchField, false, this);
         } catch (Exception ex) {
@@ -392,6 +413,7 @@ private JLabel createHeader() {
     }
 
     private void handleShowInfoAction() {
+
         try {
             JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
@@ -400,6 +422,7 @@ private JLabel createHeader() {
     }
 
     private void handleResultAction() {
+
         try {
             String examCode = examSearchField.getText().trim();
             if (examCode.isEmpty()) {
@@ -456,6 +479,7 @@ private JLabel createHeader() {
     }
 
     private void handleCourseAction() {
+
         try {
             dispose();
             new StudentCourseFrame(account);
@@ -465,6 +489,7 @@ private JLabel createHeader() {
     }
 
     private void handleBackAction() {
+
         try {
             dispose();
             new LoginForm();
@@ -474,6 +499,7 @@ private JLabel createHeader() {
     }
 
     private void handleQuestionStatusAction() {
+
         try {
             TeacherPanel.questionStatus(this);
         } catch (Exception ex) {
@@ -482,28 +508,30 @@ private JLabel createHeader() {
     }
 
     public static void searchExam(JTextField examSearchField, boolean isTeacher, JFrame frame) {
+
         String searchExam = examSearchField.getText().trim();
         if (searchExam.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            Question questionSet = Main.getQuestionMap().get(searchExam);
-            if (questionSet == null) {
-                JOptionPane.showMessageDialog(frame, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (!isTeacher && Utils.EXAM_CODE.get(searchExam) != null && Utils.EXAM_CODE.get(searchExam)) {
-                JOptionPane.showMessageDialog(frame,
-                        "The Exam is running",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            } else {
-                StringBuilder qs = new StringBuilder();
-                qs.append("Exam Code: " + questionSet.getQuestionCode() + "\n\n");
-                int i = 1;
-                for (SingleQuestion SQ : questionSet.getSingleQuestions()) {
-                    qs.append("  " + i + ". " + SQ.toString() + "\n");
-                    i++;
-                }
-                JOptionPane.showMessageDialog(frame, Utils.ScrollPanel(qs), "Exam Details", JOptionPane.INFORMATION_MESSAGE);
-            }
+            return;
         }
+        Question questionSet = Main.getQuestionMap().get(searchExam);
+        if (questionSet == null) {
+            JOptionPane.showMessageDialog(frame, "No Question Found!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!isTeacher && Utils.EXAM_CODE.get(searchExam) != null && Utils.EXAM_CODE.get(searchExam)) {
+            JOptionPane.showMessageDialog(frame,
+                    "The Exam is running",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            StringBuilder qs = new StringBuilder();
+            qs.append("Exam Code: " + questionSet.getQuestionCode() + "\n\n");
+            int i = 1;
+            for (SingleQuestion SQ : questionSet.getSingleQuestions()) {
+                qs.append("  " + i + ". " + SQ.toString() + "\n");
+                i++;
+            }
+            JOptionPane.showMessageDialog(frame, Utils.ScrollPanel(qs), "Exam Details", JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }
 } 

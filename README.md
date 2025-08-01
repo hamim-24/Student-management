@@ -188,42 +188,94 @@ The application comes pre-loaded with sample data:
 - **Password**: `pass1` to `pass100`
 - **Example**: `T001` / `pass1`
 
-### 👨‍💼 Administrator Workflow
-1. **Login** with admin credentials
-2. **Access Dashboard** for comprehensive system overview
-3. **Manage Users**: View, edit, delete student and teacher accounts
-4. **Monitor Results**: View and analyze exam results across all users
-5. **System Administration**: Manage courses, notifications, and system settings
-
-### 👨‍🏫 Teacher Workflow
-1. **Login** with teacher credentials
-2. **Access Teacher Panel** for exam management
-3. **Create Exams**: Use MCQ Question Creator to build new exams
-4. **Publish Exams**: Make exams available to students with unique codes
-5. **View Results**: Monitor student performance and analyze results
-
-### 👨‍🎓 Student Workflow
-1. **Login** with student credentials
-2. **Access Student Panel** for exam participation
-3. **Search Exams**: Enter exam codes to find available exams
-4. **Take Exams**: Participate in timed MCQ exams with real-time feedback
-5. **View Results**: Check performance history and GPA calculations
 
 ## Features in Detail
 
-### Exam System
+### Component-wise Functionality
+
+#### 1. LoginForm
+- **Multi-role Authentication**: Login for administration, students, and teachers
+- **Smart Default Buttons**: Administration button as default, register button if admin account is null
+- **Enhanced Security**: Password field visibility toggle (shows placeholder when focused, hides with '-' when focus lost)
+- **Notification System**: Integrated notification display
+- **Placeholder Management**: Dynamic placeholder text for better UX
+
+#### 2. AdministrationForm
+- **Centralized Dashboard**: Default search button for quick access
+- **Comprehensive Lists**: Student list, teacher list, result list, and course list management
+- **Advanced Search**: Search accounts (students and teachers) with filtering capabilities
+- **Announcement System**: Create and manage system announcements
+- **Promotion Management**: 
+  - Calculate promotion statistics (promoted vs not promoted)
+  - Automated promotion logic: if StudentAccount matches year, session, and department
+  - GPA-based promotion: CG ≥ 2 increases year (for years 1-4) and sets result info
+  - Result tracking for all promotion decisions
+
+#### 3. CourseList
+- **5-Column Display**: Course ID, Course Name, Credits, Student Capacity, Current Students
+- **Full CRUD Operations**: Edit, add, delete courses with validation
+- **Edit Panel Management**: Clear edit panel functionality
+- **Navigation**: Back button for seamless navigation
+
+#### 4. MCQQuestionCreator
+- **Unique Question Codes**: Generate unique identifiers for each question
+- **MCQ Management**: Add multiple choice questions with options
+- **Validation**: Warning system for empty fields
+- **Save Functionality**: Persistent storage of created questions
+
+#### 5. ResultList
+- **6-Column Results**: ID, Roll, Marks, Incorrect, Correct, CG
+- **Advanced Filtering**: Filter results by year, department, session, and exam code
+- **Performance Analytics**: Comprehensive result analysis and reporting
+
+#### 6. SignInFrame
+- **Comprehensive Data Collection**: Gather all required user information
+- **Student-Specific Fields**: Additional text fields for student registration
+- **Email Validation**: Proper email format verification
+- **Unique ID System**: Ensure unique user identification
+- **Password Security**: Minimum 6-character password requirement
+- **Password Confirmation**: Match password validation
+- **Account Creation**: Support for both Student and Teacher account types
+
+#### 7. StudentCourseFrame
+- **Course Catalog**: Display all available courses
+- **Enrollment Management**: Select courses for enrollment and drop-out functionality
+- **Course Persistence**: Save course selections and changes
+
+#### 8. StudentExamFrame
+- **Exam Interface**: Complete exam-taking experience
+- **Result Creation**: Generate exam results automatically
+- **Result Storage**: Add results to the system
+- **Average CG**: Calculate and display average CG
+- **Answer Analysis**: Track correct and incorrect answers
 - **Timed Exams**: 30 seconds per question with automatic submission
 - **Real-time Timer**: Visual countdown with color-coded warnings
 - **Auto-grading**: Instant score calculation and performance analysis
 - **Question Navigation**: Easy navigation between questions
 - **Answer Validation**: Prevents submission with unanswered questions
 
-### Result Analysis
-- **Score Calculation**: Automatic grading with detailed breakdown
-- **GPA Computation**: Weighted GPA calculation based on performance
-- **Performance Metrics**: Correct/incorrect answer analysis
-- **Historical Data**: Performance tracking over time
-- **Export Capabilities**: Result export for external analysis
+#### 9. StudentList
+- **8-Column Display**: Roll, Name, ID, Email, Session, Department, GPA, Year
+- **Student Management**: Edit student information and delete courses
+- **Edit Panel**: Clear edit panel functionality
+- **Advanced Filtering**: Filter by year, department, roll, ID, and minimum CG
+
+#### 10. StudentPanel
+- **Exam Status**: Display exam running status and result publication
+- **Exam Access**: Conditional exam access based on year, department, session, and courseId matching
+- **Question Search**: Search questions (hidden when exam is running)
+- **Information Display**: Show relevant student information
+- **Result Access**: View published results
+- **Course Management**: Add courses to student profile
+- **Navigation**: Back button for panel navigation
+
+#### 11. TeacherPanel
+- **Exam Status**: Display exam running status and result publication
+- **Exam Creation**: Create new exams with full configuration
+- **Exam Search**: Search exams without student restrictions
+- **Exam Publishing**: Publish exams for specific year, department, session, code, and name
+- **Result Publishing**: Publish results for published exams
+- **Navigation**: Back button for panel navigation
 
 ### User Management
 - **Role-based Access**: Different interfaces for different user types
@@ -231,12 +283,6 @@ The application comes pre-loaded with sample data:
 - **Search & Filter**: Advanced search capabilities for large datasets
 - **Bulk Operations**: Efficient management of multiple accounts
 - **Data Validation**: Input validation and error handling
-
-### Course Management
-- **Department Organization**: Courses organized by academic departments
-- **Enrollment Tracking**: Real-time enrollment status and capacity management
-- **Course Details**: Comprehensive course information and metadata
-- **Capacity Management**: Automatic enrollment limit enforcement
 
 ## System Requirements
 

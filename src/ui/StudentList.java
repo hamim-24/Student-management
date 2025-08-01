@@ -35,6 +35,7 @@ public class StudentList extends JFrame {
     Map<String, Account> accounts;
 
     public StudentList() {
+
         this.accounts = Main.getAccounts();
         initializeComponents();
         setupLayout();
@@ -44,6 +45,7 @@ public class StudentList extends JFrame {
     }
 
     private void setupFrame() {
+
         setTitle("Student List");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 700);
@@ -151,7 +153,7 @@ public class StudentList extends JFrame {
         gpaField = new JTextField(20);
         gpaField.setToolTipText("GPA (0.0 - 4.0)");
 
-        // Create year combo box for adding students
+        // Create year combo box for edit students
         String[] years = Utils.YEARS;
         yearComboBox = new JComboBox<>(years);
         yearComboBox.setToolTipText("Select year");
@@ -170,7 +172,7 @@ public class StudentList extends JFrame {
         updateDepartmentCombo = new JComboBox<>(departmentFilters);
         updateDepartmentCombo.setToolTipText("Select department");
 
-        // Initialize new filter components with tooltips
+        // Initialize new filter components
         rollFilterField = new JTextField(20);
         rollFilterField.setToolTipText("Filter by roll number");
         rollFilterField.setPreferredSize(new Dimension(80, 25));
@@ -202,7 +204,7 @@ public class StudentList extends JFrame {
         Utils.styleButton(clearFiltersButton);
         clearFiltersButton.setToolTipText("Clear all filters");
 
-        // Create buttons with tooltips
+        // Create buttons
         updateButton = new JButton("Update Student");
         updateButton.setToolTipText("Update selected student");
         deleteButton = new JButton("Delete Student");
@@ -275,46 +277,41 @@ public class StudentList extends JFrame {
         gbc.insets = new Insets(5, 5, 10, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // First row - existing filters
         gbc.gridx = 0; gbc.gridy = 0;
         filterPanel.add(new JLabel("Year:"), gbc);
-        gbc.gridx = 1;
+        gbc.gridx++;
         filterPanel.add(yearFilterComboBox, gbc);
 
-        gbc.gridx = 2;
+        gbc.gridx++;
         filterPanel.add(new JLabel("Department:"), gbc);
-        gbc.gridx = 3;
+        gbc.gridx++;
         filterPanel.add(departmentComboBox, gbc);
 
-        // Second row - new filters
-        gbc.gridx = 4;
+        gbc.gridx++;
         filterPanel.add(new JLabel("Roll:"), gbc);
-        gbc.gridx = 5;
+        gbc.gridx++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0.2;
         filterPanel.add(rollFilterField, gbc);
 
-        gbc.gridx = 6;
+        gbc.gridx++;
         gbc.weightx = 0;
         filterPanel.add(new JLabel("ID:"), gbc);
-        gbc.gridx = 7;
+        gbc.gridx++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0.2;
         filterPanel.add(idFilterField, gbc);
 
-        gbc.gridx = 8;
+        gbc.gridx++;
         gbc.weightx = 0;
         filterPanel.add(new JLabel("Min CGPA:"), gbc);
-        gbc.gridx = 9;
+        gbc.gridx++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0.2;
         filterPanel.add(cgpaFilterField, gbc);
 
-        // Clear filters button
-        gbc.gridx = 10;
-        filterPanel.add(clearFiltersButton, gbc);
-
-        gbc.gridx = 11; gbc.gridheight = 1;
+        gbc.gridx++;
+        gbc.gridheight = 1;
         filterPanel.add(filteredCountLabel, gbc);
 
         return filterPanel;
@@ -396,6 +393,7 @@ public class StudentList extends JFrame {
     }
 
     private JPanel createButtonPanel() {
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 20));
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
@@ -405,6 +403,7 @@ public class StudentList extends JFrame {
     }
 
     private void setupEventListeners() {
+
         updateButton.addActionListener(e -> updateStudent());
         deleteButton.addActionListener(e -> deleteStudent());
         clearButton.addActionListener(e -> clearFields());
@@ -418,6 +417,7 @@ public class StudentList extends JFrame {
     }
 
     private void clearAllFilters() {
+
         yearFilterComboBox.setSelectedIndex(0);
         departmentComboBox.setSelectedIndex(0);
         rollFilterField.setText("");
@@ -427,6 +427,7 @@ public class StudentList extends JFrame {
     }
 
     private void updateStudent() {
+
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a student to update.",
                     "Selection Error", JOptionPane.WARNING_MESSAGE);
@@ -438,77 +439,79 @@ public class StudentList extends JFrame {
                     "Are you sure you want to update this student?",
                     "Confirm Update", JOptionPane.YES_NO_OPTION);
 
-            if (confirm == JOptionPane.YES_OPTION) {
+            if (confirm == JOptionPane.NO_OPTION) return;
+
+            try {
+                // Get the student ID from the displayed table (column index 2)
+                String studentId;
                 try {
-                    // Get the student ID from the displayed table (column index 2)
-                    String studentId;
-                    try {
-                        studentId = tableModel.getValueAt(selectedRow, 2).toString();
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Error retrieving student ID: " + ex.getMessage(),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    // Update the actual account in the accounts map
-                    Account account;
-                    try {
-                        account = accounts.get(studentId);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Error accessing account: " + ex.getMessage(),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    if (account instanceof StudentAccount) {
-                        StudentAccount student = (StudentAccount) account;
-
-                        // Create a new StudentAccount with updated information
-                        String[] nameParts = nameField.getText().trim().split(" ", 2);
-                        String firstName = nameParts[0];
-                        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-                        double gpa;
-                        try {
-                            gpa = Double.parseDouble(gpaField.getText().trim());
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(this, "Invalid GPA: " + ex.getMessage(),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                        StudentAccount updatedStudent = new StudentAccount(
-                                student.getID(),
-                                student.getPassword(),
-                                emailField.getText().trim(),
-                                firstName,
-                                lastName,
-                                student.getGender(),
-                                student.getDob(), // DOB
-                                yearComboBox.getSelectedItem().toString(),
-                                student.getRoll(),
-                                updateDepartmentCombo.getSelectedItem().toString(), // Department
-                                student.getStatus(),
-                                gpa,
-                                student.getSession()
-                        );
-                        // Update the accounts map
-                        accounts.put(studentId, updatedStudent);
-                    }
-
-                    // Reload data and refresh view
-                    loadStudentsFromAccounts();
-                    clearFields();
-                    studentTable.clearSelection();
-                    selectedRow = -1;
-                    JOptionPane.showMessageDialog(this, "Student updated successfully!");
-
+                    studentId = tableModel.getValueAt(selectedRow, 2).toString();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Error updating student: " + ex.getMessage(),
-                            "Update Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error retrieving student ID: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                // Update the actual account in the accounts map
+                Account account;
+                try {
+                    account = accounts.get(studentId);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error accessing account: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (account instanceof StudentAccount) {
+                    StudentAccount student = (StudentAccount) account;
+
+                    // Create a new StudentAccount with updated information
+                    String[] nameParts = nameField.getText().trim().split(" ", 2);
+                    String firstName = nameParts[0];
+                    String lastName = nameParts.length > 1 ? nameParts[1] : "";
+                    double gpa;
+                    try {
+                        gpa = Double.parseDouble(gpaField.getText().trim());
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Invalid GPA: " + ex.getMessage(),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    StudentAccount updatedStudent = new StudentAccount(
+                            student.getID(),
+                            student.getPassword(),
+                            emailField.getText().trim(),
+                            firstName,
+                            lastName,
+                            student.getGender(),
+                            student.getDob(), // DOB
+                            yearComboBox.getSelectedItem().toString(),
+                            student.getRoll(),
+                            updateDepartmentCombo.getSelectedItem().toString(), // Department
+                            student.getStatus(),
+                            gpa,
+                            student.getSession()
+                    );
+                    // Update the accounts map
+                    accounts.put(studentId, updatedStudent);
+                }
+
+                // Reload data and refresh view
+                loadStudentsFromAccounts();
+                clearFields();
+                studentTable.clearSelection();
+                selectedRow = -1;
+                JOptionPane.showMessageDialog(this, "Student updated successfully!");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error updating student: " + ex.getMessage(),
+                        "Update Error", JOptionPane.ERROR_MESSAGE);
             }
+
         }
     }
 
     private void deleteStudent() {
+
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a student to delete.",
                     "Selection Error", JOptionPane.WARNING_MESSAGE);
@@ -542,6 +545,7 @@ public class StudentList extends JFrame {
     }
 
     private void clearFields() {
+
         nameField.setText("");
         emailField.setText("");
         updateDepartmentCombo.setSelectedIndex(0);
@@ -552,6 +556,7 @@ public class StudentList extends JFrame {
     }
 
     private void populateFields() {
+
         if (selectedRow != -1) {
             nameField.setText(tableModel.getValueAt(selectedRow, 1).toString());
             emailField.setText(tableModel.getValueAt(selectedRow, 3).toString());
@@ -562,6 +567,7 @@ public class StudentList extends JFrame {
     }
 
     private boolean validateFields() {
+
         if (nameField.getText().trim().isEmpty() ||
                 emailField.getText().trim().isEmpty() ||
                 updateDepartmentCombo.getSelectedItem().equals("Select") ||
@@ -594,6 +600,7 @@ public class StudentList extends JFrame {
 
     // Enhanced filtering logic with new filters
     private void filterStudents() {
+
         try {
             String selectedYear = yearFilterComboBox.getSelectedItem().toString();
             String selectedDept = departmentComboBox.getSelectedItem().toString();
@@ -654,6 +661,7 @@ public class StudentList extends JFrame {
     }
 
     private void loadStudentsFromAccounts() {
+
         allStudentsModel.setRowCount(0);
         totalStudents = 0;
         

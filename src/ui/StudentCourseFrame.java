@@ -51,14 +51,14 @@ public class StudentCourseFrame extends JFrame {
         
         initializeFrame();
         createComponents();
-        setupLayout();
         addEventListeners();
         refreshCourseLists();
         setVisible(true);
     }
 
     private void initializeFrame() {
-        setTitle("Course Management - " + account.getFirstName() + " " + account.getLastName());
+
+        setTitle("Course Management - ");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 700);
         setLocationRelativeTo(null);
@@ -74,11 +74,9 @@ public class StudentCourseFrame extends JFrame {
     }
 
     private void createTitleLabel() {
+
         JLabel titleLabel = new JLabel("Course Management", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 12, 0));
-        titleLabel.setForeground(new Color(44, 62, 80));
-        add(titleLabel, BorderLayout.NORTH);
+        add(Utils.setHeader(titleLabel), BorderLayout.NORTH);
     }
 
     private void createInfoPanel() {
@@ -106,6 +104,7 @@ public class StudentCourseFrame extends JFrame {
     }
 
     private void createMainPanels() {
+
         JPanel mainPanel = new JPanel(new GridLayout(1, 2, 20, 0));
         mainPanel.setBackground(new Color(245, 247, 250));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
@@ -127,6 +126,7 @@ public class StudentCourseFrame extends JFrame {
     }
 
     private void styleLists() {
+
         allCoursesList.setFont(new Font("Arial", Font.PLAIN, 14));
         enrolledCoursesList.setFont(new Font("Arial", Font.PLAIN, 14));
         allCoursesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -136,6 +136,7 @@ public class StudentCourseFrame extends JFrame {
     }
 
     private void createAllCoursesPanel(JPanel mainPanel) {
+
         JPanel allCoursesPanel = new JPanel(new BorderLayout(10, 10));
         allCoursesPanel.setBackground(new Color(255, 255, 255));
         allCoursesPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -158,6 +159,7 @@ public class StudentCourseFrame extends JFrame {
     }
 
     private void createEnrolledCoursesPanel(JPanel mainPanel) {
+
         JPanel enrolledPanel = new JPanel(new BorderLayout(10, 10));
         enrolledPanel.setBackground(new Color(255, 255, 255));
         enrolledPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -180,6 +182,7 @@ public class StudentCourseFrame extends JFrame {
     }
 
     private void createButtonPanel() {
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(new Color(245, 247, 250));
         
@@ -195,34 +198,13 @@ public class StudentCourseFrame extends JFrame {
         doneButton.addActionListener(e -> handleSaveAndReturn());
     }
 
-    private void setupLayout() {
-        // Layout is handled in createComponents method
-    }
-
     private void addEventListeners() {
-        addEnrollButtonListener();
-        addDropButtonListener();
-    }
-
-    private void addEnrollButtonListener() {
-        enrollButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleEnrollAction();
-            }
-        });
-    }
-
-    private void addDropButtonListener() {
-        dropButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleDropAction();
-            }
-        });
+        enrollButton.addActionListener(e -> handleEnrollAction());
+        dropButton.addActionListener(e  -> handleDropAction());
     }
 
     private void handleEnrollAction() {
+
         try {
             String selected = allCoursesList.getSelectedValue();
             if (selected == null || selected.trim().isEmpty()) {
@@ -272,11 +254,12 @@ public class StudentCourseFrame extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(StudentCourseFrame.this, 
                 "Error enrolling in course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.err.println("Exception in enroll action: " + ex.getMessage());
+            System.err.println("Exception in StudentCourseFrame.handleEnrollAction: " + ex.getMessage());
         }
     }
 
     private void handleDropAction() {
+
         try {
             String selected = enrolledCoursesList.getSelectedValue();
             if (selected == null || selected.trim().isEmpty()) {
@@ -319,11 +302,12 @@ public class StudentCourseFrame extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(StudentCourseFrame.this, 
                 "Error dropping course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.err.println("Exception in drop action: " + ex.getMessage());
+            System.err.println("Exception in StudentCourseFrame.handleDropAction: " + ex.getMessage());
         }
     }
 
     private void handleSaveAndReturn() {
+
         try {
             dispose();
             if (account.getCourses() != null) {
@@ -333,11 +317,12 @@ public class StudentCourseFrame extends JFrame {
             new StudentPanel(account);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error saving course changes: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.err.println("Exception in done button action: " + ex.getMessage());
+            System.err.println("Exception in StudentCourseFrame.handleSaveAndReturn: " + ex.getMessage());
         }
     }
 
     private void refreshCourseLists() {
+
         try {
             allCoursesModel.clear();
             enrolledCoursesModel.clear();

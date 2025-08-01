@@ -18,7 +18,7 @@ public class AdministrationForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
-        add(createHeader(), BorderLayout.NORTH);
+        add(Utils.setHeader(new JLabel("Administration Dashboard", SwingConstants.CENTER)), BorderLayout.NORTH);
 
         setupMainPanel();
         add(mainPanel, BorderLayout.CENTER);
@@ -29,15 +29,6 @@ public class AdministrationForm extends JFrame {
         setMinimumSize(new Dimension(500, 750));
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    private JLabel createHeader() {
-
-        JLabel headerLabel = new JLabel("Administration Dashboard", SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        headerLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 24, 0));
-        headerLabel.setForeground(new Color(44, 62, 80));
-        return headerLabel;
     }
 
     private void setupMainPanel() {
@@ -51,6 +42,7 @@ public class AdministrationForm extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(12, 12, 12, 12);
 
+        // Student List button
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -64,6 +56,7 @@ public class AdministrationForm extends JFrame {
             new StudentList();
         });
 
+        // Teacher List button
         gbc.gridy++;
         JButton teacherButton = new JButton("Teacher List");
         Utils.styleButton(teacherButton);
@@ -74,6 +67,7 @@ public class AdministrationForm extends JFrame {
             new TeacherList();
         });
 
+        // Result List button
         gbc.gridy++;
         JButton resultButton = new JButton("Result List");
         Utils.styleButton(resultButton);
@@ -84,6 +78,7 @@ public class AdministrationForm extends JFrame {
             new ResultList();
         });
 
+        // Course List button
         gbc.gridy++;
         JButton courseButton = new JButton("Course List");
         Utils.styleButton(courseButton);
@@ -94,16 +89,20 @@ public class AdministrationForm extends JFrame {
             new CourseList();
         });
 
+        // Account id label
         gbc.gridy++;
         gbc.gridwidth = 1;
         JLabel searchLabel = new JLabel("Account ID:");
         searchLabel.setFont(new Font("Arial", Font.PLAIN, 15));
         mainPanel.add(searchLabel, gbc);
+
+        // text field
         gbc.gridx = 1;
         JTextField searchField = new JTextField(15);
         searchField.setFont(new Font("Arial", Font.PLAIN, 15));
         mainPanel.add(searchField, gbc);
 
+        // Search Account button
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
@@ -113,6 +112,7 @@ public class AdministrationForm extends JFrame {
         mainPanel.add(searchButton, gbc);
         searchButton.addActionListener(e -> handleSearchAccount(searchField));
 
+        // Announcement button
         gbc.gridy++;
         JButton announcementButton = new JButton("Announcement");
         Utils.styleButton(announcementButton);
@@ -120,6 +120,7 @@ public class AdministrationForm extends JFrame {
         mainPanel.add(announcementButton, gbc);
         announcementButton.addActionListener(e -> handleAnnouncement());
 
+        // Promotion button
         gbc.gridy++;
         JButton promotionButton = new JButton("Promotion");
         Utils.styleButton(promotionButton);
@@ -127,6 +128,7 @@ public class AdministrationForm extends JFrame {
         mainPanel.add(promotionButton, gbc);
         promotionButton.addActionListener(e -> handlePromotion());
 
+        // Back button
         gbc.gridy++;
         JButton backButton = new JButton("Back to Main Menu");
         Utils.styleButton(backButton);
@@ -139,6 +141,7 @@ public class AdministrationForm extends JFrame {
     }
 
     private void handlePromotion() {
+
         String department = (String) JOptionPane.showInputDialog(
                 this,
                 "Select Department:",
@@ -166,21 +169,19 @@ public class AdministrationForm extends JFrame {
             return;
         }
 
-        String[] sessions = Utils.session();
         String session = (String) JOptionPane.showInputDialog(
                 this,
                 "Select session:",
                 "Session",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                sessions,
-                sessions[0]
+                Utils.session(),
+                Utils.session()[0]
         );
         if (session == null || session.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please select a session", "Warning", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
 
         int res = JOptionPane.showConfirmDialog(this, "Are you sure to promote students?\nDepartment: " + department + "\nYear: " + year, "Confirm", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
@@ -223,6 +224,7 @@ public class AdministrationForm extends JFrame {
     }
     
     private String getNextYear(String currentYear) {
+
         for (int i = 1; i < Utils.YEARS.length - 1; i++) {
             if (Utils.YEARS[i].equals(currentYear)) {
                 return Utils.YEARS[i + 1];
@@ -232,6 +234,7 @@ public class AdministrationForm extends JFrame {
     }
 
     private void handleSearchAccount(JTextField searchField) {
+
         String searchID = searchField.getText().trim();
         
         if (searchID.isEmpty()) {
@@ -252,6 +255,7 @@ public class AdministrationForm extends JFrame {
     }
 
     private void handleAnnouncement() {
+
         String note = JOptionPane.showInputDialog(this, "Add Announcement:", "Announcements", JOptionPane.QUESTION_MESSAGE);
         
         if (note == null) {

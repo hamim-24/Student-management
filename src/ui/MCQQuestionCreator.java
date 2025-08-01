@@ -146,6 +146,18 @@ public class MCQQuestionCreator extends JFrame {
     private void saveQuestion() {
         String questionCode = questionCodeField.getText().trim();
 
+        boolean uniquecode = false;
+        for (Question q : Main.getQuestionMap().values()) {
+            if (q.getQuestionCode().equals(questionCode)) {
+                uniquecode = true;
+                break;
+            }
+        }
+        if (uniquecode) {
+            JOptionPane.showMessageDialog(this, "Change the Question Code to a unique code..", "Question Code", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         if (questionCode.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter Question Code!",
                     "Missing Information", JOptionPane.WARNING_MESSAGE);
