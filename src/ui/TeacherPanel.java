@@ -339,7 +339,7 @@ public class TeacherPanel extends JFrame {
                 if ((examDone == null || !examDone) && courseIs && studentAccount.getDepartment().equals(department) && studentAccount.getYear().equals(year) && studentAccount.getSession().equals(session)) {
 
                     studentAccount.setEXAM_DONE(publishExamCode, false);
-                    result = new Result((StudentAccount) acc, 0, 0,0, publishExamCode, "You didn't participate");
+                    result = new Result((StudentAccount) acc, 0, 0,0, publishExamCode, "You didn't participate", 0.0);
                     Main.getResultList().add(result);
                 }
             }

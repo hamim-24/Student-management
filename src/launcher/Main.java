@@ -121,7 +121,8 @@ public class Main {
             int correct = (int)(Math.random() * 10);
             int incorrect = (int)(Math.random() * 10);
             double mark = correct * 2.5;
-            Result result = new Result(student, mark, correct, incorrect, questionCode, null);
+            double cgpa = 1.0 + (Math.random() * 2.0);
+            Result result = new Result(student, mark, correct, incorrect, questionCode, null, cgpa);
             resultsList.add(result);
         }
 

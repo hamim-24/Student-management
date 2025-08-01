@@ -12,11 +12,12 @@ public class Result {
     private final int incorrect;
     private final String questionCode;
     private final String resultInfo;
+    private final double cg;
 
     StudentAccount studentAccount;
     Question question;
 
-    public Result(StudentAccount account, double mark, int correct, int incorrect, String questionCode, String resultInfo) {
+    public Result(StudentAccount account, double mark, int correct, int incorrect, String questionCode, String resultInfo,  double cg) {
 
         this.studentAccount = account;
         this.mark = mark;
@@ -25,6 +26,11 @@ public class Result {
         this.questionCode = questionCode;
         this.resultInfo = resultInfo;
         this.question = Main.getQuestionMap().get(questionCode);
+        this.cg = cg;
+    }
+
+    public double getCg() {
+        return cg;
     }
 
     public String getResultInfo() {
@@ -37,10 +43,6 @@ public class Result {
 
     public String getDepartment() {
         return studentAccount.getDepartment();
-    }
-
-    public double getCg() {
-        return studentAccount.getCg();
     }
 
     public String getId() {

@@ -274,7 +274,7 @@ public class StudentExamFrame extends JFrame {
 
         double averageCG = getAverageCG(correct, incorrect);
         account.setCg(averageCG);
-        Result re = new Result(account, mark, correct, incorrect, resultCode, result.toString());
+        Result re = new Result(account, mark, correct, incorrect, resultCode, result.toString(), calculateCGPA(correct, incorrect));
         Main.getResultList().add(re);
 
     }
