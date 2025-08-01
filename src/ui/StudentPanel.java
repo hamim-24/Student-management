@@ -442,11 +442,12 @@ private JLabel createHeader() {
             } else {
                 boolean resoultFount = false;
                 for (Result r : Main.getResultList()) {
+                    String id = r.getId();
                     String code = r.getExamCode();
                     String year = r.getYear();
                     String department = r.getDepartment();
                     String session = r.getSession();
-                    if (code.equals(examCode) && year.equals(account.getYear()) && session.equals(account.getSession()) && department.equals(account.getDepartment())) {
+                    if (id.equals(account.getID()) && code.equals(examCode) && year.equals(account.getYear()) && session.equals(account.getSession()) && department.equals(account.getDepartment())) {
                         result.append(r.getResultInfo());
                         result.append("\nCourse ID: ").append(questionMap.get(examCode).getCourseId()).append("\n");
                         result.append("Mark: ").append(r.getMark()).append("\n");
