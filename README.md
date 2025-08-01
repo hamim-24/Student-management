@@ -33,6 +33,7 @@ The Student Management System is a comprehensive Java-based desktop application 
   - Configure question codes for easy access
 - **Real-time Publishing**: Exams can be published and made available to students instantly
 - **Question Management**: Support for multiple questions per exam with 4 options each
+- **Retake system**: Those who have fail, didn't got promotion, can seat for retake
 
 ### 🎯 Exam Participation
 - **Exam Discovery**: Students can search for available exams using unique codes
@@ -90,6 +91,7 @@ Student-management/
 │   └── util/
 │       └── utils.java               # Utility functions and constants
 ├── Project-Proposal.pdf             # Detailed project documentation
+├── Project-Details                  # Detailed project
 └── Student-management.iml           # IntelliJ IDEA project configuration
 ```
 
@@ -273,6 +275,7 @@ The application comes pre-loaded with sample data:
 - **Exam Status**: Display exam running status and result publication
 - **Exam Creation**: Create new exams with full configuration
 - **Exam Search**: Search exams without student restrictions
+- **Retake Exam**: Those, didn't get promotion, Year will be same can be taken exam.
 - **Exam Publishing**: Publish exams for specific year, department, session, code, and name
 - **Result Publishing**: Publish results for published exams
 - **Navigation**: Back button for panel navigation

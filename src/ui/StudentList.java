@@ -20,6 +20,7 @@ public class StudentList extends JFrame {
     private JComboBox<String> yearComboBox;
     private JComboBox<String> departmentComboBox, updateDepartmentCombo;
     private JComboBox<String> yearFilterComboBox;
+    private JComboBox<String> sessionFilterComboBox;
 
     // New filter components
     private JTextField rollFilterField, idFilterField, cgpaFilterField;
@@ -164,6 +165,11 @@ public class StudentList extends JFrame {
         yearFilterComboBox.setToolTipText("Filter by year");
         yearFilterComboBox.addActionListener(e -> filterStudents());
 
+        // Create session filter combo bos
+        sessionFilterComboBox = new JComboBox<>(Utils.session());
+        sessionFilterComboBox.setToolTipText("Select session");
+        sessionFilterComboBox.addActionListener(e -> filterStudents());
+
         // Create department filter combo box
         String[] departmentFilters = Utils.DEPARTMENTS;
         departmentComboBox = new JComboBox<>(departmentFilters);
@@ -281,6 +287,12 @@ public class StudentList extends JFrame {
         filterPanel.add(new JLabel("Year:"), gbc);
         gbc.gridx++;
         filterPanel.add(yearFilterComboBox, gbc);
+
+        gbc.gridx++;
+        filterPanel.add(new JLabel("Session:"), gbc);
+        gbc.gridx++;
+        filterPanel.add(sessionFilterComboBox, gbc);
+
 
         gbc.gridx++;
         filterPanel.add(new JLabel("Department:"), gbc);
@@ -419,6 +431,7 @@ public class StudentList extends JFrame {
     private void clearAllFilters() {
 
         yearFilterComboBox.setSelectedIndex(0);
+        sessionFilterComboBox.setSelectedIndex(0);
         departmentComboBox.setSelectedIndex(0);
         rollFilterField.setText("");
         idFilterField.setText("");
@@ -603,6 +616,7 @@ public class StudentList extends JFrame {
 
         try {
             String selectedYear = yearFilterComboBox.getSelectedItem().toString();
+            String selectedSession = sessionFilterComboBox.getSelectedItem().toString();
             String selectedDept = departmentComboBox.getSelectedItem().toString();
             String rollFilter = rollFilterField.getText().trim();
             String idFilter = idFilterField.getText().trim().toLowerCase();
@@ -614,6 +628,8 @@ public class StudentList extends JFrame {
             for (int i = 0; i < allStudentsModel.getRowCount(); i++) {
                 String studentYear = allStudentsModel.getValueAt(i, 7) != null ?
                         allStudentsModel.getValueAt(i, 7).toString() : "";
+                String studentSession = allStudentsModel.getValueAt(i, 4) != null ?
+                        allStudentsModel.getValueAt(i, 4).toString() : "";
                 String studentDept = allStudentsModel.getValueAt(i, 5) != null ?
                         allStudentsModel.getValueAt(i, 5).toString() : "";
                 String studentRoll = allStudentsModel.getValueAt(i, 0) != null ?
@@ -624,6 +640,7 @@ public class StudentList extends JFrame {
                         allStudentsModel.getValueAt(i, 6).toString() : "";
 
                 boolean yearMatch = selectedYear.equals("Select") || selectedYear.equals(studentYear);
+                boolean sessionMatch = selectedSession.equals("Select") || selectedSession.equals(studentSession);
                 boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(studentDept);
                 boolean rollMatch = rollFilter.isEmpty() || studentRoll.contains(rollFilter);
                 boolean idMatch = idFilter.isEmpty() || studentId.contains(idFilter);
@@ -641,7 +658,7 @@ public class StudentList extends JFrame {
                     }
                 }
 
-                if (yearMatch && deptMatch && rollMatch && idMatch && cgpaMatch) {
+                if (yearMatch && deptMatch && rollMatch && idMatch && cgpaMatch && sessionMatch) {
                     Vector<Object> rowData = new Vector<>();
                     for (int j = 0; j < allStudentsModel.getColumnCount(); j++) {
                         rowData.add(allStudentsModel.getValueAt(i, j));
