@@ -99,13 +99,6 @@ public class CourseList extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
 
-        // Header
-        JLabel headerLabel = new JLabel("Course Management", SwingConstants.CENTER);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        headerLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 24, 0));
-        headerLabel.setForeground(new Color(44, 62, 80));
-        add(headerLabel, BorderLayout.NORTH);
-
         // Main content panel
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -275,7 +268,7 @@ public class CourseList extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for credits and max students", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error adding course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.err.println("Exception in addCourse: " + ex.getMessage());
+            System.err.println("Exception in CourseList.addCourse: " + ex.getMessage());
         }
     }
 
@@ -317,7 +310,7 @@ public class CourseList extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for credits and max students", "Input Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error updating course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.err.println("Exception in updateCourse: " + ex.getMessage());
+            System.err.println("Exception in CourseList.updateCourse: " + ex.getMessage());
         }
     }
 
@@ -361,7 +354,7 @@ public class CourseList extends JFrame {
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error deleting course: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.err.println("Exception in deleteCourse: " + ex.getMessage());
+            System.err.println("Exception in CourseList.deleteCourse: " + ex.getMessage());
         }
     }
 

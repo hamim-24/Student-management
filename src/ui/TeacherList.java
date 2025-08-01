@@ -356,52 +356,53 @@ public class TeacherList extends JFrame {
                     "Are you sure you want to update this teacher?",
                     "Confirm Update", JOptionPane.YES_NO_OPTION);
 
-            if (confirm == JOptionPane.YES_OPTION) {
+            if (confirm == JOptionPane.NO_OPTION) return;
+
+            try {
+                String teacherId = null;
                 try {
-                    String teacherId = null;
-                    try {
-                        teacherId = tableModel.getValueAt(selectedRow, 1).toString();
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Error retrieving teacher ID: " + ex.getMessage(),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    Account account = null;
-                    try {
-                        account = accounts.get(teacherId);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Error accessing account: " + ex.getMessage(),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    if (account instanceof TeacherAccount) {
-                        TeacherAccount teacher = (TeacherAccount) account;
-                        String[] nameParts = nameField.getText().trim().split(" ", 2);
-                        String firstName = nameParts[0];
-                        String lastName = nameParts.length > 1 ? nameParts[1] : "";
-                        TeacherAccount updatedTeacher = new TeacherAccount(
-                                teacher.getID(),
-                                teacher.getPassword(),
-                                emailField.getText().trim(),
-                                firstName,
-                                lastName,
-                                teacher.getGender(),
-                                dobField.getText().trim(),
-                                updateDepartmentCombo.getSelectedItem().toString(),
-                                teacher.getStatus()
-                        );
-                        accounts.put(teacherId, updatedTeacher);
-                    }
-                    loadTeachersFromAccounts();
-                    clearFields();
-                    teacherTable.clearSelection();
-                    selectedRow = -1;
-                    JOptionPane.showMessageDialog(this, "Teacher updated successfully!");
+                    teacherId = tableModel.getValueAt(selectedRow, 1).toString();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Error updating teacher: " + ex.getMessage(),
-                            "Update Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error retrieving teacher ID: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+                Account account = null;
+                try {
+                    account = accounts.get(teacherId);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error accessing account: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (account instanceof TeacherAccount) {
+                    TeacherAccount teacher = (TeacherAccount) account;
+                    String[] nameParts = nameField.getText().trim().split(" ", 2);
+                    String firstName = nameParts[0];
+                    String lastName = nameParts.length > 1 ? nameParts[1] : "";
+                    TeacherAccount updatedTeacher = new TeacherAccount(
+                            teacher.getID(),
+                            teacher.getPassword(),
+                            emailField.getText().trim(),
+                            firstName,
+                            lastName,
+                            teacher.getGender(),
+                            dobField.getText().trim(),
+                            updateDepartmentCombo.getSelectedItem().toString(),
+                            teacher.getStatus()
+                    );
+                    accounts.put(teacherId, updatedTeacher);
+                }
+                loadTeachersFromAccounts();
+                clearFields();
+                teacherTable.clearSelection();
+                selectedRow = -1;
+                JOptionPane.showMessageDialog(this, "Teacher updated successfully!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error updating teacher: " + ex.getMessage(),
+                        "Update Error", JOptionPane.ERROR_MESSAGE);
             }
+
         }
     }
 

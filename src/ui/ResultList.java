@@ -18,6 +18,7 @@ public class ResultList extends JFrame {
     private JLabel filteredCountLabel;
 
     public ResultList() {
+
         initializeComponents();
         setupLayout();
         setupEventListeners();
@@ -26,6 +27,7 @@ public class ResultList extends JFrame {
     }
 
     private void setupFrame() {
+
         setTitle("Result List");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 700);
@@ -34,6 +36,7 @@ public class ResultList extends JFrame {
     }
 
     private void initializeComponents() {
+
         String[] columnNames = {"ID", "Roll", "Marks", "Incorrect", "Correct", "CG"};
         allResultsModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -109,11 +112,12 @@ public class ResultList extends JFrame {
     }
 
     private void setupLayout() {
+
         setLayout(new BorderLayout());
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
+        mainPanel.add(Utils.setHeader(new JLabel("Result List", SwingConstants.CENTER)), BorderLayout.NORTH);
         // Filter panel
         JPanel filterPanel = new JPanel(new GridBagLayout());
         filterPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -143,9 +147,6 @@ public class ResultList extends JFrame {
         filterPanel.add(new JLabel("Exam Code:"), gbc);
         gbc.gridx++;
         filterPanel.add(examCodeComboBox, gbc);
-
-        //gbc.gridx++;
-        //filterPanel.add(clearFiltersButton, gbc);
 
         gbc.gridx++;
         filterPanel.add(filteredCountLabel, gbc);
@@ -244,9 +245,7 @@ public class ResultList extends JFrame {
         resultTable.clearSelection();
     }
 
-    // Helper to avoid index errors (not used in this version, but can be extended)
     private String getValue(DefaultTableModel model, int row, int col, String type) {
-        // Not used, as we use Result object directly for filtering
         return "";
     }
 }

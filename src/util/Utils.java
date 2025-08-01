@@ -78,4 +78,11 @@ public class Utils {
             }
         });
     }
+
+    public static JLabel setHeader(JLabel headerLabel) {
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        headerLabel.setBorder(BorderFactory.createEmptyBorder(24, 0, 24, 0));
+        headerLabel.setForeground(new Color(44, 62, 80));
+        return headerLabel;
+    }
 }

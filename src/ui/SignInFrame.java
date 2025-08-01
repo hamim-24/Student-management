@@ -241,27 +241,26 @@ public class SignInFrame extends JFrame {
         // ID field
         addFormField(mainPanel, idLabel, idTextField, gbc, nextLine());
 
-        // ID status label - positioned directly under ID field
+        // ID status label
         gbc.gridx = 1;
         gbc.gridy = nextLine();
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 5, -5, 5); // No top margin to place directly under
+        gbc.insets = new Insets(0, 5, -5, 5);
         mainPanel.add(idStatusLabel, gbc);
 
         // Password fields
         addFormField(mainPanel, passwordLabel, passwordTextField, gbc, nextLine());
         addFormField(mainPanel, confirmPasswordLabel, confirmPasswordTextField, gbc, nextLine());
 
-        // Password status label - positioned directly under confirm password field
+        // Password status label
         gbc.gridx = 1;
         gbc.gridy = nextLine();
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 5, 0, 5); // No top margin to place directly under
+        gbc.insets = new Insets(0, 5, 0, 5);
         mainPanel.add(PasswordStatusLabel, gbc);
 
-        // Reset insets for button panel
         gbc.insets = new Insets(20, 0, 0, 0);
 
         // Button panel
@@ -280,10 +279,21 @@ public class SignInFrame extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
 
         // Add action listeners
-        choosePhotoButton.addActionListener(new FormActionListener());
-        resetButton.addActionListener(new FormActionListener());
-        createButton.addActionListener(new FormActionListener());
-        loginButton.addActionListener(new FormActionListener());
+        choosePhotoButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(SignInFrame.this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                filePathLabel.setText(filePath);
+                filePathLabel.setForeground(Color.BLACK);
+            }
+        });
+        resetButton.addActionListener(e -> resetFrame());
+        createButton.addActionListener(e -> validateAndCreateAccount());
+        loginButton.addActionListener(e -> {
+            dispose();
+            new LoginForm();
+        });
 
         pack();
     }
@@ -373,31 +383,6 @@ public class SignInFrame extends JFrame {
             getRootPane().setDefaultButton(createButton);
             pack();
         });
-    }
-
-    private class FormActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String command = e.getActionCommand();
-
-            if ("Choose".equals(command)) {
-                JFileChooser fileChooser = new JFileChooser();
-                int result = fileChooser.showOpenDialog(SignInFrame.this);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                    filePathLabel.setText(filePath);
-                    filePathLabel.setForeground(Color.BLACK);
-                }
-            } else if ("Reset".equals(command)) {
-                resetFrame();
-            } else if ("Create Account".equals(command)) {
-                validateAndCreateAccount();
-            } else if ("Login".equals(command)) {
-                dispose();
-                new LoginForm();
-            }
-        }
-
     }
 
     private void validateAndCreateAccount() {
