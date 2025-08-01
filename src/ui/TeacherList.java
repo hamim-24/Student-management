@@ -223,10 +223,6 @@ public class TeacherList extends JFrame {
         gbc.weightx = 0.2;
         filterPanel.add(idFilterField, gbc);
 
-        // Clear filters button
-        gbc.gridx = 4;
-        filterPanel.add(clearFiltersButton, gbc);
-
         // Add filtered count label
         gbc.gridx = 5;
         filterPanel.add(filteredCountLabel, gbc);

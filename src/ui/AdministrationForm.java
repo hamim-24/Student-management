@@ -199,6 +199,7 @@ public class AdministrationForm extends JFrame {
                                 studentAccount.setYear(nextYear);
                                 studentAccount.setPromotion("Congratulations for your brilliant success! You are now a " + nextYear + " student.");
                                 promotedCount++;
+                                studentAccount.getCourses().clear();
                             }
                         } else {
                             studentAccount.setPromotion("Sorry, you were not promoted due to low CGPA (minimum 2.0 required).");

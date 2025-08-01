@@ -50,7 +50,16 @@ public class Main {
             int roll = i;
             String department = departments[(int)(Math.random() * departments.length)];
             double cgpa = 1.0 + (Math.random() * 2.0);
-            String session = "2023-2024";
+            String session = "";
+            if (year.equals(years[3])) {
+                session = "2021-2022";
+            } else if (year.equals(years[2])) {
+                session = "2022-2023";
+            } else if (year.equals(years[1])) {
+                session = "2023-2024";
+            } else if (year.equals(years[0])) {
+                session = "2024-2025";
+            }
             StudentAccount student = new StudentAccount(studentId, "pass" + i, email, firstName, lastName, 
                                                      gender, dob, year, roll, department, "Student", cgpa, session);
             accounts.put(studentId, student);
