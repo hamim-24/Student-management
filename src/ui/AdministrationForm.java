@@ -56,7 +56,7 @@ public class AdministrationForm extends JFrame {
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         JButton studentButton = new JButton("Student List");
-        utils.styleButton(studentButton);
+        Utils.styleButton(studentButton);
         studentButton.setToolTipText("Show Student List");
         mainPanel.add(studentButton, gbc);
         studentButton.addActionListener(e -> {
@@ -66,7 +66,7 @@ public class AdministrationForm extends JFrame {
 
         gbc.gridy++;
         JButton teacherButton = new JButton("Teacher List");
-        utils.styleButton(teacherButton);
+        Utils.styleButton(teacherButton);
         teacherButton.setToolTipText("Show Teacher List");
         mainPanel.add(teacherButton, gbc);
         teacherButton.addActionListener(e -> {
@@ -76,7 +76,7 @@ public class AdministrationForm extends JFrame {
 
         gbc.gridy++;
         JButton resultButton = new JButton("Result List");
-        utils.styleButton(resultButton);
+        Utils.styleButton(resultButton);
         resultButton.setToolTipText("Show Result List");
         mainPanel.add(resultButton, gbc);
         resultButton.addActionListener(e -> {
@@ -86,7 +86,7 @@ public class AdministrationForm extends JFrame {
 
         gbc.gridy++;
         JButton courseButton = new JButton("Course List");
-        utils.styleButton(courseButton);
+        Utils.styleButton(courseButton);
         courseButton.setToolTipText("Show Course List");
         mainPanel.add(courseButton, gbc);
         courseButton.addActionListener(e -> {
@@ -108,28 +108,28 @@ public class AdministrationForm extends JFrame {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         JButton searchButton = new JButton("Search Account");
-        utils.styleButton(searchButton);
+        Utils.styleButton(searchButton);
         searchButton.setToolTipText("Show Search Account");
         mainPanel.add(searchButton, gbc);
         searchButton.addActionListener(e -> handleSearchAccount(searchField));
 
         gbc.gridy++;
         JButton announcementButton = new JButton("Announcement");
-        utils.styleButton(announcementButton);
+        Utils.styleButton(announcementButton);
         announcementButton.setToolTipText("Set Announcement");
         mainPanel.add(announcementButton, gbc);
         announcementButton.addActionListener(e -> handleAnnouncement());
 
         gbc.gridy++;
         JButton promotionButton = new JButton("Promotion");
-        utils.styleButton(promotionButton);
+        Utils.styleButton(promotionButton);
         promotionButton.setToolTipText("Set Promotion");
         mainPanel.add(promotionButton, gbc);
         promotionButton.addActionListener(e -> handlePromotion());
 
         gbc.gridy++;
         JButton backButton = new JButton("Back to Main Menu");
-        utils.styleButton(backButton);
+        Utils.styleButton(backButton);
         backButton.setToolTipText("Return to main menu");
         mainPanel.add(backButton, gbc);
         backButton.addActionListener(e -> {
@@ -145,8 +145,8 @@ public class AdministrationForm extends JFrame {
                 "Department",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                utils.DEPARTMENTS,
-                utils.DEPARTMENTS[0]
+                Utils.DEPARTMENTS,
+                Utils.DEPARTMENTS[0]
         );
         if (department == null || department.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Department Selected !",  "Warning", JOptionPane.WARNING_MESSAGE);
@@ -158,15 +158,15 @@ public class AdministrationForm extends JFrame {
                 "Year",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                utils.YEARS,
-                utils.YEARS[0]
+                Utils.YEARS,
+                Utils.YEARS[0]
         );
         if (year == null || year.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please Select Year", "Warning", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        String[] sessions = utils.session();
+        String[] sessions = Utils.session();
         String session = (String) JOptionPane.showInputDialog(
                 this,
                 "Select session:",
@@ -210,7 +210,7 @@ public class AdministrationForm extends JFrame {
             Notification notification = new Notification("Promotion completed for Department: " + department + ", Year: " + year +
                     "Session: " + session +
                 ". Promoted: " + promotedCount + ", Not promoted: " + notPromotedCount + 
-                ". Search: '" + utils.promotion + "' for detailed results.");
+                ". Search: '" + Utils.promotion + "' for detailed results.");
             Main.getNotifications().add(notification);
 
             JOptionPane.showMessageDialog(this, 
@@ -223,9 +223,9 @@ public class AdministrationForm extends JFrame {
     }
     
     private String getNextYear(String currentYear) {
-        for (int i = 1; i < utils.YEARS.length - 1; i++) {
-            if (utils.YEARS[i].equals(currentYear)) {
-                return utils.YEARS[i + 1];
+        for (int i = 1; i < Utils.YEARS.length - 1; i++) {
+            if (Utils.YEARS[i].equals(currentYear)) {
+                return Utils.YEARS[i + 1];
             }
         }
         return null;
@@ -247,7 +247,7 @@ public class AdministrationForm extends JFrame {
             qs.append("Account Details:\n");
             qs.append("================\n");
             qs.append(account);
-            JOptionPane.showMessageDialog(this, utils.ScrollPanel(qs), "Account Details", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, Utils.ScrollPanel(qs), "Account Details", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -258,7 +258,7 @@ public class AdministrationForm extends JFrame {
             // User cancelled the dialog
             return;
         }
-        
+
         note = note.trim();
         if (note.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter an announcement!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -270,7 +270,7 @@ public class AdministrationForm extends JFrame {
             return;
         }
         
-        int res = JOptionPane.showConfirmDialog(this, "Are you sure you want to add this announcement?\n\n'" + note + "'", "Confirm Announcement", JOptionPane.YES_NO_OPTION);
+        int res = JOptionPane.showConfirmDialog(this, "Are you sure you want to add this announcement?\n'" + note + "'", "Confirm Announcement", JOptionPane.YES_NO_OPTION);
         if (res == JOptionPane.YES_OPTION) {
             Notification notification = new Notification(note);
             Main.getNotifications().add(notification);

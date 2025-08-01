@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import launcher.Main;
 import model.Course;
-import util.utils;
+import util.Utils;
 
 import java.util.*;
 import java.util.List;
@@ -150,7 +150,7 @@ public class StudentCourseFrame extends JFrame {
         allCoursesPanel.add(allCoursesScrollPane, BorderLayout.CENTER);
         
         enrollButton = new JButton("Enroll in Course");
-        utils.styleButton(enrollButton);
+        Utils.styleButton(enrollButton);
         enrollButton.setPreferredSize(new Dimension(150, 40));
         allCoursesPanel.add(enrollButton, BorderLayout.SOUTH);
         
@@ -172,7 +172,7 @@ public class StudentCourseFrame extends JFrame {
         enrolledPanel.add(enrolledScrollPane, BorderLayout.CENTER);
         
         dropButton = new JButton("Drop Course");
-        utils.styleButton(dropButton);
+        Utils.styleButton(dropButton);
         dropButton.setPreferredSize(new Dimension(150, 40));
         enrolledPanel.add(dropButton, BorderLayout.SOUTH);
         
@@ -184,7 +184,7 @@ public class StudentCourseFrame extends JFrame {
         buttonPanel.setBackground(new Color(245, 247, 250));
         
         JButton doneButton = new JButton("Save & Return");
-        utils.styleButton(doneButton);
+        Utils.styleButton(doneButton);
         doneButton.setPreferredSize(new Dimension(180, 45));
         
         buttonPanel.add(doneButton);

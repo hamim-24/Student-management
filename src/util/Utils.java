@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class utils {
+public class Utils {
 
     public static final String promotion = "PROMOTION";
     public static Map<String, Boolean> EXAM_CODE = new HashMap<>();

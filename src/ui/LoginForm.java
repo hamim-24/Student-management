@@ -2,7 +2,7 @@ package ui;
 
 import launcher.Main;
 import model.*;
-import util.utils;
+import util.Utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -252,7 +252,7 @@ public class LoginForm extends JFrame {
                         notification.append("\n#").append(n.getDate()).append(" - ").append(n.getNote());
                     }
                 }
-                JOptionPane.showMessageDialog(this, utils.ScrollPanel(notification), "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, Utils.ScrollPanel(notification), "Notification", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "No notification available" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 System.err.println("Exception in notification button: " + ex.getMessage());

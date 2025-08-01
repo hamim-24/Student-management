@@ -152,18 +152,18 @@ public class StudentList extends JFrame {
         gpaField.setToolTipText("GPA (0.0 - 4.0)");
 
         // Create year combo box for adding students
-        String[] years = utils.YEARS;
+        String[] years = Utils.YEARS;
         yearComboBox = new JComboBox<>(years);
         yearComboBox.setToolTipText("Select year");
 
         // Create year filter combo box
-        String[] yearFilters = utils.YEARS;
+        String[] yearFilters = Utils.YEARS;
         yearFilterComboBox = new JComboBox<>(yearFilters);
         yearFilterComboBox.setToolTipText("Filter by year");
         yearFilterComboBox.addActionListener(e -> filterStudents());
 
         // Create department filter combo box
-        String[] departmentFilters = utils.DEPARTMENTS;
+        String[] departmentFilters = Utils.DEPARTMENTS;
         departmentComboBox = new JComboBox<>(departmentFilters);
         departmentComboBox.setToolTipText("Filter by department");
         departmentComboBox.addActionListener(e -> filterStudents());
@@ -199,7 +199,7 @@ public class StudentList extends JFrame {
         });
 
         clearFiltersButton = new JButton("Reset Filters");
-        utils.styleButton(clearFiltersButton);
+        Utils.styleButton(clearFiltersButton);
         clearFiltersButton.setToolTipText("Clear all filters");
 
         // Create buttons with tooltips
@@ -211,10 +211,10 @@ public class StudentList extends JFrame {
         clearButton.setToolTipText("Clear input fields");
         backButton = new JButton("Back");
         backButton.setToolTipText("Return to Administration Dashboard");
-        utils.styleButton(backButton);
-        utils.styleButton(updateButton);
-        utils.styleButton(deleteButton);
-        utils.styleButton(clearButton);
+        Utils.styleButton(backButton);
+        Utils.styleButton(updateButton);
+        Utils.styleButton(deleteButton);
+        Utils.styleButton(clearButton);
 
     }
 
