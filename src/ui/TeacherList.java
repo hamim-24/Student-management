@@ -70,7 +70,7 @@ public class TeacherList extends JFrame {
         };
 
         // Initialize filtered count label
-        filteredCountLabel = new JLabel("Teachers: 0 / 0 (filtered/total)");
+        filteredCountLabel = new JLabel("Teachers: 0 / 0");
 
         teacherTable = new JTable(tableModel) {
 
@@ -496,7 +496,7 @@ public class TeacherList extends JFrame {
                     filteredTeacherCount++;
                 }
             }
-            filteredCountLabel.setText("Teachers: " + filteredTeacherCount + " / " + totalTeachers + " (filtered/total)");
+            filteredCountLabel.setText("Teachers: " + filteredTeacherCount + " / " + totalTeachers);
             teacherTable.clearSelection();
             selectedRow = -1;
             clearFields();

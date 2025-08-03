@@ -75,7 +75,7 @@ public class StudentList extends JFrame {
         };
         
         // Initialize filtered count label
-        filteredCountLabel = new JLabel("Students: 0 / 0 (filtered/total)");
+        filteredCountLabel = new JLabel("Students: 0 / 0");
 
         // backgroud is red if cgpa < 2
         studentTable = new JTable(tableModel) {
@@ -340,7 +340,7 @@ public class StudentList extends JFrame {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Personal Information Section
@@ -667,7 +667,7 @@ public class StudentList extends JFrame {
                     filteredStudentCount++;
                 }
             }
-            filteredCountLabel.setText("Students: " + filteredStudentCount + " / " + totalStudents + " (filtered/total)");
+            filteredCountLabel.setText("Students: " + filteredStudentCount + " / " + totalStudents);
             studentTable.clearSelection();
             selectedRow = -1;
             clearFields();

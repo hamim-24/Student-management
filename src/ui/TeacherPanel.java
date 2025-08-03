@@ -239,17 +239,19 @@ public class TeacherPanel extends JFrame {
             return;
         }
 
-        String name = JOptionPane.showInputDialog(this, "Enter exam name: ", "Exam name", JOptionPane.QUESTION_MESSAGE).trim();
-        if (name.isEmpty()) {
+        String name = JOptionPane.showInputDialog(this, "Enter exam name: ", "Exam name", JOptionPane.QUESTION_MESSAGE);
+        if (name == null || name.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid exam name", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        name = name.trim();
 
-        String examCode = JOptionPane.showInputDialog(this, "Enter exam Code:", "Result", JOptionPane.QUESTION_MESSAGE).trim();
-        if (examCode.isEmpty()) {
+        String examCode = JOptionPane.showInputDialog(this, "Enter exam Code:", "Result", JOptionPane.QUESTION_MESSAGE);
+        if (examCode == null || examCode.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid exam code", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        examCode = examCode.trim();
 
         if (Main.getQuestionMap().get(examCode) != null || examCode.equals(Utils.promotion)) {
             JOptionPane.showMessageDialog(this, "Exam exists! Change Code...", "Error", JOptionPane.ERROR_MESSAGE);

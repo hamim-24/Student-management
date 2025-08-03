@@ -126,7 +126,8 @@ public class Main {
             resultsList.add(result);
         }
 
-        new LoginForm();
+        //new LoginForm();
+        new ResultList();
     }
     
     private static String getDepartmentByIndex(int index) {

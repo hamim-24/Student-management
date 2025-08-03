@@ -1,6 +1,7 @@
 package ui;
 
 import launcher.Main;
+import model.Question;
 import model.Result;
 import util.Utils;
 
@@ -15,7 +16,7 @@ public class ResultList extends JFrame {
     private DefaultTableModel tableModel, allResultsModel;
     private JComboBox<String> yearComboBox, departmentComboBox, sessionComboBox, examCodeComboBox;
     private JButton clearFiltersButton, backButton;
-    private JLabel filteredCountLabel;
+    private JLabel filteredCountLabel, resultInfoLabel;
 
     public ResultList() {
 
@@ -81,7 +82,10 @@ public class ResultList extends JFrame {
         resultTable.getTableHeader().setReorderingAllowed(false);
         resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        filteredCountLabel = new JLabel("Results: 0 / 0 (filtered/total)");
+        filteredCountLabel = new JLabel("Results: 0 / 0");
+        resultInfoLabel = new JLabel();
+        resultInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        resultInfoLabel.setPreferredSize(new Dimension(850, 20));
 
         yearComboBox = new JComboBox<>(Utils.YEARS);
         yearComboBox.setToolTipText("Filter by year");
@@ -121,13 +125,13 @@ public class ResultList extends JFrame {
         // Filter panel
         JPanel filterPanel = new JPanel(new GridBagLayout());
         filterPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createEmptyBorder(24, 32, 0, 32),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)),
                         "Filter:", 0, 0,
                         new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 10, 5);
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
         gbc.gridx = 0; gbc.gridy = 0;
@@ -152,7 +156,6 @@ public class ResultList extends JFrame {
 
         gbc.gridx++;
         filterPanel.add(filteredCountLabel, gbc);
-
         mainPanel.add(filterPanel, BorderLayout.NORTH);
 
         // Table panel
@@ -162,7 +165,17 @@ public class ResultList extends JFrame {
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Result List", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         scrollPane.setPreferredSize(new Dimension(900, 400));
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Center panel to hold resultInfoLabel and scrollPane
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        resultInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(Box.createVerticalStrut(10));
+        centerPanel.add(resultInfoLabel);
+        centerPanel.add(Box.createVerticalStrut(10));
+        centerPanel.add(scrollPane);
+
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 20));
@@ -213,16 +226,23 @@ public class ResultList extends JFrame {
         String selectedSession = sessionComboBox.getSelectedItem().toString();
         String selectedExamCode = examCodeComboBox.getSelectedItem().toString();
 
+        Question q = Main.getQuestionMap().get(selectedExamCode);
+        if (q != null) {
+            resultInfoLabel.setText("Exam : " + q.getExamName()
+                    + " | " + q.getYear()
+                    + ", " + q.getDepartment()
+                    + ", " + q.getSession());
+        } else if (!selectedExamCode.equals("Select")) {
+            resultInfoLabel.setText("Details not available for exam code: " + selectedExamCode);
+        } else {
+            resultInfoLabel.setText("Select an exam code to view details.");
+        }
+
         tableModel.setRowCount(0);
         int total = allResultsModel.getRowCount();
         int filtered = 0;
 
         for (int i = 0; i < total; i++) {
-            String year = getValue(allResultsModel, i, 0, "year");
-            String dept = getValue(allResultsModel, i, 0, "department");
-            String session = getValue(allResultsModel, i, 0, "session");
-            String examCode = getValue(allResultsModel, i, 0, "examCode");
-
             // Get actual Result object for this row
             Result r = Main.getResultList().get(i);
 
@@ -243,7 +263,7 @@ public class ResultList extends JFrame {
                 filtered++;
             }
         }
-        filteredCountLabel.setText("Results: " + filtered + " / " + total + " (filtered/total)");
+        filteredCountLabel.setText("Results: " + filtered + " / " + total);
         resultTable.clearSelection();
     }
 
