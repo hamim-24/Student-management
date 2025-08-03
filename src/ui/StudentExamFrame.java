@@ -283,7 +283,8 @@ public class StudentExamFrame extends JFrame {
 
         double cg = account.getCg();
         double currentCG = calculateCGPA(correct, incorrect);
-        double totalCG = (currentCG + cg) / 2;
+
+        double totalCG = (cg != 0) ? (currentCG + cg) / 2 : currentCG;
         int totalExam = 1;
 
         for (Result r : Main.getResultList()) {

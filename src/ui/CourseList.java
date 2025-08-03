@@ -107,7 +107,7 @@ public class CourseList extends JFrame {
         // Table panel
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(0, 0, 20, 0),
+                BorderFactory.createEmptyBorder(10, 20, 10, 10),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Course List", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         tablePanel.setBackground(Color.WHITE);
@@ -145,10 +145,10 @@ public class CourseList extends JFrame {
 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(10, 10, 0, 20),
+                BorderFactory.createEmptyBorder(10, 10, 10, 20),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Edit Information", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
-        inputPanel.setPreferredSize(new Dimension(320, 400));
+        inputPanel.setPreferredSize(new Dimension(360, 400));
         inputPanel.setBackground(Color.WHITE);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -184,7 +184,6 @@ public class CourseList extends JFrame {
 
         // Credits field
         gbc.gridwidth = 1;
-        gbc.insets = new Insets(8, 8, 8, 8);
         gbc.gridx = 0;
         gbc.gridy++;
         inputPanel.add(new JLabel("Credits:"), gbc);

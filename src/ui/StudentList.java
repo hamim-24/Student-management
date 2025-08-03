@@ -280,8 +280,8 @@ public class StudentList extends JFrame {
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Filter:", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 10, 5);
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 1, 5, 1);
+        gbc.anchor = GridBagConstraints.CENTER;
 
         gbc.gridx = 0; gbc.gridy = 0;
         filterPanel.add(new JLabel("Year:"), gbc);

@@ -122,7 +122,9 @@ public class ResultList extends JFrame {
         JPanel filterPanel = new JPanel(new GridBagLayout());
         filterPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(24, 32, 24, 32),
-                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Filter:", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                        "Filter:", 0, 0,
+                        new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 10, 5);
@@ -156,7 +158,7 @@ public class ResultList extends JFrame {
         // Table panel
         JScrollPane scrollPane = new JScrollPane(resultTable);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                BorderFactory.createEmptyBorder(24, 32, 24, 32),
                 BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Result List", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
         ));
         scrollPane.setPreferredSize(new Dimension(900, 400));
