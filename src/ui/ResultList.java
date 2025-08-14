@@ -267,7 +267,4 @@ public class ResultList extends JFrame {
         resultTable.clearSelection();
     }
 
-    private String getValue(DefaultTableModel model, int row, int col, String type) {
-        return "";
-    }
 }

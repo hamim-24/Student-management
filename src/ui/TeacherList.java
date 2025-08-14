@@ -483,8 +483,6 @@ public class TeacherList extends JFrame {
                         allTeachersModel.getValueAt(i, 4).toString() : "";
                 String teacherId = allTeachersModel.getValueAt(i, 1) != null ?
                         allTeachersModel.getValueAt(i, 1).toString().toLowerCase() : "";
-                String teacherName = allTeachersModel.getValueAt(i, 0) != null ?
-                        allTeachersModel.getValueAt(i, 0).toString() : "";
                 boolean deptMatch = selectedDept.equals("Select") || selectedDept.equals(teacherDept);
                 boolean idMatch = idFilter.isEmpty() || teacherId.contains(idFilter);
                 if (deptMatch && idMatch) {

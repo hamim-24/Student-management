@@ -1,6 +1,5 @@
 package launcher;
 
-import com.sun.source.tree.UsesTree;
 import model.*;
 import ui.*;
 
@@ -39,7 +38,7 @@ public class Main {
     public static void main(String[] args) {
         String[] departments = {"CSE", "EEE", "BBA", "Civil"};
         String[] years = {"1st Year", "2nd Year", "3rd Year", "4th Year"};
-        for (int i = 1; i <= 10000; i++) {
+        for (int i = 1; i <= 100; i++) {
             String studentId = String.format("S%03d", i);
             String firstName = "Student" + i;
             String lastName = "Last" + i;
@@ -65,7 +64,7 @@ public class Main {
             accounts.put(studentId, student);
         }
 
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 10; i++) {
             String teacherId = String.format("T%03d", i);
             String firstName = "Teacher" + i;
             String lastName = "Last" + i;
@@ -135,8 +134,4 @@ public class Main {
         return departments[index % departments.length];
     }
     
-    private static String getYearByIndex(int index) {
-        String[] years = {"1st Year", "2nd Year", "3rd Year", "4th Year"};
-        return years[index % years.length];
-    }
 }

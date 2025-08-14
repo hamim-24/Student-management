@@ -42,7 +42,7 @@
 
 6. SignInFrame
     - collect all data
-    - if student add more two text field
+    - if student, add more two text field
     - valid email formate
     - unique ID
     - minimum 6 character password
@@ -50,10 +50,10 @@
     - create account (Student, Teacher)
 
 7. StudentCourseFrame
-    - Show all courese
+    - Show all courses
     - select course and enroll
     - also drop out
-    - save courese
+    - save courses
 
 8. StudentExamFrame
     - exam

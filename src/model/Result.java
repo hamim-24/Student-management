@@ -2,9 +2,6 @@ package model;
 
 import launcher.Main;
 
-import java.util.List;
-import java.util.Map;
-
 public class Result {
 
     private final double mark;
