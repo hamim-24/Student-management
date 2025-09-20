@@ -25,6 +25,12 @@ public class StudentCourseFrame extends JFrame {
     private JLabel studentInfoLabel;
     private JLabel totalCreditsLabel;
     private JLabel enrollmentStatusLabel;
+    
+    // Search components
+    private JTextField courseIdSearchField;
+    private JTextField courseNameSearchField;
+    private JComboBox<String> departmentSearchComboBox;
+    private JLabel searchResultsLabel;
 
     public StudentCourseFrame(StudentAccount account) {
         // Validate account parameter
@@ -69,6 +75,7 @@ public class StudentCourseFrame extends JFrame {
     private void createComponents() {
         createTitleLabel();
         createInfoPanel();
+        createSearchPanel();
         createMainPanels();
         createButtonPanel();
     }
@@ -107,6 +114,55 @@ public class StudentCourseFrame extends JFrame {
         infoPanel.add(enrollmentStatusLabel);
         
         add(infoPanel, BorderLayout.CENTER);
+    }
+
+    private void createSearchPanel() {
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        searchPanel.setBackground(new Color(255, 255, 255));
+        searchPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(5, 20, 5, 20),
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Search Courses", 0, 0, new Font("Arial", Font.BOLD, 14), new Color(52, 73, 94))
+        ));
+        
+        // Initialize search components
+        courseIdSearchField = new JTextField(12);
+        courseIdSearchField.setToolTipText("Search by Course ID (e.g., CSE101)");
+        courseIdSearchField.setPreferredSize(new Dimension(120, 25));
+        courseIdSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterAllCourses();
+            }
+        });
+        
+        courseNameSearchField = new JTextField(20);
+        courseNameSearchField.setToolTipText("Search by Course Name");
+        courseNameSearchField.setPreferredSize(new Dimension(200, 25));
+        courseNameSearchField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterAllCourses();
+            }
+        });
+        
+        // Department filter combo box
+        String[] departmentFilters = Utils.DEPARTMENTS;
+        departmentSearchComboBox = new JComboBox<>(departmentFilters);
+        departmentSearchComboBox.setToolTipText("Filter by department");
+        departmentSearchComboBox.setPreferredSize(new Dimension(120, 25));
+        departmentSearchComboBox.addActionListener(e -> filterAllCourses());
+
+        searchResultsLabel = new JLabel("All Courses");
+        searchResultsLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        searchResultsLabel.setForeground(new Color(52, 152, 219));
+        
+        searchPanel.add(new JLabel("Course ID:"));
+        searchPanel.add(courseIdSearchField);
+        searchPanel.add(new JLabel("Course Name:"));
+        searchPanel.add(courseNameSearchField);
+        searchPanel.add(new JLabel("Department:"));
+        searchPanel.add(departmentSearchComboBox);
+        searchPanel.add(searchResultsLabel);
+        
+        add(searchPanel, BorderLayout.NORTH);
     }
 
     private void createMainPanels() {
@@ -400,9 +456,60 @@ public class StudentCourseFrame extends JFrame {
             // Update total credits label
             totalCreditsLabel.setText("Total Credits: " + totalCredits);
             
+            // Apply current search filters
+            filterAllCourses();
+            
         } catch (Exception ex) {
             System.err.println("Error refreshing course lists: " + ex.getMessage());
             throw new RuntimeException("Failed to refresh course lists", ex);
+        }
+    }
+
+    private void filterAllCourses() {
+        try {
+            String courseIdFilter = courseIdSearchField.getText().trim().toLowerCase();
+            String courseNameFilter = courseNameSearchField.getText().trim().toLowerCase();
+            String selectedDept = departmentSearchComboBox.getSelectedItem().toString();
+            
+            // Clear the current display
+            allCoursesList.setModel(new DefaultListModel<>());
+            DefaultListModel<String> filteredModel = new DefaultListModel<>();
+            
+            int filteredCount = 0;
+            int totalCount = 0;
+            
+            for (Course c : courseMap.values()) {
+                if (c != null) {
+                    totalCount++;
+                    String courseId = c.getCourseId().toLowerCase();
+                    String courseName = c.getCourseName().toLowerCase();
+                    
+                    // Determine department from course ID (first 3 characters)
+                    String courseDept = courseId.length() >= 3 ? courseId.substring(0, 3).toUpperCase() : "";
+                    
+                    boolean idMatch = courseIdFilter.isEmpty() || courseId.contains(courseIdFilter);
+                    boolean nameMatch = courseNameFilter.isEmpty() || courseName.contains(courseNameFilter);
+                    boolean deptMatch = selectedDept.equals("Select") || courseDept.equals(selectedDept);
+                    
+                    if (idMatch && nameMatch && deptMatch) {
+                        String display = c.getCourseId() + " - " + c.getCourseName() + " (" + c.getCredits() + " credits) - " + 
+                                       c.getCurrentStudents() + "/" + c.getMaxStudents() + " students";
+                        filteredModel.addElement(display);
+                        filteredCount++;
+                    }
+                }
+            }
+            
+            allCoursesList.setModel(filteredModel);
+            
+            // Update search results label
+            searchResultsLabel.setText("Courses: " + filteredCount + "/" + totalCount);
+
+
+        } catch (Exception ex) {
+            System.err.println("Error filtering courses: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error filtering courses: " + ex.getMessage(), 
+                    "Search Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 } 

@@ -2,6 +2,7 @@ package ui;
 
 import launcher.Main;
 import model.Course;
+import model.Notification;
 import util.Utils;
 
 import javax.swing.*;
@@ -71,6 +72,8 @@ public class CourseList extends JFrame {
         
         // Initialize filtered count label
         filteredCountLabel = new JLabel("Courses: 0 / 0");
+        filteredCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        filteredCountLabel.setForeground(new Color(52, 152, 219));
 
         courseTable = new JTable(tableModel) {
             @Override
@@ -420,6 +423,7 @@ public class CourseList extends JFrame {
                 "Course enrollment has been ENABLED!\n\nStudents can now enroll in courses.", 
                 "Course Enrollment Enabled", 
                 JOptionPane.INFORMATION_MESSAGE);
+            Main.getNotifications().add(new Notification("Course Enrollment Enabled"));
         } else {
             courseButton.setText("Enable Course Enrollment");
             courseButton.setBackground(new Color(40, 167, 69)); // Green color for enable
@@ -434,6 +438,7 @@ public class CourseList extends JFrame {
                 "Course enrollment has been DISABLED!\n\nStudents cannot enroll in courses.", 
                 "Course Enrollment Disabled", 
                 JOptionPane.WARNING_MESSAGE);
+            Main.getNotifications().add(new Notification("Course Enrollment Disabled"));
         }
         
         // Update button styling after text change
@@ -620,16 +625,7 @@ public class CourseList extends JFrame {
         }
         filterCourses();
     }
-    
-    private void clearAllFilters() {
-        courseIdFilterField.setText("");
-        courseNameFilterField.setText("");
-        creditsFilterField.setText("");
-        maxStudentsFilterField.setText("");
-        departmentFilterComboBox.setSelectedIndex(0);
-        filterCourses();
-    }
-    
+
     private void filterCourses() {
         try {
             String courseIdFilter = courseIdFilterField.getText().trim().toLowerCase();

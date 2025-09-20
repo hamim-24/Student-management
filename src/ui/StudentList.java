@@ -76,6 +76,8 @@ public class StudentList extends JFrame {
         
         // Initialize filtered count label
         filteredCountLabel = new JLabel("Students: 0 / 0");
+        filteredCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        filteredCountLabel.setForeground(new Color(52, 152, 219));
 
         // backgroud is red if cgpa < 2
         studentTable = new JTable(tableModel) {

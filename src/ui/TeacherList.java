@@ -71,6 +71,8 @@ public class TeacherList extends JFrame {
 
         // Initialize filtered count label
         filteredCountLabel = new JLabel("Teachers: 0 / 0");
+        filteredCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        filteredCountLabel.setForeground(new Color(52, 152, 219));
 
         teacherTable = new JTable(tableModel) {
 

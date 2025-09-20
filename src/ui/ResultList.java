@@ -83,6 +83,9 @@ public class ResultList extends JFrame {
         resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         filteredCountLabel = new JLabel("Results: 0 / 0");
+        filteredCountLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        filteredCountLabel.setForeground(new Color(52, 152, 219));
+
         resultInfoLabel = new JLabel();
         resultInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
         resultInfoLabel.setPreferredSize(new Dimension(850, 20));
