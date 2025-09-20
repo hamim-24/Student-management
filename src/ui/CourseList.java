@@ -18,6 +18,14 @@ public class CourseList extends JFrame {
     private JButton addButton, updateButton, deleteButton, clearButton, backButton, courseButton;
     private int selectedRow = -1;
     JLabel totalCourseLabel, enrollmentStatusLabel;
+    
+    // Search panel components
+    private JTextField courseIdFilterField, courseNameFilterField, creditsFilterField, maxStudentsFilterField;
+    private JComboBox<String> departmentFilterComboBox;
+    //private JButton clearFiltersButton;
+    private JLabel filteredCountLabel;
+    private DefaultTableModel allCoursesModel;
+    private int filteredCourseCount = 0;
 
     Map<String, Course> courseMap;
     private int totalCourse;
@@ -46,12 +54,23 @@ public class CourseList extends JFrame {
         // Create table with column names
         String[] columnNames = {"Course ID", "Course Name", "Credits", "Student Capacity", "Current Students"};
 
+        // Create models for all courses and filtered view
+        allCoursesModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
+        
+        // Initialize filtered count label
+        filteredCountLabel = new JLabel("Courses: 0 / 0");
 
         courseTable = new JTable(tableModel) {
             @Override
@@ -78,7 +97,50 @@ public class CourseList extends JFrame {
         courseNameField = new JTextField(15);
         creditsField = new JTextField(15);
         maxStudentsField = new JTextField(15);
-
+        
+        // Initialize search panel components
+        courseIdFilterField = new JTextField(15);
+        courseIdFilterField.setToolTipText("Filter by Course ID");
+        courseIdFilterField.setPreferredSize(new Dimension(100, 25));
+        courseIdFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterCourses();
+            }
+        });
+        
+        courseNameFilterField = new JTextField(15);
+        courseNameFilterField.setToolTipText("Filter by Course Name");
+        courseNameFilterField.setPreferredSize(new Dimension(150, 25));
+        courseNameFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterCourses();
+            }
+        });
+        
+        creditsFilterField = new JTextField(15);
+        creditsFilterField.setToolTipText("Filter by minimum credits");
+        creditsFilterField.setPreferredSize(new Dimension(80, 25));
+        creditsFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterCourses();
+            }
+        });
+        
+        maxStudentsFilterField = new JTextField(15);
+        maxStudentsFilterField.setToolTipText("Filter by minimum capacity");
+        maxStudentsFilterField.setPreferredSize(new Dimension(80, 25));
+        maxStudentsFilterField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterCourses();
+            }
+        });
+        
+        // Department filter combo box
+        String[] departmentFilters = Utils.DEPARTMENTS;
+        departmentFilterComboBox = new JComboBox<>(departmentFilters);
+        departmentFilterComboBox.setToolTipText("Filter by department");
+        departmentFilterComboBox.addActionListener(e -> filterCourses());
+        
         // Initialize buttons
         addButton = new JButton("Add Course");
         updateButton = new JButton("Update Course");
@@ -112,10 +174,24 @@ public class CourseList extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(245, 247, 250));
 
-        // Main content panel
-        JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
+        // Create main panel
+        JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(new Color(245, 247, 250));
+
+        // Create top panel with search filters
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+
+        // Enhanced filter panel
+        JPanel filterPanel = createEnhancedFilterPanel();
+        topPanel.add(filterPanel, BorderLayout.CENTER);
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        // Create center panel with table and input form
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 32, 20, 32));
 
         // Table panel
         JPanel tablePanel = new JPanel(new BorderLayout());
@@ -129,8 +205,10 @@ public class CourseList extends JFrame {
         // Input panel
         JPanel inputPanel = createInputPanel();
 
-        mainPanel.add(tablePanel, BorderLayout.CENTER);
-        mainPanel.add(inputPanel, BorderLayout.EAST);
+        centerPanel.add(tablePanel, BorderLayout.CENTER);
+        centerPanel.add(inputPanel, BorderLayout.EAST);
+
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         add(mainPanel, BorderLayout.CENTER);
         
@@ -153,6 +231,62 @@ public class CourseList extends JFrame {
         buttonPanel.add(backButton);
         
         return buttonPanel;
+    }
+
+    private JPanel createEnhancedFilterPanel() {
+        JPanel filterPanel = new JPanel(new GridBagLayout());
+        filterPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(24, 32, 24, 32),
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)), "Filter:", 0, 0, new Font("Arial", Font.BOLD, 16), new Color(52, 73, 94))
+        ));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 1, 5, 1);
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        filterPanel.add(new JLabel("Course ID:"), gbc);
+        gbc.gridx++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
+        filterPanel.add(courseIdFilterField, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 0;
+        filterPanel.add(new JLabel("Course Name:"), gbc);
+        gbc.gridx++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.3;
+        filterPanel.add(courseNameFilterField, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 0;
+        filterPanel.add(new JLabel("Min Credits:"), gbc);
+        gbc.gridx++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
+        filterPanel.add(creditsFilterField, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 0;
+        filterPanel.add(new JLabel("Min Capacity:"), gbc);
+        gbc.gridx++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
+        filterPanel.add(maxStudentsFilterField, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 0;
+        filterPanel.add(new JLabel("Department:"), gbc);
+        gbc.gridx++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0.2;
+        filterPanel.add(departmentFilterComboBox, gbc);
+
+        gbc.gridx++;
+        gbc.gridheight = 1;
+        filterPanel.add(filteredCountLabel, gbc);
+
+        return filterPanel;
     }
 
     private JPanel createInputPanel() {
@@ -264,6 +398,7 @@ public class CourseList extends JFrame {
             dispose();
             new AdministrationForm();
         });
+
     }
 
     private void courseEnrollment() {
@@ -323,7 +458,6 @@ public class CourseList extends JFrame {
                 courseMap.put(courseId, newCourse);
                 loadCoursesFromMap();
                 clearFields();
-                totalCourse++;
                 totalCourseLabel.setText("Total Courses: " + totalCourse);
                 JOptionPane.showMessageDialog(this, "Course added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -411,7 +545,6 @@ public class CourseList extends JFrame {
                 courseMap.remove(courseId);
                 loadCoursesFromMap();
                 clearFields();
-                totalCourse--;
                 totalCourseLabel.setText("Total Courses: " + totalCourse);
                 JOptionPane.showMessageDialog(this, "Course deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -472,7 +605,9 @@ public class CourseList extends JFrame {
     }
 
     private void loadCoursesFromMap() {
-        tableModel.setRowCount(0);
+        allCoursesModel.setRowCount(0);
+        totalCourse = 0;
+        
         for (Course course : courseMap.values()) {
             Vector<Object> row = new Vector<>();
             row.add(course.getCourseId());
@@ -480,7 +615,87 @@ public class CourseList extends JFrame {
             row.add(course.getCredits());
             row.add(course.getMaxStudents());
             row.add(course.getCurrentStudents());
-            tableModel.addRow(row);
+            allCoursesModel.addRow(row);
+            totalCourse++;
+        }
+        filterCourses();
+    }
+    
+    private void clearAllFilters() {
+        courseIdFilterField.setText("");
+        courseNameFilterField.setText("");
+        creditsFilterField.setText("");
+        maxStudentsFilterField.setText("");
+        departmentFilterComboBox.setSelectedIndex(0);
+        filterCourses();
+    }
+    
+    private void filterCourses() {
+        try {
+            String courseIdFilter = courseIdFilterField.getText().trim().toLowerCase();
+            String courseNameFilter = courseNameFilterField.getText().trim().toLowerCase();
+            String creditsFilter = creditsFilterField.getText().trim();
+            String maxStudentsFilter = maxStudentsFilterField.getText().trim();
+            String selectedDept = departmentFilterComboBox.getSelectedItem().toString();
+
+            tableModel.setRowCount(0);
+            filteredCourseCount = 0;
+
+            for (int i = 0; i < allCoursesModel.getRowCount(); i++) {
+                String courseId = allCoursesModel.getValueAt(i, 0) != null ?
+                        allCoursesModel.getValueAt(i, 0).toString().toLowerCase() : "";
+                String courseName = allCoursesModel.getValueAt(i, 1) != null ?
+                        allCoursesModel.getValueAt(i, 1).toString().toLowerCase() : "";
+                String credits = allCoursesModel.getValueAt(i, 2) != null ?
+                        allCoursesModel.getValueAt(i, 2).toString() : "";
+                String maxStudents = allCoursesModel.getValueAt(i, 3) != null ?
+                        allCoursesModel.getValueAt(i, 3).toString() : "";
+
+                // Determine department from course ID (first 3 characters)
+                String courseDept = courseId.length() >= 3 ? courseId.substring(0, 3).toUpperCase() : "";
+
+                boolean idMatch = courseIdFilter.isEmpty() || courseId.contains(courseIdFilter);
+                boolean nameMatch = courseNameFilter.isEmpty() || courseName.contains(courseNameFilter);
+                boolean deptMatch = selectedDept.equals("Select") || courseDept.equals(selectedDept);
+
+                boolean creditsMatch = true;
+                if (!creditsFilter.isEmpty()) {
+                    try {
+                        int filterCredits = Integer.parseInt(creditsFilter);
+                        int courseCredits = Integer.parseInt(credits);
+                        creditsMatch = courseCredits >= filterCredits;
+                    } catch (NumberFormatException e) {
+                        creditsMatch = true; // If invalid number, don't filter
+                    }
+                }
+
+                boolean capacityMatch = true;
+                if (!maxStudentsFilter.isEmpty()) {
+                    try {
+                        int filterCapacity = Integer.parseInt(maxStudentsFilter);
+                        int courseCapacity = Integer.parseInt(maxStudents);
+                        capacityMatch = courseCapacity >= filterCapacity;
+                    } catch (NumberFormatException e) {
+                        capacityMatch = true; // If invalid number, don't filter
+                    }
+                }
+
+                if (idMatch && nameMatch && deptMatch && creditsMatch && capacityMatch) {
+                    Vector<Object> rowData = new Vector<>();
+                    for (int j = 0; j < allCoursesModel.getColumnCount(); j++) {
+                        rowData.add(allCoursesModel.getValueAt(i, j));
+                    }
+                    tableModel.addRow(rowData);
+                    filteredCourseCount++;
+                }
+            }
+            filteredCountLabel.setText("Courses: " + filteredCourseCount + " / " + totalCourse);
+            courseTable.clearSelection();
+            selectedRow = -1;
+            clearFields();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error filtering courses: " + e.getMessage(),
+                    "Filter Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 } 
