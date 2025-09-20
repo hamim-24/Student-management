@@ -24,6 +24,8 @@
 
 3. CourseList
     - 5 column "Course ID", "Course Name", "Credits", "Student Capacity", "Current Students"}
+    - filter courses
+    - enable / disable course enrollment
     - edit course
     - add course
     - delete course
@@ -39,6 +41,7 @@
 5. ResultList
     - 6 column "ID", "Roll", "Marks", "Incorrect", "Correct", "CG"
     - filter result (year, department, session, exam code)
+    - back
 
 6. SignInFrame
     - collect all data
@@ -51,8 +54,9 @@
 
 7. StudentCourseFrame
     - Show all courses
-    - select course and enroll
-    - also drop out
+    - filter courses
+    - select course and enroll when enabled
+    - also drop out any time
     - save courses
 
 8. StudentExamFrame
