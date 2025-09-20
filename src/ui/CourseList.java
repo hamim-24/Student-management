@@ -15,9 +15,9 @@ public class CourseList extends JFrame {
     private JTable courseTable;
     private DefaultTableModel tableModel;
     private JTextField courseIdField, courseNameField, creditsField, maxStudentsField;
-    private JButton addButton, updateButton, deleteButton, clearButton, backButton;
+    private JButton addButton, updateButton, deleteButton, clearButton, backButton, courseButton;
     private int selectedRow = -1;
-    JLabel totalCourseLabel;
+    JLabel totalCourseLabel, enrollmentStatusLabel;
 
     Map<String, Course> courseMap;
     private int totalCourse;
@@ -85,6 +85,9 @@ public class CourseList extends JFrame {
         deleteButton = new JButton("Delete Course");
         clearButton = new JButton("Clear");
         backButton = new JButton("Back");
+        
+        // Initialize course enrollment button with current status
+        courseButton = new JButton(Utils.isCourseEnrollmentEnabled() ? "Disable Course Enrollment" : "Enable Course Enrollment");
 
         // Style buttons
         Utils.styleButton(addButton);
@@ -92,6 +95,16 @@ public class CourseList extends JFrame {
         Utils.styleButton(deleteButton);
         Utils.styleButton(clearButton);
         Utils.styleButton(backButton);
+        
+        // Style course enrollment button with appropriate color
+        Utils.styleButton(courseButton);
+        if (Utils.isCourseEnrollmentEnabled()) {
+            courseButton.setBackground(new Color(220, 53, 69)); // Red for disable
+            courseButton.setToolTipText("Click to disable course enrollment for students");
+        } else {
+            courseButton.setBackground(new Color(40, 167, 69)); // Green for enable
+            courseButton.setToolTipText("Click to enable course enrollment for students");
+        }
     }
 
     private void setupLayout() {
@@ -131,7 +144,8 @@ public class CourseList extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(new Color(245, 247, 250));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        
+
+        buttonPanel.add(courseButton);
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
@@ -209,6 +223,16 @@ public class CourseList extends JFrame {
         gbc.insets = new Insets(15, 8, 8, 8);
         inputPanel.add(totalCourseLabel, gbc);
 
+        // enrollment status
+        enrollmentStatusLabel = new JLabel("Enrollment Status: " + (Utils.isCourseEnrollmentEnabled() ? "ENABLED" : "DISABLED"));
+        enrollmentStatusLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        enrollmentStatusLabel.setForeground(Utils.isCourseEnrollmentEnabled() ? new Color(40, 167, 69) : new Color(220, 53, 69));
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(8, 8, 8, 8);
+        inputPanel.add(enrollmentStatusLabel, gbc);
+
         // Add some spacing at the bottom
         gbc.gridx = 0;
         gbc.gridy++;
@@ -231,6 +255,7 @@ public class CourseList extends JFrame {
         });
 
         // Button listeners
+        courseButton.addActionListener(e -> courseEnrollment());
         addButton.addActionListener(e -> addCourse());
         updateButton.addActionListener(e -> updateCourse());
         deleteButton.addActionListener(e -> deleteCourse());
@@ -239,6 +264,45 @@ public class CourseList extends JFrame {
             dispose();
             new AdministrationForm();
         });
+    }
+
+    private void courseEnrollment() {
+        // Toggle the course enrollment status
+        Utils.setCourseEnrollment(!Utils.isCourseEnrollmentEnabled());
+        
+        // Update button text and styling based on current status
+        if (Utils.isCourseEnrollmentEnabled()) {
+            courseButton.setText("Disable Course Enrollment");
+            courseButton.setBackground(new Color(220, 53, 69)); // Red color for disable
+            courseButton.setToolTipText("Click to disable course enrollment for students");
+            
+            // Update status label
+            enrollmentStatusLabel.setText("Enrollment Status: ENABLED");
+            enrollmentStatusLabel.setForeground(new Color(40, 167, 69));
+            
+            // Show confirmation message
+            JOptionPane.showMessageDialog(this, 
+                "Course enrollment has been ENABLED!\n\nStudents can now enroll in courses.", 
+                "Course Enrollment Enabled", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            courseButton.setText("Enable Course Enrollment");
+            courseButton.setBackground(new Color(40, 167, 69)); // Green color for enable
+            courseButton.setToolTipText("Click to enable course enrollment for students");
+            
+            // Update status label
+            enrollmentStatusLabel.setText("Enrollment Status: DISABLED");
+            enrollmentStatusLabel.setForeground(new Color(220, 53, 69));
+            
+            // Show confirmation message
+            JOptionPane.showMessageDialog(this, 
+                "Course enrollment has been DISABLED!\n\nStudents cannot enroll in courses.", 
+                "Course Enrollment Disabled", 
+                JOptionPane.WARNING_MESSAGE);
+        }
+        
+        // Update button styling after text change
+        Utils.styleButton(courseButton);
     }
 
     private void addCourse() {

@@ -11,8 +11,24 @@ public class Utils {
 
     public static final String promotion = "PROMOTION";
     public static Map<String, Boolean> EXAM_CODE = new HashMap<>();
-    public static Map<String, Long> EXAM_TIMESTAMPS = new HashMap<>();
     public static String PUBLISHED_STATUS = "No Exam is running";
+    public static Boolean COURSE = false;
+    
+    /**
+     * Check if course enrollment is currently enabled
+     * @return true if enrollment is enabled, false otherwise
+     */
+    public static boolean isCourseEnrollmentEnabled() {
+        return COURSE;
+    }
+    
+    /**
+     * Enable or disable course enrollment
+     * @param enabled true to enable, false to disable
+     */
+    public static void setCourseEnrollment(boolean enabled) {
+        COURSE = enabled;
+    }
 
     public static final String DEFAULT_FILE_PATH = "No Path Selected";
 

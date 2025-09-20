@@ -153,6 +153,7 @@ public class AdministrationForm extends JFrame {
         );
         if (department == null || department.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Department Selected !",  "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
         String year = (String) JOptionPane.showInputDialog(

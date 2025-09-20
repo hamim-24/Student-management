@@ -152,7 +152,7 @@ public class LoginForm extends JFrame {
                 if (String.valueOf(passwordField.getPassword()).equals(PASSWORD_PLACE_HOLDER)) {
                     passwordField.setText("");
                     passwordField.setForeground(Color.BLACK);
-                    passwordField.setEchoChar('-');
+                    passwordField.setEchoChar('*');
                 }
             }
 

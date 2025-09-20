@@ -2,6 +2,7 @@ package launcher;
 
 import model.*;
 import ui.*;
+import util.Utils;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -36,45 +37,42 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        String[] departments = {"CSE", "EEE", "BBA", "Civil"};
-        String[] years = {"1st Year", "2nd Year", "3rd Year", "4th Year"};
+
         for (int i = 1; i <= 100; i++) {
-            String studentId = String.format("S%03d", i);
-            String firstName = "Student" + i;
-            String lastName = "Last" + i;
-            String email = "student" + i + "@university.edu";
+            String studentId = String.format("s%03d", i);
             String gender = (i % 2 == 0) ? "Male" : "Female";
             String dob = String.format("2000-%02d-%02d", (i % 12) + 1, (i % 28) + 1);
-            String year = years[(int)(Math.random() * years.length)];
-            int roll = i;
-            String department = departments[(int)(Math.random() * departments.length)];
-            double cgpa = 1.0 + (Math.random() * 2.0);
+            String year = Utils.YEARS[(int)(Math.random() * (Utils.YEARS.length - 1))];
+            String department = Utils.DEPARTMENTS[(int)(Math.random() * (Utils.DEPARTMENTS.length - 1)) + 1];
+            double cgpa = Math.random() * 4.0;
             String session = "";
-            if (year.equals(years[3])) {
+            if (year.equals(Utils.YEARS[4])) {
                 session = "2021-2022";
-            } else if (year.equals(years[2])) {
+            } else if (year.equals(Utils.YEARS[3])) {
                 session = "2022-2023";
-            } else if (year.equals(years[1])) {
+            } else if (year.equals(Utils.YEARS[2])) {
                 session = "2023-2024";
-            } else if (year.equals(years[0])) {
+            } else if (year.equals(Utils.YEARS[1])) {
                 session = "2024-2025";
             }
-            StudentAccount student = new StudentAccount(studentId, "pass" + i, email, firstName, lastName, 
-                                                     gender, dob, year, roll, department, "Student", cgpa, session);
+            StudentAccount student = new StudentAccount(studentId, "pass" + i, "student" + i + "@university.edu", "Student" + i, "Last" + i,
+                                                     gender, dob, year, i, department, "Student", cgpa, session);
             accounts.put(studentId, student);
+
+            Result result = new Result(student, Math.random() * 100, (int) (Math.random() * 100), (int) (Math.random() * 100), "100", null, cgpa);
+            resultsList.add(result);
         }
 
         for (int i = 1; i <= 10; i++) {
-            String teacherId = String.format("T%03d", i);
-            String firstName = "Teacher" + i;
-            String lastName = "Last" + i;
-            String email = "teacher" + i + "@university.edu";
+            String teacherId = String.format("t%03d", i);
             String gender = (i % 2 == 0) ? "Male" : "Female";
             String dob = String.format("1980-%02d-%02d", (i % 12) + 1, (i % 28) + 1);
-            String department = getDepartmentByIndex(i);
-            
-            TeacherAccount teacher = new TeacherAccount(teacherId, "pass" + i, email, firstName, lastName, 
-                                                     gender, dob, department, "Teacher");
+            String department = Utils.DEPARTMENTS[(int)(Math.random() * Utils.DEPARTMENTS.length)];
+
+            TeacherAccount teacher = new TeacherAccount(teacherId, "pass" + i, "teacher" + i + "@university.edu",
+                    "Teacher" + i, "Last" + i,
+                    gender, dob, department, "Teacher");
+
             accounts.put(teacherId, teacher);
         }
 
@@ -109,29 +107,8 @@ public class Main {
 
         questionMap.put(q1.getQuestionCode(), q1);
 
-        for (int i = 0; i < 100; i++) {
-            String studentId = String.format("S%03d", 1 + (int)(Math.random() * 10000));
-            Account acc = accounts.get(studentId);
-            if (!(acc instanceof StudentAccount)) continue;
-            StudentAccount student = (StudentAccount) acc;
-            List<String> qCodes = new ArrayList<>(questionMap.keySet());
-            if (qCodes.isEmpty()) break;
-            String questionCode = qCodes.get((int)(Math.random() * qCodes.size()));
-            int correct = (int)(Math.random() * 10);
-            int incorrect = (int)(Math.random() * 10);
-            double mark = correct * 2.5;
-            double cgpa = 1.0 + (Math.random() * 2.0);
-            Result result = new Result(student, mark, correct, incorrect, questionCode, null, cgpa);
-            resultsList.add(result);
-        }
-
         new LoginForm();
 
     }
-    
-    private static String getDepartmentByIndex(int index) {
-        String[] departments = {"CSE", "EEE", "BBA", "Civil"};
-        return departments[index % departments.length];
-    }
-    
+
 }

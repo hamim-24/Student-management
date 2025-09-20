@@ -24,6 +24,7 @@ public class StudentCourseFrame extends JFrame {
     private JButton dropButton;
     private JLabel studentInfoLabel;
     private JLabel totalCreditsLabel;
+    private JLabel enrollmentStatusLabel;
 
     public StudentCourseFrame(StudentAccount account) {
         // Validate account parameter
@@ -51,6 +52,7 @@ public class StudentCourseFrame extends JFrame {
         createComponents();
         addEventListeners();
         refreshCourseLists();
+        setupEnrollmentStatusTimer();
         setVisible(true);
     }
 
@@ -95,8 +97,14 @@ public class StudentCourseFrame extends JFrame {
         totalCreditsLabel.setFont(new Font("Arial", Font.BOLD, 15));
         totalCreditsLabel.setForeground(new Color(52, 152, 219));
         
+        enrollmentStatusLabel = new JLabel();
+        enrollmentStatusLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        enrollmentStatusLabel.setForeground(Utils.isCourseEnrollmentEnabled() ? new Color(40, 167, 69) : new Color(220, 53, 69));
+        enrollmentStatusLabel.setText("Enrollment Status: " + (Utils.isCourseEnrollmentEnabled() ? "ENABLED" : "DISABLED"));
+        
         infoPanel.add(studentInfoLabel);
         infoPanel.add(totalCreditsLabel);
+        infoPanel.add(enrollmentStatusLabel);
         
         add(infoPanel, BorderLayout.CENTER);
     }
@@ -153,6 +161,9 @@ public class StudentCourseFrame extends JFrame {
         enrollButton.setPreferredSize(new Dimension(150, 40));
         allCoursesPanel.add(enrollButton, BorderLayout.SOUTH);
         
+        // Update button state based on enrollment status
+        updateEnrollButtonState();
+        
         mainPanel.add(allCoursesPanel);
     }
 
@@ -200,10 +211,49 @@ public class StudentCourseFrame extends JFrame {
         enrollButton.addActionListener(e -> handleEnrollAction());
         dropButton.addActionListener(e  -> handleDropAction());
     }
+    
+    private void updateEnrollButtonState() {
+        boolean enrollmentEnabled = Utils.isCourseEnrollmentEnabled();
+        enrollButton.setEnabled(enrollmentEnabled);
+        
+        if (enrollmentEnabled) {
+            enrollButton.setText("Enroll in Course");
+            enrollButton.setToolTipText("Click to enroll in the selected course");
+        } else {
+            enrollButton.setText("Enrollment Disabled");
+            enrollButton.setToolTipText("Course enrollment is currently disabled by administration");
+        }
+    }
+    
+    private void setupEnrollmentStatusTimer() {
+        // Timer to check enrollment status every 2 seconds
+        javax.swing.Timer timer = new javax.swing.Timer(2000, e -> refreshEnrollmentStatus());
+        timer.setRepeats(true);
+        timer.start();
+    }
+    
+    private void refreshEnrollmentStatus() {
+        boolean enrollmentEnabled = Utils.isCourseEnrollmentEnabled();
+        
+        // Update status label
+        enrollmentStatusLabel.setText("Enrollment Status: " + (enrollmentEnabled ? "ENABLED" : "DISABLED"));
+        enrollmentStatusLabel.setForeground(enrollmentEnabled ? new Color(40, 167, 69) : new Color(220, 53, 69));
+        
+        // Update button state
+        updateEnrollButtonState();
+    }
 
     private void handleEnrollAction() {
 
         try {
+            // Check if course enrollment is enabled
+            if (!Utils.isCourseEnrollmentEnabled()) {
+                JOptionPane.showMessageDialog(StudentCourseFrame.this, 
+                    "Course enrollment is currently DISABLED.\n\nPlease contact the administration to enable course enrollment.", 
+                    "Enrollment Disabled", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
             String selected = allCoursesList.getSelectedValue();
             if (selected == null || selected.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(StudentCourseFrame.this, 
