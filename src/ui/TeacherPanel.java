@@ -209,8 +209,8 @@ public class TeacherPanel extends JFrame {
 
         String session = (String) JOptionPane.showInputDialog(
                 this,
-                "Select Year:",
-                "Year",
+                "Select session:",
+                "Session",
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 Utils.session(),

@@ -72,8 +72,8 @@ public class Account {
                         Date of Birth: %s
                         Gender: %s
                         Status: %s
-                        Department : %s
-                        Date: %s""",
-                ID, firstName, lastName, email, dob, gender, status, department, date);
+                        Date: %s
+                        Department : %s""",
+                ID, firstName, lastName, email, dob, gender, status, date, department);
     }
 }

@@ -38,23 +38,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        for (int i = 1; i <= 100; i++) {
-            String studentId = String.format("s%03d", i);
+        for (int i = 1; i <= 1000; i++) {
+            String studentId = String.format("s%d", i);
             String gender = (i % 2 == 0) ? "Male" : "Female";
             String dob = String.format("2000-%02d-%02d", (i % 12) + 1, (i % 28) + 1);
-            String year = Utils.YEARS[(int)(Math.random() * (Utils.YEARS.length - 1))];
+            String year = Utils.YEARS[(int)(Math.random() * (Utils.YEARS.length - 2)) + 1];
             String department = Utils.DEPARTMENTS[(int)(Math.random() * (Utils.DEPARTMENTS.length - 1)) + 1];
             double cgpa = Math.random() * 4.0;
-            String session = "";
-            if (year.equals(Utils.YEARS[4])) {
-                session = "2021-2022";
-            } else if (year.equals(Utils.YEARS[3])) {
-                session = "2022-2023";
-            } else if (year.equals(Utils.YEARS[2])) {
-                session = "2023-2024";
-            } else if (year.equals(Utils.YEARS[1])) {
-                session = "2024-2025";
-            }
+            String[] sessions = {"2021-2022", "2022-2023", "2023-2024", "2024-2025"};
+            String session = sessions[(int)(Math.random() * sessions.length)];
             StudentAccount student = new StudentAccount(studentId, "pass" + i, "student" + i + "@university.edu", "Student" + i, "Last" + i,
                                                      gender, dob, year, i, department, "Student", cgpa, session);
             accounts.put(studentId, student);
@@ -63,11 +55,11 @@ public class Main {
             resultsList.add(result);
         }
 
-        for (int i = 1; i <= 10; i++) {
-            String teacherId = String.format("t%03d", i);
+        for (int i = 1; i <= 100; i++) {
+            String teacherId = String.format("t%d", i);
             String gender = (i % 2 == 0) ? "Male" : "Female";
             String dob = String.format("1980-%02d-%02d", (i % 12) + 1, (i % 28) + 1);
-            String department = Utils.DEPARTMENTS[(int)(Math.random() * Utils.DEPARTMENTS.length)];
+            String department = Utils.DEPARTMENTS[(int)(Math.random() * (Utils.DEPARTMENTS.length - 1)) + 1];
 
             TeacherAccount teacher = new TeacherAccount(teacherId, "pass" + i, "teacher" + i + "@university.edu",
                     "Teacher" + i, "Last" + i,

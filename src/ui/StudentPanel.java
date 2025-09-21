@@ -415,7 +415,7 @@ private JLabel createHeader() {
     private void handleShowInfoAction() {
 
         try {
-            JOptionPane.showMessageDialog(this, account, "Info", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, Utils.ScrollPanel(new StringBuilder(account.toString())), "Details", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error displaying information: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

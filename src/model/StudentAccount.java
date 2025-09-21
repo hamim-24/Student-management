@@ -89,7 +89,7 @@ public class StudentAccount extends Account {
 
     @Override
     public String toString() {
-        return super.toString() + "\nYear: " + year + "\nRoll: " + roll + "\nGPA: " + cg + "\nSession: " + session + "\nCourses:\n" + showCourses();
+        return super.toString() + "\nYear: " + year + "\nSession: " + session + "\nRoll: " + roll + "\nGPA: " + cg + "\nCourses:\n" + showCourses();
     }
 
     public String showCourses() {

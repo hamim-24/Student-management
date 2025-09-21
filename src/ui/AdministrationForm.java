@@ -165,7 +165,7 @@ public class AdministrationForm extends JFrame {
                 Utils.YEARS,
                 Utils.YEARS[0]
         );
-        if (year == null || year.equals("Select")) {
+        if (year == null || year.equals("Select") ) {
             JOptionPane.showMessageDialog(this, "Please Select Year", "Warning", JOptionPane.ERROR_MESSAGE);
             return;
         }
